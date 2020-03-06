@@ -26,6 +26,7 @@
 #include "xprocess.h"
 #include "xprocessdevice.h"
 #include "xprocessdialoghex.h"
+#include "xprocessdialogsystemstructs.h"
 #include "xpe.h"
 
 namespace Ui {
@@ -54,6 +55,7 @@ private slots:
 
     void on_tableWidgetProcesses_customContextMenuRequested(const QPoint &pos);
     void _hex();
+    void _systemStructs();
 
 private:
     Ui::XProcessWidget *ui;

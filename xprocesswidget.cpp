@@ -92,8 +92,14 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
 
         QAction actionHex(tr("Hex"),this);
         connect(&actionHex,SIGNAL(triggered()),this,SLOT(_hex()));
-
         contextMenu.addAction(&actionHex);
+
+        QAction actionSystemStructs(tr("System structs"),this);
+        connect(&actionSystemStructs,SIGNAL(triggered()),this,SLOT(_systemStructs()));
+        contextMenu.addAction(&actionSystemStructs);
+
+        // Add Strings
+        // PE Editor
 
         contextMenu.exec(ui->tableWidgetProcesses->viewport()->mapToGlobal(pos));
     }
@@ -115,5 +121,17 @@ void XProcessWidget::_hex()
             XProcessDialogHex xpdh(this,&pe);
             xpdh.exec();
         }
+    }
+}
+
+void XProcessWidget::_systemStructs()
+{
+    if(ui->tableWidgetProcesses->selectedItems().count())
+    {
+        qint64 nPID=ui->tableWidgetProcesses->selectedItems().at(0)->data(Qt::DisplayRole).toLongLong();
+
+        XProcessDialogSystemStructs xpdss(this);
+
+        xpdss.exec();
     }
 }
