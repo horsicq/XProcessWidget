@@ -56,6 +56,7 @@ private slots:
     void on_tableWidgetProcesses_customContextMenuRequested(const QPoint &pos);
     void _hex();
     void _systemStructs();
+    void _strings();
 
 private:
     Ui::XProcessWidget *ui;

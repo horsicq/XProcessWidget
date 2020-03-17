@@ -98,6 +98,10 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
         connect(&actionSystemStructs,SIGNAL(triggered()),this,SLOT(_systemStructs()));
         contextMenu.addAction(&actionSystemStructs);
 
+        QAction actionStrings(tr("Strings"),this);
+        connect(&actionStrings,SIGNAL(triggered()),this,SLOT(_strings()));
+        contextMenu.addAction(&actionStrings);
+
         // Add Strings
         // PE Editor
 
@@ -134,4 +138,10 @@ void XProcessWidget::_systemStructs()
 
         xpdss.exec();
     }
+}
+
+void XProcessWidget::_strings()
+{
+    // TODO
+    qDebug("Strings");
 }
