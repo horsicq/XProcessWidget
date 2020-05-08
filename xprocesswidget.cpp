@@ -90,12 +90,13 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
     {
         QMenu contextMenu(this);
 
-        QMenu menuFile(tr("File"),this);
-        contextMenu.addMenu(&menuFile);
-
-        QAction actionHexFile(tr("Hex"),this);
+        QAction actionHexFile(QString("%1(%2)").arg(tr("Hex")).arg(tr("File")),this);
         connect(&actionHexFile,SIGNAL(triggered()),this,SLOT(_hexFile()));
-        menuFile.addAction(&actionHexFile);
+        contextMenu.addAction(&actionHexFile);
+
+        QAction actionHexMemory(QString("%1(%2)").arg(tr("Hex")).arg(tr("Memory")),this);
+        connect(&actionHexMemory,SIGNAL(triggered()),this,SLOT(_hexMemory()));
+        contextMenu.addAction(&actionHexMemory);
 
         QAction actionSystemStructs(tr("System structs"),this);
         connect(&actionSystemStructs,SIGNAL(triggered()),this,SLOT(_systemStructs()));
@@ -104,13 +105,6 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
         QAction actionStrings(tr("Strings"),this);
         connect(&actionStrings,SIGNAL(triggered()),this,SLOT(_strings()));
         contextMenu.addAction(&actionStrings);
-
-        QMenu menuMemory(tr("Memory"),this);
-        contextMenu.addMenu(&menuMemory);
-
-        QAction actionHexMemory(tr("Hex"),this);
-        connect(&actionHexMemory,SIGNAL(triggered()),this,SLOT(_hexMemory()));
-        menuMemory.addAction(&actionHexMemory);
 
         // Add Strings
         // PE Editor
@@ -123,7 +117,20 @@ void XProcessWidget::_hexFile()
 {
     if(ui->tableWidgetProcesses->selectedItems().count())
     {
-        // TODO
+        QString sFilePath=ui->tableWidgetProcesses->selectedItems().at(CN_FILEPATH)->data(Qt::DisplayRole).toString();
+
+        QFile file;
+        file.setFileName(sFilePath);
+
+        if(file.open(QIODevice::ReadOnly))
+        {
+            XBinary binary(&file);
+
+            XProcessDialogHex xpdh(this,&binary);
+            xpdh.exec();
+
+            file.close();
+        }
     }
 }
 
@@ -131,17 +138,19 @@ void XProcessWidget::_hexMemory()
 {
     if(ui->tableWidgetProcesses->selectedItems().count())
     {
-        qint64 nPID=ui->tableWidgetProcesses->selectedItems().at(0)->data(Qt::DisplayRole).toLongLong();
+        qint64 nPID=ui->tableWidgetProcesses->selectedItems().at(CN_ID)->data(Qt::DisplayRole).toLongLong();
 
         XProcess::PROCESS_INFO processInfo=XProcess::getInfoByProcessID(nPID);
 
         XProcessDevice pd;
         if(pd.openPID(nPID,processInfo.nImageAddress,processInfo.nImageSize,QIODevice::ReadOnly))
         {
-            XPE pe(&pd,true,processInfo.nImageAddress);
+            XBinary binary(&pd,true,processInfo.nImageAddress);
 
-            XProcessDialogHex xpdh(this,&pe);
+            XProcessDialogHex xpdh(this,&binary);
             xpdh.exec();
+
+            pd.close();
         }
     }
 }
@@ -150,7 +159,7 @@ void XProcessWidget::_systemStructs()
 {
     if(ui->tableWidgetProcesses->selectedItems().count())
     {
-        qint64 nPID=ui->tableWidgetProcesses->selectedItems().at(0)->data(Qt::DisplayRole).toLongLong();
+        qint64 nPID=ui->tableWidgetProcesses->selectedItems().at(CN_ID)->data(Qt::DisplayRole).toLongLong();
 
         XProcessDialogSystemStructs xpdss(this);
 
