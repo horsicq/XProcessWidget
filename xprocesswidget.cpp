@@ -90,9 +90,12 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
     {
         QMenu contextMenu(this);
 
-        QAction actionHex(tr("Hex"),this);
-        connect(&actionHex,SIGNAL(triggered()),this,SLOT(_hex()));
-        contextMenu.addAction(&actionHex);
+        QMenu menuFile(tr("File"),this);
+        contextMenu.addMenu(&menuFile);
+
+        QAction actionHexFile(tr("Hex"),this);
+        connect(&actionHexFile,SIGNAL(triggered()),this,SLOT(_hexFile()));
+        menuFile.addAction(&actionHexFile);
 
         QAction actionSystemStructs(tr("System structs"),this);
         connect(&actionSystemStructs,SIGNAL(triggered()),this,SLOT(_systemStructs()));
@@ -102,6 +105,13 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
         connect(&actionStrings,SIGNAL(triggered()),this,SLOT(_strings()));
         contextMenu.addAction(&actionStrings);
 
+        QMenu menuMemory(tr("Memory"),this);
+        contextMenu.addMenu(&menuMemory);
+
+        QAction actionHexMemory(tr("Hex"),this);
+        connect(&actionHexMemory,SIGNAL(triggered()),this,SLOT(_hexMemory()));
+        menuMemory.addAction(&actionHexMemory);
+
         // Add Strings
         // PE Editor
 
@@ -109,7 +119,15 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
     }
 }
 
-void XProcessWidget::_hex()
+void XProcessWidget::_hexFile()
+{
+    if(ui->tableWidgetProcesses->selectedItems().count())
+    {
+        // TODO
+    }
+}
+
+void XProcessWidget::_hexMemory()
 {
     if(ui->tableWidgetProcesses->selectedItems().count())
     {

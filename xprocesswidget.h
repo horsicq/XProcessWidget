@@ -54,7 +54,8 @@ private slots:
     void reload();
 
     void on_tableWidgetProcesses_customContextMenuRequested(const QPoint &pos);
-    void _hex();
+    void _hexFile();
+    void _hexMemory();
     void _systemStructs();
     void _strings();
 
