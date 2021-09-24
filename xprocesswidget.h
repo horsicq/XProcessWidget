@@ -25,8 +25,6 @@
 #include <QMenu>
 #include "xprocess.h"
 #include "xprocessdevice.h"
-#include "xprocessdialoghex.h"
-#include "xprocessdialogsystemstructs.h"
 #include "xpe.h"
 
 namespace Ui {
@@ -41,7 +39,7 @@ class XProcessWidget : public QWidget
     {
         CN_ID=0,
         CN_NAME,
-        CN_FILEPATH,
+        CN_FILENAME,
         CN_size
     };
 
@@ -50,14 +48,15 @@ public:
     ~XProcessWidget();
 
 private slots:
-    void on_pushButtonReload_clicked();
     void reload();
 
     void on_tableWidgetProcesses_customContextMenuRequested(const QPoint &pos);
     void _hexFile();
     void _hexMemory();
-    void _systemStructs();
+    void _structs();
     void _strings();
+    void on_pushButtonProcessesReload_clicked();
+    void on_pushButtonProcessStructs_clicked();
 
 private:
     Ui::XProcessWidget *ui;

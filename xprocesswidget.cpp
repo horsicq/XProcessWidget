@@ -30,17 +30,17 @@ XProcessWidget::XProcessWidget(QWidget *parent) :
     ui->tableWidgetProcesses->setColumnCount(CN_size);
     ui->tableWidgetProcesses->setRowCount(0);
 
-    ui->tableWidgetProcesses->setHorizontalHeaderItem(CN_ID,new QTableWidgetItem(tr("ID")));
+    ui->tableWidgetProcesses->setHorizontalHeaderItem(CN_ID,new QTableWidgetItem(QString("PID")));
     ui->tableWidgetProcesses->setHorizontalHeaderItem(CN_NAME,new QTableWidgetItem(tr("Name")));
-    ui->tableWidgetProcesses->setHorizontalHeaderItem(CN_FILEPATH,new QTableWidgetItem(tr("File path")));
+    ui->tableWidgetProcesses->setHorizontalHeaderItem(CN_FILENAME,new QTableWidgetItem(tr("File name")));
 
     ui->tableWidgetProcesses->setColumnWidth(CN_ID,50);
     ui->tableWidgetProcesses->setColumnWidth(CN_NAME,100);
-    ui->tableWidgetProcesses->setColumnWidth(CN_FILEPATH,300);
+    ui->tableWidgetProcesses->setColumnWidth(CN_FILENAME,300);
 
     ui->tableWidgetProcesses->horizontalHeader()->setSectionResizeMode(CN_ID,QHeaderView::Interactive);
     ui->tableWidgetProcesses->horizontalHeader()->setSectionResizeMode(CN_NAME,QHeaderView::Interactive);
-    ui->tableWidgetProcesses->horizontalHeader()->setSectionResizeMode(CN_FILEPATH,QHeaderView::Stretch);
+    ui->tableWidgetProcesses->horizontalHeader()->setSectionResizeMode(CN_FILENAME,QHeaderView::Stretch);
 
     reload();
 }
@@ -50,13 +50,9 @@ XProcessWidget::~XProcessWidget()
     delete ui;
 }
 
-void XProcessWidget::on_pushButtonReload_clicked()
-{
-    reload();
-}
-
 void XProcessWidget::reload()
 {
+    // TODO TableView
     QList<XProcess::PROCESS_INFO> listProcesses=XProcess::getProcessesList();
 
     int nCount=listProcesses.count();
@@ -78,7 +74,7 @@ void XProcessWidget::reload()
 
         QTableWidgetItem *pItemPath=new QTableWidgetItem;
         pItemPath->setText(listProcesses.at(i).sFilePath);
-        ui->tableWidgetProcesses->setItem(i,CN_FILEPATH,pItemPath);
+        ui->tableWidgetProcesses->setItem(i,CN_FILENAME,pItemPath);
     }
 
     ui->tableWidgetProcesses->setSortingEnabled(true);
@@ -86,9 +82,14 @@ void XProcessWidget::reload()
 
 void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QPoint &pos)
 {
+    // TODO Shortcuts
     if(ui->tableWidgetProcesses->selectedItems().count())
     {
         QMenu contextMenu(this);
+
+        QAction actionStructs(tr("Structs"),this);
+        connect(&actionStructs,SIGNAL(triggered()),this,SLOT(_structs()));
+        contextMenu.addAction(&actionStructs);
 
         QAction actionHexFile(QString("%1(%2)").arg(tr("Hex")).arg(tr("File")),this);
         connect(&actionHexFile,SIGNAL(triggered()),this,SLOT(_hexFile()));
@@ -97,10 +98,6 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
         QAction actionHexMemory(QString("%1(%2)").arg(tr("Hex")).arg(tr("Memory")),this);
         connect(&actionHexMemory,SIGNAL(triggered()),this,SLOT(_hexMemory()));
         contextMenu.addAction(&actionHexMemory);
-
-        QAction actionSystemStructs(tr("System structs"),this);
-        connect(&actionSystemStructs,SIGNAL(triggered()),this,SLOT(_systemStructs()));
-        contextMenu.addAction(&actionSystemStructs);
 
         QAction actionStrings(tr("Strings"),this);
         connect(&actionStrings,SIGNAL(triggered()),this,SLOT(_strings()));
@@ -117,7 +114,7 @@ void XProcessWidget::_hexFile()
 {
     if(ui->tableWidgetProcesses->selectedItems().count())
     {
-        QString sFilePath=ui->tableWidgetProcesses->selectedItems().at(CN_FILEPATH)->data(Qt::DisplayRole).toString();
+        QString sFilePath=ui->tableWidgetProcesses->selectedItems().at(CN_FILENAME)->data(Qt::DisplayRole).toString();
 
         QFile file;
         file.setFileName(sFilePath);
@@ -126,8 +123,8 @@ void XProcessWidget::_hexFile()
         {
             XBinary binary(&file);
 
-            XProcessDialogHex xpdh(this,&binary);
-            xpdh.exec();
+//            XProcessDialogHex xpdh(this,&binary);
+//            xpdh.exec();
 
             file.close();
         }
@@ -147,23 +144,23 @@ void XProcessWidget::_hexMemory()
         {
             XBinary binary(&pd,true,processInfo.nImageAddress);
 
-            XProcessDialogHex xpdh(this,&binary);
-            xpdh.exec();
+//            XProcessDialogHex xpdh(this,&binary);
+//            xpdh.exec();
 
             pd.close();
         }
     }
 }
 
-void XProcessWidget::_systemStructs()
+void XProcessWidget::_structs()
 {
     if(ui->tableWidgetProcesses->selectedItems().count())
     {
         qint64 nPID=ui->tableWidgetProcesses->selectedItems().at(CN_ID)->data(Qt::DisplayRole).toLongLong();
 
-        XProcessDialogSystemStructs xpdss(this);
+//        XProcessDialogSystemStructs xpdss(this);
 
-        xpdss.exec();
+//        xpdss.exec();
     }
 }
 
@@ -172,3 +169,14 @@ void XProcessWidget::_strings()
     // TODO
     qDebug("Strings");
 }
+
+void XProcessWidget::on_pushButtonProcessesReload_clicked()
+{
+    reload();
+}
+
+void XProcessWidget::on_pushButtonProcessStructs_clicked()
+{
+
+}
+
