@@ -23,6 +23,7 @@
 
 #include <QWidget>
 #include <QMenu>
+#include "xoptions.h"
 #include "xprocess.h"
 #include "xprocessdevice.h"
 #include "xpe.h"
@@ -57,6 +58,10 @@ private slots:
     void _strings();
     void on_pushButtonProcessesReload_clicked();
     void on_pushButtonProcessStructs_clicked();
+    void on_pushButtonProcessesSave_clicked();
+    void on_pushButtonProcessHex_clicked();
+    void on_pushButtonProcessStrings_clicked();
+    void on_pushButtonSignatures_clicked();
 
 private:
     Ui::XProcessWidget *ui;

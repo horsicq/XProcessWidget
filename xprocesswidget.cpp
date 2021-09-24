@@ -182,3 +182,23 @@ void XProcessWidget::on_pushButtonProcessStructs_clicked()
 
 }
 
+
+void XProcessWidget::on_pushButtonProcessesSave_clicked()
+{
+
+}
+
+void XProcessWidget::on_pushButtonProcessHex_clicked()
+{
+
+}
+
+void XProcessWidget::on_pushButtonProcessStrings_clicked()
+{
+
+}
+
+void XProcessWidget::on_pushButtonSignatures_clicked()
+{
+
+}
