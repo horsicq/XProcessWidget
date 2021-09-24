@@ -83,6 +83,8 @@ void XProcessWidget::reload()
 void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QPoint &pos)
 {
     // TODO Shortcuts
+    // TODO Dump
+    // TODO File -> Copy Filename
     if(ui->tableWidgetProcesses->selectedItems().count())
     {
         QMenu contextMenu(this);
