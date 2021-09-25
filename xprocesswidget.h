@@ -27,12 +27,13 @@
 #include "xprocess.h"
 #include "xprocessdevice.h"
 #include "xpe.h"
+#include "xshortcutswidget.h"
 
 namespace Ui {
 class XProcessWidget;
 }
 
-class XProcessWidget : public QWidget
+class XProcessWidget : public XShortcutsWidget
 {
     Q_OBJECT
 
@@ -45,14 +46,14 @@ class XProcessWidget : public QWidget
     };
 
 public:
-    explicit XProcessWidget(QWidget *parent = nullptr);
+    explicit XProcessWidget(QWidget *pParent=nullptr);
     ~XProcessWidget();
 
 private slots:
     void reload();
 
     void on_tableWidgetProcesses_customContextMenuRequested(const QPoint &pos);
-    void _hexFile();
+    void _memoryHex();
     void _hexMemory();
     void _structs();
     void _strings();
@@ -62,6 +63,9 @@ private slots:
     void on_pushButtonProcessHex_clicked();
     void on_pushButtonProcessStrings_clicked();
     void on_pushButtonSignatures_clicked();
+
+protected:
+    virtual void registerShortcuts(bool bState);
 
 private:
     Ui::XProcessWidget *ui;

@@ -24,3 +24,8 @@ SOURCES += \
     XCONFIG += xprocess
     include($$PWD/../XProcess/xprocess.pri)
 }
+
+!contains(XCONFIG, xshortcuts) {
+    XCONFIG += xshortcuts
+    include($$PWD/../XShortcuts/xshortcuts.pri)
+}

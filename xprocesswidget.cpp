@@ -21,8 +21,8 @@
 #include "xprocesswidget.h"
 #include "ui_xprocesswidget.h"
 
-XProcessWidget::XProcessWidget(QWidget *parent) :
-    QWidget(parent),
+XProcessWidget::XProcessWidget(QWidget *pParent) :
+    XShortcutsWidget(pParent),
     ui(new Ui::XProcessWidget)
 {
     ui->setupUi(this);
@@ -87,32 +87,25 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
     // TODO File -> Copy Filename
     if(ui->tableWidgetProcesses->selectedItems().count())
     {
-        QMenu contextMenu(this);
+        QMenu menuContext(this);
 
         QAction actionStructs(tr("Structs"),this);
         connect(&actionStructs,SIGNAL(triggered()),this,SLOT(_structs()));
-        contextMenu.addAction(&actionStructs);
+        menuContext.addAction(&actionStructs);
 
-        QAction actionHexFile(QString("%1(%2)").arg(tr("Hex")).arg(tr("File")),this);
-        connect(&actionHexFile,SIGNAL(triggered()),this,SLOT(_hexFile()));
-        contextMenu.addAction(&actionHexFile);
+        QMenu menuMemory(tr("Memory"),this);
 
-        QAction actionHexMemory(QString("%1(%2)").arg(tr("Hex")).arg(tr("Memory")),this);
-        connect(&actionHexMemory,SIGNAL(triggered()),this,SLOT(_hexMemory()));
-        contextMenu.addAction(&actionHexMemory);
+        QAction actionMemoryHex(tr("Hex"),this);
+        connect(&actionMemoryHex,SIGNAL(triggered()),this,SLOT(_memoryHex()));
+        menuMemory.addAction(&actionMemoryHex);
 
-        QAction actionStrings(tr("Strings"),this);
-        connect(&actionStrings,SIGNAL(triggered()),this,SLOT(_strings()));
-        contextMenu.addAction(&actionStrings);
+        menuContext.addMenu(&menuMemory);
 
-        // Add Strings
-        // PE Editor
-
-        contextMenu.exec(ui->tableWidgetProcesses->viewport()->mapToGlobal(pos));
+        menuContext.exec(ui->tableWidgetProcesses->viewport()->mapToGlobal(pos));
     }
 }
 
-void XProcessWidget::_hexFile()
+void XProcessWidget::_memoryHex()
 {
     if(ui->tableWidgetProcesses->selectedItems().count())
     {
@@ -199,6 +192,11 @@ void XProcessWidget::on_pushButtonProcessStrings_clicked()
 }
 
 void XProcessWidget::on_pushButtonSignatures_clicked()
+{
+
+}
+
+void XProcessWidget::registerShortcuts(bool bState)
 {
 
 }
