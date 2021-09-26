@@ -29,3 +29,8 @@ SOURCES += \
     XCONFIG += xshortcuts
     include($$PWD/../XShortcuts/xshortcuts.pri)
 }
+
+!contains(XCONFIG, dialogdump) {
+    XCONFIG += dialogdump
+    include($$PWD/../FormatDialogs/dialogdump.pri)
+}

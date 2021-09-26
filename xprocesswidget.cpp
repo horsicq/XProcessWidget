@@ -165,7 +165,19 @@ void XProcessWidget::_structs()
 
 void XProcessWidget::_dumpToFile()
 {
-    qDebug("Dump to file");
+    QString sFilter;
+    sFilter+=QString("%1 (*.bin)").arg(tr("Raw data"));
+    QString sSaveFileName=XBinary::getResultFileName(getDevice(),QString("%1.bin").arg(tr("Dump")));
+    QString sFileName=QFileDialog::getSaveFileName(this,tr("Save dump"),sSaveFileName,sFilter);
+
+    if(!sFileName.isEmpty())
+    {
+        STATE state=getState();
+
+        DialogDumpProcess dd(this,getDevice(),state.nSelectionOffset,state.nSelectionSize,sFileName,DumpProcess::DT_OFFSET);
+
+        dd.exec();
+    }
 }
 
 void XProcessWidget::_strings()
