@@ -27,20 +27,20 @@ XProcessWidget::XProcessWidget(QWidget *pParent) :
 {
     ui->setupUi(this);
 
-    ui->tableWidgetProcesses->setColumnCount(CN_size);
+    ui->tableWidgetProcesses->setColumnCount(COLUMN_size);
     ui->tableWidgetProcesses->setRowCount(0);
 
-    ui->tableWidgetProcesses->setHorizontalHeaderItem(CN_ID,new QTableWidgetItem(QString("PID")));
-    ui->tableWidgetProcesses->setHorizontalHeaderItem(CN_NAME,new QTableWidgetItem(tr("Name")));
-    ui->tableWidgetProcesses->setHorizontalHeaderItem(CN_FILENAME,new QTableWidgetItem(tr("File name")));
+    ui->tableWidgetProcesses->setHorizontalHeaderItem(COLUMN_ID,new QTableWidgetItem(QString("PID")));
+    ui->tableWidgetProcesses->setHorizontalHeaderItem(COLUMN_NAME,new QTableWidgetItem(tr("Name")));
+    ui->tableWidgetProcesses->setHorizontalHeaderItem(COLUMN_FILENAME,new QTableWidgetItem(tr("File name")));
 
-    ui->tableWidgetProcesses->setColumnWidth(CN_ID,50);
-    ui->tableWidgetProcesses->setColumnWidth(CN_NAME,100);
-    ui->tableWidgetProcesses->setColumnWidth(CN_FILENAME,300);
+    ui->tableWidgetProcesses->setColumnWidth(COLUMN_ID,50);
+    ui->tableWidgetProcesses->setColumnWidth(COLUMN_NAME,100);
+    ui->tableWidgetProcesses->setColumnWidth(COLUMN_FILENAME,300);
 
-    ui->tableWidgetProcesses->horizontalHeader()->setSectionResizeMode(CN_ID,QHeaderView::Interactive);
-    ui->tableWidgetProcesses->horizontalHeader()->setSectionResizeMode(CN_NAME,QHeaderView::Interactive);
-    ui->tableWidgetProcesses->horizontalHeader()->setSectionResizeMode(CN_FILENAME,QHeaderView::Stretch);
+    ui->tableWidgetProcesses->horizontalHeader()->setSectionResizeMode(COLUMN_ID,QHeaderView::Interactive);
+    ui->tableWidgetProcesses->horizontalHeader()->setSectionResizeMode(COLUMN_NAME,QHeaderView::Interactive);
+    ui->tableWidgetProcesses->horizontalHeader()->setSectionResizeMode(COLUMN_FILENAME,QHeaderView::Stretch);
 
     reload();
 }
@@ -66,15 +66,15 @@ void XProcessWidget::reload()
     {
         QTableWidgetItem *pItemID=new QTableWidgetItem;
         pItemID->setData(Qt::DisplayRole,listProcesses.at(i).nID);
-        ui->tableWidgetProcesses->setItem(i,CN_ID,pItemID);
+        ui->tableWidgetProcesses->setItem(i,COLUMN_ID,pItemID);
 
         QTableWidgetItem *pItemName=new QTableWidgetItem;
         pItemName->setText(listProcesses.at(i).sName);
-        ui->tableWidgetProcesses->setItem(i,CN_NAME,pItemName);
+        ui->tableWidgetProcesses->setItem(i,COLUMN_NAME,pItemName);
 
         QTableWidgetItem *pItemPath=new QTableWidgetItem;
         pItemPath->setText(listProcesses.at(i).sFilePath);
-        ui->tableWidgetProcesses->setItem(i,CN_FILENAME,pItemPath);
+        ui->tableWidgetProcesses->setItem(i,COLUMN_FILENAME,pItemPath);
     }
 
     ui->tableWidgetProcesses->setSortingEnabled(true);
@@ -101,6 +101,10 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
 
         menuContext.addMenu(&menuMemory);
 
+        QAction actionDumpToFile(tr("Dump to file"),this);
+        connect(&actionDumpToFile,SIGNAL(triggered()),this,SLOT(_dumpToFile()));
+        menuContext.addAction(&actionDumpToFile);
+
         menuContext.exec(ui->tableWidgetProcesses->viewport()->mapToGlobal(pos));
     }
 }
@@ -109,7 +113,7 @@ void XProcessWidget::_memoryHex()
 {
     if(ui->tableWidgetProcesses->selectedItems().count())
     {
-        QString sFilePath=ui->tableWidgetProcesses->selectedItems().at(CN_FILENAME)->data(Qt::DisplayRole).toString();
+        QString sFilePath=ui->tableWidgetProcesses->selectedItems().at(COLUMN_FILENAME)->data(Qt::DisplayRole).toString();
 
         QFile file;
         file.setFileName(sFilePath);
@@ -130,7 +134,7 @@ void XProcessWidget::_hexMemory()
 {
     if(ui->tableWidgetProcesses->selectedItems().count())
     {
-        qint64 nPID=ui->tableWidgetProcesses->selectedItems().at(CN_ID)->data(Qt::DisplayRole).toLongLong();
+        qint64 nPID=ui->tableWidgetProcesses->selectedItems().at(COLUMN_ID)->data(Qt::DisplayRole).toLongLong();
 
         XProcess::PROCESS_INFO processInfo=XProcess::getInfoByProcessID(nPID);
 
@@ -151,12 +155,17 @@ void XProcessWidget::_structs()
 {
     if(ui->tableWidgetProcesses->selectedItems().count())
     {
-        qint64 nPID=ui->tableWidgetProcesses->selectedItems().at(CN_ID)->data(Qt::DisplayRole).toLongLong();
+        qint64 nPID=ui->tableWidgetProcesses->selectedItems().at(COLUMN_ID)->data(Qt::DisplayRole).toLongLong();
 
 //        XProcessDialogSystemStructs xpdss(this);
 
 //        xpdss.exec();
     }
+}
+
+void XProcessWidget::_dumpToFile()
+{
+    qDebug("Dump to file");
 }
 
 void XProcessWidget::_strings()

@@ -37,17 +37,18 @@ class XProcessWidget : public XShortcutsWidget
 {
     Q_OBJECT
 
-    enum CN
+    enum COLUMN
     {
-        CN_ID=0,
-        CN_NAME,
-        CN_FILENAME,
-        CN_size
+        COLUMN_ID=0,
+        COLUMN_NAME,
+        COLUMN_FILENAME,
+        COLUMN_size
     };
 
 public:
     explicit XProcessWidget(QWidget *pParent=nullptr);
     ~XProcessWidget();
+    // TODO setOptions
 
 private slots:
     void reload();
@@ -56,6 +57,7 @@ private slots:
     void _memoryHex();
     void _hexMemory();
     void _structs();
+    void _dumpToFile();
     void _strings();
     void on_pushButtonProcessesReload_clicked();
     void on_pushButtonProcessStructs_clicked();
