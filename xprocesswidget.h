@@ -28,6 +28,7 @@
 #include "xprocessdevice.h"
 #include "xpe.h"
 #include "xshortcutswidget.h"
+#include "dialogdumpprocess.h"
 
 namespace Ui {
 class XProcessWidget;
