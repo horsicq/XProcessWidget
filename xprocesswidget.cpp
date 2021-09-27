@@ -27,6 +27,8 @@ XProcessWidget::XProcessWidget(QWidget *pParent) :
 {
     ui->setupUi(this);
 
+    // mb TODO auto refresh
+
     ui->tableWidgetProcesses->setColumnCount(COLUMN_size);
     ui->tableWidgetProcesses->setRowCount(0);
 
@@ -53,6 +55,16 @@ XProcessWidget::~XProcessWidget()
 void XProcessWidget::reload()
 {
     // TODO TableView
+
+    qint64 nPID=-1;
+
+    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
+
+    if(listSelected.count())
+    {
+        nPID=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_PID).toLongLong();
+    }
+
     QList<XProcess::PROCESS_INFO> listProcesses=XProcess::getProcessesList();
 
     int nCount=listProcesses.count();
@@ -66,6 +78,11 @@ void XProcessWidget::reload()
     {
         QTableWidgetItem *pItemID=new QTableWidgetItem;
         pItemID->setData(Qt::DisplayRole,listProcesses.at(i).nID);
+        pItemID->setData(Qt::UserRole+CBDATA_PID,listProcesses.at(i).nID);
+        pItemID->setData(Qt::UserRole+CBDATA_NAME,listProcesses.at(i).sName);
+        pItemID->setData(Qt::UserRole+CBDATA_FILEPATH,listProcesses.at(i).sFilePath);
+        pItemID->setData(Qt::UserRole+CBDATA_IMAGEADDRESS,listProcesses.at(i).nImageAddress);
+        pItemID->setData(Qt::UserRole+CBDATA_IMAGESIZE,listProcesses.at(i).nImageSize);
         ui->tableWidgetProcesses->setItem(i,COLUMN_ID,pItemID);
 
         QTableWidgetItem *pItemName=new QTableWidgetItem;
@@ -78,12 +95,28 @@ void XProcessWidget::reload()
     }
 
     ui->tableWidgetProcesses->setSortingEnabled(true);
+
+    // Restore row
+    if(nPID!=-1)
+    {
+        for(int i=0;i<nCount;i++)
+        {
+            qint64 _nPID=ui->tableWidgetProcesses->item(i,COLUMN_ID)->data(Qt::UserRole+CBDATA_PID).toLongLong();
+
+            if(nPID==_nPID)
+            {
+                ui->tableWidgetProcesses->setCurrentCell(i,COLUMN_ID);
+
+                break;
+            }
+        }
+    }
 }
 
 void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QPoint &pos)
 {
+    // TODO check isReadable
     // TODO Shortcuts
-    // TODO Dump
     // TODO File -> Copy Filename
     if(ui->tableWidgetProcesses->selectedItems().count())
     {
@@ -99,7 +132,19 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
         connect(&actionMemoryHex,SIGNAL(triggered()),this,SLOT(_memoryHex()));
         menuMemory.addAction(&actionMemoryHex);
 
+        QAction actionMemoryStrings(tr("Strings"),this);
+        connect(&actionMemoryStrings,SIGNAL(triggered()),this,SLOT(_memoryStrings()));
+        menuMemory.addAction(&actionMemoryStrings);
+
         menuContext.addMenu(&menuMemory);
+
+        QMenu menuFile(tr("File"),this);
+
+        QAction actionViewer(QString("PE %1").arg(tr("Viewer")),this); // TODO Windows/Linux/OSX
+        connect(&actionViewer,SIGNAL(triggered()),this,SLOT(_fileViewer()));
+        menuFile.addAction(&actionViewer);
+
+        menuContext.addMenu(&menuFile);
 
         QAction actionDumpToFile(tr("Dump to file"),this);
         connect(&actionDumpToFile,SIGNAL(triggered()),this,SLOT(_dumpToFile()));
@@ -111,51 +156,123 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
 
 void XProcessWidget::_memoryHex()
 {
-    if(ui->tableWidgetProcesses->selectedItems().count())
+    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
+
+    if(listSelected.count())
     {
-        QString sFilePath=ui->tableWidgetProcesses->selectedItems().at(COLUMN_FILENAME)->data(Qt::DisplayRole).toString();
-
-        QFile file;
-        file.setFileName(sFilePath);
-
-        if(file.open(QIODevice::ReadOnly))
-        {
-            XBinary binary(&file);
-
-//            XProcessDialogHex xpdh(this,&binary);
-//            xpdh.exec();
-
-            file.close();
-        }
-    }
-}
-
-void XProcessWidget::_hexMemory()
-{
-    if(ui->tableWidgetProcesses->selectedItems().count())
-    {
-        qint64 nPID=ui->tableWidgetProcesses->selectedItems().at(COLUMN_ID)->data(Qt::DisplayRole).toLongLong();
-
-        XProcess::PROCESS_INFO processInfo=XProcess::getInfoByProcessID(nPID);
+        qint64 nPID=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_PID).toLongLong();
+        qint64 nImageAddress=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_IMAGEADDRESS).toLongLong();
+        qint64 nImageSize=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_IMAGESIZE).toLongLong();
+        QString sName=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_NAME).toString();
 
         XProcessDevice pd;
-        if(pd.openPID(nPID,processInfo.nImageAddress,processInfo.nImageSize,QIODevice::ReadOnly))
+        if(pd.openPID(nPID,nImageAddress,nImageSize,QIODevice::ReadOnly))
         {
-            XBinary binary(&pd,true,processInfo.nImageAddress);
+            XHexView::OPTIONS options={};
 
-//            XProcessDialogHex xpdh(this,&binary);
-//            xpdh.exec();
+            options.sTitle=sName;
+            options.nStartAddress=nImageAddress;
+
+            DialogHexView dialogHexView(this,&pd,options);
+            // TODO setShortcuts
+            dialogHexView.exec();
 
             pd.close();
         }
     }
 }
 
+void XProcessWidget::_memoryStrings()
+{
+    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
+
+    if(listSelected.count())
+    {
+        qint64 nPID=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_PID).toLongLong();
+        qint64 nImageAddress=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_IMAGEADDRESS).toLongLong();
+        qint64 nImageSize=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_IMAGESIZE).toLongLong();
+        QString sName=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_NAME).toString();
+
+        XProcessDevice pd;
+        if(pd.openPID(nPID,nImageAddress,nImageSize,QIODevice::ReadOnly))
+        {
+            SearchStringsWidget::OPTIONS options={};
+            options.bAnsi=true;
+            options.bUnicode=true;
+            options.bCStrings=true;
+            options.sTitle=sName;
+
+            DialogSearchStrings dialogSearchStrings(this);
+
+            dialogSearchStrings.setData(&pd,options,true);
+            // TODO setShortcuts
+            dialogSearchStrings.exec();
+
+            pd.close();
+        }
+    }
+}
+
+void XProcessWidget::_memorySignatures()
+{
+    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
+
+    if(listSelected.count())
+    {
+        qint64 nPID=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_PID).toLongLong();
+        qint64 nImageAddress=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_IMAGEADDRESS).toLongLong();
+        qint64 nImageSize=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_IMAGESIZE).toLongLong();
+        QString sName=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_NAME).toString();
+
+        XProcessDevice pd;
+        if(pd.openPID(nPID,nImageAddress,nImageSize,QIODevice::ReadOnly))
+        {
+            // TODO
+
+            pd.close();
+        }
+    }
+}
+
+void XProcessWidget::_fileViewer()
+{
+    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
+
+    if(listSelected.count())
+    {
+        QString sFilePath=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_FILEPATH).toString();
+
+        QFile file;
+
+        file.setFileName(sFilePath);
+
+        if(file.open(QIODevice::ReadOnly))
+        {
+            FW_DEF::OPTIONS options={};
+
+            // TODO set pathes
+            options.sTitle=sFilePath;
+            options.nStartType=SPE::TYPE_HEURISTICSCAN;
+
+            // TODO Windows/Linux/OSX
+            DialogPE dialogPE(this);
+            // TODO Shortcuts
+            dialogPE.setData(&file,options);
+
+            dialogPE.exec();
+
+            file.close();
+        }
+    }
+}
+
 void XProcessWidget::_structs()
 {
-    if(ui->tableWidgetProcesses->selectedItems().count())
+    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
+
+    if(listSelected.count())
     {
-        qint64 nPID=ui->tableWidgetProcesses->selectedItems().at(COLUMN_ID)->data(Qt::DisplayRole).toLongLong();
+        qint64 nPID=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_PID).toLongLong();
 
 //        XProcessDialogSystemStructs xpdss(this);
 
@@ -165,25 +282,27 @@ void XProcessWidget::_structs()
 
 void XProcessWidget::_dumpToFile()
 {
-//    QString sFilter;
-//    sFilter+=QString("%1 (*.bin)").arg(tr("Raw data"));
-//    QString sSaveFileName=XBinary::getResultFileName(getDevice(),QString("%1.bin").arg(tr("Dump")));
-//    QString sFileName=QFileDialog::getSaveFileName(this,tr("Save dump"),sSaveFileName,sFilter);
+    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
 
-//    if(!sFileName.isEmpty())
-//    {
-//        STATE state=getState();
+    if(listSelected.count())
+    {
+        qint64 nPID=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_PID).toLongLong();
+        qint64 nImageAddress=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_IMAGEADDRESS).toLongLong();
+        qint64 nImageSize=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_IMAGESIZE).toLongLong();
+        QString sName=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_NAME).toString();
 
-//        DialogDumpProcess dd(this,getDevice(),state.nSelectionOffset,state.nSelectionSize,sFileName,DumpProcess::DT_OFFSET);
+        XProcessDevice pd;
+        if(pd.openPID(nPID,nImageAddress,nImageSize,QIODevice::ReadOnly))
+        {
+            QString sFileName=sName;
 
-//        dd.exec();
-//    }
-}
+            DialogDumpProcess dialogDumpProcess(this,&pd,0,nImageSize,sFileName,DumpProcess::DT_OFFSET);
 
-void XProcessWidget::_strings()
-{
-    // TODO
-    qDebug("Strings");
+            dialogDumpProcess.exec();
+
+            pd.close();
+        }
+    }
 }
 
 void XProcessWidget::on_pushButtonProcessesReload_clicked()
@@ -193,9 +312,8 @@ void XProcessWidget::on_pushButtonProcessesReload_clicked()
 
 void XProcessWidget::on_pushButtonProcessStructs_clicked()
 {
-
+    _structs();
 }
-
 
 void XProcessWidget::on_pushButtonProcessesSave_clicked()
 {
@@ -204,20 +322,25 @@ void XProcessWidget::on_pushButtonProcessesSave_clicked()
 
 void XProcessWidget::on_pushButtonProcessHex_clicked()
 {
-
+    _memoryHex();
 }
 
 void XProcessWidget::on_pushButtonProcessStrings_clicked()
 {
-
+    _memoryStrings();
 }
 
 void XProcessWidget::on_pushButtonSignatures_clicked()
 {
-
+    _memorySignatures();
 }
 
 void XProcessWidget::registerShortcuts(bool bState)
 {
 
+}
+
+void XProcessWidget::on_pushButtonProcessesFileViewer_clicked()
+{
+    _fileViewer();
 }

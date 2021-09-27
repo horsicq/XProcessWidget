@@ -28,7 +28,9 @@
 #include "xprocessdevice.h"
 #include "xpe.h"
 #include "xshortcutswidget.h"
-#include "dialogdumpprocess.h"
+#include "dialoghexview.h"
+#include "dialogsearchstrings.h"
+#include "dialogpe.h";
 
 namespace Ui {
 class XProcessWidget;
@@ -46,6 +48,15 @@ class XProcessWidget : public XShortcutsWidget
         COLUMN_size
     };
 
+    enum CBDATA
+    {
+        CBDATA_PID=0,
+        CBDATA_NAME,
+        CBDATA_FILEPATH,
+        CBDATA_IMAGEADDRESS,
+        CBDATA_IMAGESIZE
+    };
+
 public:
     explicit XProcessWidget(QWidget *pParent=nullptr);
     ~XProcessWidget();
@@ -56,16 +67,18 @@ private slots:
 
     void on_tableWidgetProcesses_customContextMenuRequested(const QPoint &pos);
     void _memoryHex();
-    void _hexMemory();
+    void _memoryStrings();
+    void _memorySignatures();
+    void _fileViewer();
     void _structs();
     void _dumpToFile();
-    void _strings();
     void on_pushButtonProcessesReload_clicked();
     void on_pushButtonProcessStructs_clicked();
     void on_pushButtonProcessesSave_clicked();
     void on_pushButtonProcessHex_clicked();
     void on_pushButtonProcessStrings_clicked();
     void on_pushButtonSignatures_clicked();
+    void on_pushButtonProcessesFileViewer_clicked();
 
 protected:
     virtual void registerShortcuts(bool bState);
