@@ -201,6 +201,7 @@ void XProcessWidget::_memoryStrings()
             options.bUnicode=true;
             options.bCStrings=true;
             options.sTitle=sName;
+            options.nBaseAddress=nImageAddress;
 
             DialogSearchStrings dialogSearchStrings(this);
 
