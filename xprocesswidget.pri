@@ -21,7 +21,7 @@ SOURCES += \
     include($$PWD/../FormatWidgets/allformatwidgets.pri)
 }
 
-!contains(XCONFIG, allformatwidgets) {
-    XCONFIG += allformatwidgets
+!contains(XCONFIG, xdynstructswidget) {
+    XCONFIG += xdynstructswidget
     include($$PWD/../XDynStructsWidget/xdynstructswidget.pri)
 }

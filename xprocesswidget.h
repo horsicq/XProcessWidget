@@ -1,4 +1,4 @@
-// copyright (c) 2020 hors<horsicq@gmail.com>
+// copyright (c) 2020-2021  hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,8 +21,6 @@
 #ifndef XPROCESSWIDGET_H
 #define XPROCESSWIDGET_H
 
-#include <QWidget>
-#include <QMenu>
 #include "xoptions.h"
 #include "xprocess.h"
 #include "xprocessdevice.h"
@@ -30,7 +28,8 @@
 #include "xshortcutswidget.h"
 #include "dialoghexview.h"
 #include "dialogsearchstrings.h"
-#include "dialogpe.h";
+#include "dialogpe.h"
+#include "dialogxdynstructs.h"
 
 namespace Ui {
 class XProcessWidget;

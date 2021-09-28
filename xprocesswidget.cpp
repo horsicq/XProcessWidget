@@ -1,4 +1,4 @@
-// copyright (c) 2020 hors<horsicq@gmail.com>
+// copyright (c) 2020-2021 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -275,9 +275,11 @@ void XProcessWidget::_structs()
     {
         qint64 nPID=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_PID).toLongLong();
 
-//        XProcessDialogSystemStructs xpdss(this);
+        DialogXDynStructs dialogXDynStructs(this);
 
-//        xpdss.exec();
+        dialogXDynStructs.setData(nPID);
+        // TODO Shortcuts
+        dialogXDynStructs.exec();
     }
 }
 
@@ -318,7 +320,13 @@ void XProcessWidget::on_pushButtonProcessStructs_clicked()
 
 void XProcessWidget::on_pushButtonProcessesSave_clicked()
 {
+    QString sFileName=tr("Processes");
+    sFileName=QFileDialog::getSaveFileName(this, tr("Save file"),sFileName, QString("%1 (*.txt);;%2 (*)").arg(tr("Text files"),tr("All files")));
 
+    if(!sFileName.isEmpty())
+    {
+        XOptions::saveTableWidget(ui->tableWidgetProcesses,sFileName);
+    }
 }
 
 void XProcessWidget::on_pushButtonProcessHex_clicked()
@@ -338,7 +346,7 @@ void XProcessWidget::on_pushButtonSignatures_clicked()
 
 void XProcessWidget::registerShortcuts(bool bState)
 {
-
+    // TODO
 }
 
 void XProcessWidget::on_pushButtonProcessesFileViewer_clicked()
