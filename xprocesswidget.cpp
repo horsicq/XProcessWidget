@@ -274,10 +274,11 @@ void XProcessWidget::_structs()
     if(listSelected.count())
     {
         qint64 nPID=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_PID).toLongLong();
+        qint64 nImageAddress=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_IMAGEADDRESS).toLongLong();
 
         DialogXDynStructs dialogXDynStructs(this);
 
-        dialogXDynStructs.setData(nPID);
+        dialogXDynStructs.setData(nPID,nImageAddress);
         // TODO Shortcuts
         dialogXDynStructs.exec();
     }
