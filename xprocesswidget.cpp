@@ -27,6 +27,8 @@ XProcessWidget::XProcessWidget(QWidget *pParent) :
 {
     ui->setupUi(this);
 
+    g_scProcessSctruct=nullptr;
+
     // mb TODO auto refresh
 
     ui->tableWidgetProcesses->setColumnCount(COLUMN_size);
@@ -123,6 +125,7 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
         QMenu menuContext(this);
 
         QAction actionStructs(tr("Structs"),this);
+        actionStructs.setShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_STRUCTS));
         connect(&actionStructs,SIGNAL(triggered()),this,SLOT(_structs()));
         menuContext.addAction(&actionStructs);
 
@@ -347,7 +350,21 @@ void XProcessWidget::on_pushButtonSignatures_clicked()
 
 void XProcessWidget::registerShortcuts(bool bState)
 {
-    // TODO
+//    ID_PROCESS_STRUCTS,
+//    ID_PROCESS_MEMORY_HEX,
+//    ID_PROCESS_MEMORY_STRINGS,
+//    ID_PROCESS_MEMORY_SIGNATURES,
+//    ID_PROCESS_FILE_VIEWER,
+//    ID_PROCESS_DUMPTOFILE,
+
+    if(bState)
+    {
+        if(!g_scProcessSctruct)           g_scProcessSctruct        =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_STRUCTS),         this,SLOT(_struct()));
+    }
+    else
+    {
+        if(g_scProcessSctruct)            {delete g_scProcessSctruct;           g_scProcessSctruct=nullptr;}
+    }
 }
 
 void XProcessWidget::on_pushButtonProcessesFileViewer_clicked()

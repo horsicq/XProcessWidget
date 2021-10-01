@@ -84,6 +84,8 @@ protected:
 
 private:
     Ui::XProcessWidget *ui;
+
+    QShortcut *g_scProcessSctruct;
 };
 
 #endif // XPROCESSWIDGET_H
