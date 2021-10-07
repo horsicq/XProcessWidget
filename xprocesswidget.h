@@ -30,6 +30,7 @@
 #include "dialogsearchstrings.h"
 #include "dialogpe.h"
 #include "dialogxdynstructs.h"
+#include "dialogsearchsignatures.h"
 
 namespace Ui {
 class XProcessWidget;
@@ -57,9 +58,16 @@ class XProcessWidget : public XShortcutsWidget
     };
 
 public:
+    struct OPTIONS
+    {
+        QString sStructsPath;
+        QString sSearchSignaturesPath;
+    };
+
     explicit XProcessWidget(QWidget *pParent=nullptr);
     ~XProcessWidget();
-    // TODO setOptions
+    void setOptions(OPTIONS options);
+    void setShortcuts(XShortcuts *pShortcuts);
 
 private slots:
     void reload();
@@ -85,6 +93,7 @@ protected:
 private:
     Ui::XProcessWidget *ui;
 
+    OPTIONS g_options;
     QShortcut *g_scProcessSctruct;
 };
 

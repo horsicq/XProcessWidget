@@ -54,6 +54,16 @@ XProcessWidget::~XProcessWidget()
     delete ui;
 }
 
+void XProcessWidget::setOptions(OPTIONS options)
+{
+    g_options=options;
+}
+
+void XProcessWidget::setShortcuts(XShortcuts *pShortcuts)
+{
+    XShortcutsWidget::setShortcuts(pShortcuts);
+}
+
 void XProcessWidget::reload()
 {
     // TODO TableView
@@ -139,6 +149,10 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
         connect(&actionMemoryStrings,SIGNAL(triggered()),this,SLOT(_memoryStrings()));
         menuMemory.addAction(&actionMemoryStrings);
 
+        QAction actionMemorySignatures(tr("Signatures"),this);
+        connect(&actionMemorySignatures,SIGNAL(triggered()),this,SLOT(_memorySignatures()));
+        menuMemory.addAction(&actionMemorySignatures);
+
         menuContext.addMenu(&menuMemory);
 
         QMenu menuFile(tr("File"),this);
@@ -209,7 +223,8 @@ void XProcessWidget::_memoryStrings()
             DialogSearchStrings dialogSearchStrings(this);
 
             dialogSearchStrings.setData(&pd,options,true);
-            // TODO setShortcuts
+            dialogSearchStrings.setShortcuts(getShortcuts());
+
             dialogSearchStrings.exec();
 
             pd.close();
@@ -231,7 +246,13 @@ void XProcessWidget::_memorySignatures()
         XProcessDevice pd;
         if(pd.openPID(nPID,nImageAddress,nImageSize,QIODevice::ReadOnly))
         {
-            // TODO
+            DialogSearchSignatures dialogSearchSignatures(this);
+
+            SearchSignaturesWidget::OPTIONS options={};
+            options.sSignaturesPath=g_options.sSearchSignaturesPath;
+
+            dialogSearchSignatures.setData(&pd,XBinary::FT_BINARY,options,false);
+            dialogSearchSignatures.setShortcuts(getShortcuts());
 
             pd.close();
         }
@@ -254,14 +275,14 @@ void XProcessWidget::_fileViewer()
         {
             FW_DEF::OPTIONS options={};
 
-            // TODO set pathes
             options.sTitle=sFilePath;
             options.nStartType=SPE::TYPE_HEURISTICSCAN;
+            options.sSearchSignaturesPath=g_options.sSearchSignaturesPath;
 
             // TODO Windows/Linux/OSX
             DialogPE dialogPE(this);
-            // TODO Shortcuts
             dialogPE.setData(&file,options);
+            dialogPE.setShortcuts(getShortcuts());
 
             dialogPE.exec();
 
@@ -282,7 +303,7 @@ void XProcessWidget::_structs()
         DialogXDynStructs dialogXDynStructs(this);
 
         dialogXDynStructs.setData(nPID,nImageAddress);
-        // TODO Shortcuts
+        dialogXDynStructs.setShortcuts(getShortcuts());
         dialogXDynStructs.exec();
     }
 }
