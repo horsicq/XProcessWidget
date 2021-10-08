@@ -77,6 +77,7 @@ private slots:
     void _memoryStrings();
     void _memorySignatures();
     void _fileViewer();
+    void _fileCopyFileName();
     void _structs();
     void _dumpToFile();
     void on_pushButtonProcessesReload_clicked();
@@ -95,6 +96,12 @@ private:
 
     OPTIONS g_options;
     QShortcut *g_scProcessSctruct;
+    QShortcut *g_scProcessDumpToFile;
+    QShortcut *g_scProcessMemoryHex;
+    QShortcut *g_scProcessMemoryStrings;
+    QShortcut *g_scProcessMemorySignatures;
+    QShortcut *g_scProcessFileViewer;
+    QShortcut *g_scProcessFileCopyFileName;
 };
 
 #endif // XPROCESSWIDGET_H
