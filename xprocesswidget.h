@@ -28,9 +28,15 @@
 #include "xshortcutswidget.h"
 #include "dialoghexview.h"
 #include "dialogsearchstrings.h"
-#include "dialogpe.h"
 #include "dialogxdynstructs.h"
 #include "dialogsearchsignatures.h"
+
+#ifdef Q_OS_WIN
+#include "dialogpe.h"
+#endif
+#ifdef Q_OS_LINUX
+#include "dialogelf.h"
+#endif
 
 namespace Ui {
 class XProcessWidget;

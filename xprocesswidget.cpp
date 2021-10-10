@@ -167,7 +167,17 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
 
         QMenu menuFile(tr("File"),this);
 
-        QAction actionFileViewer(QString("PE %1").arg(tr("Viewer")),this); // TODO Windows/Linux/OSX
+        QString sFileViewer=tr("Viewer");
+
+    #ifdef Q_OS_WIN
+        sFileViewer=QString("PE %1").arg(tr("Viewer"));
+    #endif
+    #ifdef Q_OS_LINUX
+        sFileViewer=QString("ELF %1").arg(tr("Viewer"));
+    #endif
+        // TODO mac
+
+        QAction actionFileViewer(sFileViewer,this);
         actionFileViewer.setShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_FILE_VIEWER));
         connect(&actionFileViewer,SIGNAL(triggered()),this,SLOT(_fileViewer()));
         menuFile.addAction(&actionFileViewer);
@@ -292,18 +302,33 @@ void XProcessWidget::_fileViewer()
 
         if(file.open(QIODevice::ReadOnly))
         {
+        #ifdef Q_OS_WIN
             FW_DEF::OPTIONS options={};
 
             options.sTitle=sFilePath;
             options.nStartType=SPE::TYPE_HEURISTICSCAN;
             options.sSearchSignaturesPath=g_options.sSearchSignaturesPath;
 
-            // TODO Windows/Linux/OSX
             DialogPE dialogPE(this);
             dialogPE.setData(&file,options);
             dialogPE.setShortcuts(getShortcuts());
 
             dialogPE.exec();
+        #endif
+        #ifdef Q_OS_LINUX
+            FW_DEF::OPTIONS options={};
+
+            options.sTitle=sFilePath;
+            options.nStartType=SELF::TYPE_HEURISTICSCAN;
+            options.sSearchSignaturesPath=g_options.sSearchSignaturesPath;
+
+            DialogELF dialogELF(this);
+            dialogELF.setData(&file,options);
+            dialogELF.setShortcuts(getShortcuts());
+
+            dialogELF.exec();
+        #endif
+            // TODO OSX
 
             file.close();
         }
@@ -391,7 +416,7 @@ void XProcessWidget::on_pushButtonProcessStructs_clicked()
 
 void XProcessWidget::on_pushButtonProcessesSave_clicked()
 {
-    QString sFileName=tr("Processes");
+    QString sFileName=QString("%1.txt").arg(tr("Processes"));
     sFileName=QFileDialog::getSaveFileName(this, tr("Save file"),sFileName, QString("%1 (*.txt);;%2 (*)").arg(tr("Text files"),tr("All files")));
 
     if(!sFileName.isEmpty())
