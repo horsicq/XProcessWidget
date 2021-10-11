@@ -64,6 +64,13 @@ XProcessWidget::~XProcessWidget()
 void XProcessWidget::setOptions(OPTIONS options)
 {
     g_options=options;
+
+    XDynStructsEngine::OPTIONS dynStructsOptions={};
+    dynStructsOptions.bCustom=true;
+    dynStructsOptions.bGeneral=true;
+    dynStructsOptions.bSystem=true;
+
+    dynStructsEngine.setStructsPath(options.sStructsPath,dynStructsOptions);
 }
 
 void XProcessWidget::setShortcuts(XShortcuts *pShortcuts)
@@ -354,21 +361,14 @@ void XProcessWidget::_structs()
 
     if(listSelected.count())
     {
-        qint64 nPID=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_PID).toLongLong();
+        qint64 nProcessId=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_PID).toLongLong();
         qint64 nImageAddress=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_IMAGEADDRESS).toLongLong();
+
+        dynStructsEngine.setProcessId(nProcessId);
 
         DialogXDynStructs dialogXDynStructs(this);
 
-        XDynStructsEngine::OPTIONS options={};
-
-        options.nProcessId=nPID;
-        options.nAddress=nImageAddress;
-        options.sStructsPath=g_options.sStructsPath;
-        options.bSystem=true;
-        options.bGeneral=true;
-        options.bCustom=true;
-
-        dialogXDynStructs.setData(options);
+        dialogXDynStructs.setData(&dynStructsEngine,nImageAddress);
         dialogXDynStructs.setShortcuts(getShortcuts());
 
         dialogXDynStructs.exec();

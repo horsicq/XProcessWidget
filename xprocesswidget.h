@@ -101,6 +101,7 @@ private:
     Ui::XProcessWidget *ui;
 
     OPTIONS g_options;
+    XDynStructsEngine dynStructsEngine;
     QShortcut *g_scProcessSctruct;
     QShortcut *g_scProcessDumpToFile;
     QShortcut *g_scProcessMemoryHex;
