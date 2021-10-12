@@ -36,6 +36,8 @@ XProcessWidget::XProcessWidget(QWidget *pParent) :
     g_scProcessFileViewer=nullptr;
     g_scProcessFileCopyFileName=nullptr;
 
+    connect(&dynStructsEngine,SIGNAL(errorMessage(QString)),this,SLOT(errorMessageSlot(QString)));
+
     // mb TODO auto refresh
 
     ui->tableWidgetProcesses->setColumnCount(COLUMN_size);
@@ -467,4 +469,9 @@ void XProcessWidget::registerShortcuts(bool bState)
 void XProcessWidget::on_pushButtonProcessesFileViewer_clicked()
 {
     _fileViewer();
+}
+
+void XProcessWidget::errorMessageSlot(QString sErrorMessage)
+{
+    QMessageBox::critical(XOptions::getMainWidget(this),tr("Error"),sErrorMessage);
 }

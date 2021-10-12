@@ -93,6 +93,7 @@ private slots:
     void on_pushButtonProcessStrings_clicked();
     void on_pushButtonSignatures_clicked();
     void on_pushButtonProcessesFileViewer_clicked();
+    void errorMessageSlot(QString sErrorMessage);
 
 protected:
     virtual void registerShortcuts(bool bState);
