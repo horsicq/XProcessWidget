@@ -55,6 +55,8 @@ XProcessWidget::XProcessWidget(QWidget *pParent) :
     ui->tableWidgetProcesses->horizontalHeader()->setSectionResizeMode(COLUMN_NAME,QHeaderView::Interactive);
     ui->tableWidgetProcesses->horizontalHeader()->setSectionResizeMode(COLUMN_FILENAME,QHeaderView::Stretch);
 
+    ui->labelBuild->setText(XProcess::getSystemInfo().sBuild);
+
     reload();
 }
 
@@ -227,7 +229,9 @@ void XProcessWidget::_memoryHex()
             options.nStartAddress=nImageAddress;
 
             DialogHexView dialogHexView(this,&pd,options);
-            // TODO setShortcuts
+
+            dialogHexView.setShortcuts(getShortcuts());
+
             dialogHexView.exec();
 
             pd.close();
@@ -446,7 +450,7 @@ void XProcessWidget::registerShortcuts(bool bState)
 {
     if(bState)
     {
-        if(!g_scProcessSctruct)             g_scProcessSctruct                  =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_STRUCTS),             this,SLOT(_struct()));
+        if(!g_scProcessSctruct)             g_scProcessSctruct                  =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_STRUCTS),             this,SLOT(_structs()));
         if(!g_scProcessDumpToFile)          g_scProcessDumpToFile               =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_DUMPTOFILE),          this,SLOT(_dumpToFile()));
         if(!g_scProcessMemoryHex)           g_scProcessMemoryHex                =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_HEX),          this,SLOT(_memoryHex()));
         if(!g_scProcessMemoryStrings)       g_scProcessMemoryStrings            =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_STRINGS),      this,SLOT(_memoryStrings()));
