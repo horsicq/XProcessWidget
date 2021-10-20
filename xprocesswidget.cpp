@@ -321,6 +321,7 @@ void XProcessWidget::_fileViewer()
             options.sTitle=sFilePath;
             options.nStartType=SPE::TYPE_HEURISTICSCAN;
             options.sSearchSignaturesPath=g_options.sSearchSignaturesPath;
+            options.nImageBase=-1;
 
             DialogPE dialogPE(this);
             dialogPE.setData(&file,options);
@@ -334,6 +335,7 @@ void XProcessWidget::_fileViewer()
             options.sTitle=sFilePath;
             options.nStartType=SELF::TYPE_HEURISTICSCAN;
             options.sSearchSignaturesPath=g_options.sSearchSignaturesPath;
+            options.nImageBase=-1;
 
             DialogELF dialogELF(this);
             dialogELF.setData(&file,options);
