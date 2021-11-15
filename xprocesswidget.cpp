@@ -55,7 +55,7 @@ XProcessWidget::XProcessWidget(QWidget *pParent) :
     ui->tableWidgetProcesses->horizontalHeader()->setSectionResizeMode(COLUMN_NAME,QHeaderView::Interactive);
     ui->tableWidgetProcesses->horizontalHeader()->setSectionResizeMode(COLUMN_FILENAME,QHeaderView::Stretch);
 
-    ui->labelBuild->setText(XProcess::getSystemInfo().sBuild);
+    ui->labelBuild->setText(XProcess::getOsInfo().sBuild);
 
     reload();
 }
