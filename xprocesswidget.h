@@ -1,4 +1,4 @@
-// copyright (c) 2020-2021  hors<horsicq@gmail.com>
+// Copyright (c) 2020-2021  hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -64,16 +64,16 @@ class XProcessWidget : public XShortcutsWidget
     };
 
 public:
-    struct OPTIONS
-    {
-        QString sStructsPath;
-        QString sSearchSignaturesPath;
-    };
+//    struct OPTIONS
+//    {
+//        QString sStructsPath;
+//        QString sSearchSignaturesPath;
+//    };
 
     explicit XProcessWidget(QWidget *pParent=nullptr);
     ~XProcessWidget();
-    void setOptions(OPTIONS options);
-    void setShortcuts(XShortcuts *pShortcuts);
+//    void setOptions(OPTIONS options);
+    void setGlobal(XShortcuts *pShortcuts,XOptions *pXOptions);
 
 private slots:
     void reload();
@@ -101,7 +101,7 @@ protected:
 private:
     Ui::XProcessWidget *ui;
 
-    OPTIONS g_options;
+//    OPTIONS g_options;
     XDynStructsEngine dynStructsEngine;
     QShortcut *g_scProcessSctruct;
     QShortcut *g_scProcessDumpToFile;

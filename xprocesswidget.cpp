@@ -65,21 +65,23 @@ XProcessWidget::~XProcessWidget()
     delete ui;
 }
 
-void XProcessWidget::setOptions(OPTIONS options)
+//void XProcessWidget::setOptions(OPTIONS options)
+//{
+//    g_options=options;
+
+//    XDynStructsEngine::OPTIONS dynStructsOptions={};
+//    dynStructsOptions.bCustom=true;
+//    dynStructsOptions.bGeneral=true;
+//    dynStructsOptions.bSystem=true;
+
+//    dynStructsEngine.setStructsPath(options.sStructsPath,dynStructsOptions);
+//}
+
+void XProcessWidget::setGlobal(XShortcuts *pShortcuts,XOptions *pXOptions)
 {
-    g_options=options;
-
-    XDynStructsEngine::OPTIONS dynStructsOptions={};
-    dynStructsOptions.bCustom=true;
-    dynStructsOptions.bGeneral=true;
-    dynStructsOptions.bSystem=true;
-
-    dynStructsEngine.setStructsPath(options.sStructsPath,dynStructsOptions);
-}
-
-void XProcessWidget::setShortcuts(XShortcuts *pShortcuts)
-{
-    XShortcutsWidget::setShortcuts(pShortcuts);
+    // TODO
+    XShortcutsWidget::setGlobal(pShortcuts,pXOptions);
+    dynStructsEngine.setOptions(pXOptions);
 }
 
 void XProcessWidget::reload()
@@ -230,7 +232,7 @@ void XProcessWidget::_memoryHex()
 
             DialogHexView dialogHexView(this,&pd,options);
 
-            dialogHexView.setShortcuts(getShortcuts());
+            dialogHexView.setGlobal(getShortcuts(),getGlobalOptions());
 
             dialogHexView.exec();
 
@@ -263,7 +265,7 @@ void XProcessWidget::_memoryStrings()
             DialogSearchStrings dialogSearchStrings(this);
 
             dialogSearchStrings.setData(&pd,options,true);
-            dialogSearchStrings.setShortcuts(getShortcuts());
+            dialogSearchStrings.setGlobal(getShortcuts(),getGlobalOptions());
 
             dialogSearchStrings.exec();
 
@@ -289,10 +291,9 @@ void XProcessWidget::_memorySignatures()
             DialogSearchSignatures dialogSearchSignatures(this);
 
             SearchSignaturesWidget::OPTIONS options={};
-            options.sSignaturesPath=g_options.sSearchSignaturesPath;
 
             dialogSearchSignatures.setData(&pd,XBinary::FT_REGION,options,false);
-            dialogSearchSignatures.setShortcuts(getShortcuts());
+            dialogSearchSignatures.setGlobal(getShortcuts(),getGlobalOptions());
 
             dialogSearchSignatures.exec();
 
@@ -320,12 +321,12 @@ void XProcessWidget::_fileViewer()
 
             options.sTitle=sFilePath;
             options.nStartType=SPE::TYPE_HEURISTICSCAN;
-            options.sSearchSignaturesPath=g_options.sSearchSignaturesPath;
+//            options.sSearchSignaturesPath=g_options.sSearchSignaturesPath;
             options.nImageBase=-1;
 
             DialogPE dialogPE(this);
             dialogPE.setData(&file,options);
-            dialogPE.setShortcuts(getShortcuts());
+            dialogPE.setGlobal(getShortcuts(),getGlobalOptions());
 
             dialogPE.exec();
         #endif
@@ -377,7 +378,7 @@ void XProcessWidget::_structs()
         DialogXDynStructs dialogXDynStructs(this);
 
         dialogXDynStructs.setData(&dynStructsEngine,nImageAddress);
-        dialogXDynStructs.setShortcuts(getShortcuts());
+        dialogXDynStructs.setGlobal(getShortcuts(),getGlobalOptions());
 
         dialogXDynStructs.exec();
     }
