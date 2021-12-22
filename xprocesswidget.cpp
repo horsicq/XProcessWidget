@@ -99,14 +99,14 @@ void XProcessWidget::reload()
 
     QList<XProcess::PROCESS_INFO> listProcesses=XProcess::getProcessesList();
 
-    int nCount=listProcesses.count();
+    qint32 nCount=listProcesses.count();
 
     ui->tableWidgetProcesses->setSortingEnabled(false);
 
     ui->tableWidgetProcesses->setRowCount(0);
     ui->tableWidgetProcesses->setRowCount(nCount);
 
-    for(int i=0;i<nCount;i++)
+    for(qint32 i=0;i<nCount;i++)
     {
         QTableWidgetItem *pItemID=new QTableWidgetItem;
         pItemID->setData(Qt::DisplayRole,listProcesses.at(i).nID);
