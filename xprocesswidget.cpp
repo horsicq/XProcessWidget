@@ -131,7 +131,7 @@ void XProcessWidget::reload()
     // Restore row
     if(nPID!=-1)
     {
-        for(int i=0;i<nCount;i++)
+        for(qint32 i=0;i<nCount;i++)
         {
             qint64 _nPID=ui->tableWidgetProcesses->item(i,COLUMN_ID)->data(Qt::UserRole+CBDATA_PID).toLongLong();
 
