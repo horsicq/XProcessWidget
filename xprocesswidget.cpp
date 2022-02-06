@@ -426,7 +426,7 @@ void XProcessWidget::on_pushButtonProcessStructs_clicked()
 void XProcessWidget::on_pushButtonProcessesSave_clicked()
 {
     QString sFileName=QString("%1.txt").arg(tr("Processes"));
-    sFileName=QFileDialog::getSaveFileName(this, tr("Save file"),sFileName, QString("%1 (*.txt);;%2 (*)").arg(tr("Text files"),tr("All files")));
+    sFileName=QFileDialog::getSaveFileName(this,tr("Save file"),sFileName, QString("%1 (*.txt);;%2 (*)").arg(tr("Text files"),tr("All files")));
 
     if(!sFileName.isEmpty())
     {
