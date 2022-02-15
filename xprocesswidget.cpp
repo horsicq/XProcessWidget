@@ -27,14 +27,7 @@ XProcessWidget::XProcessWidget(QWidget *pParent) :
 {
     ui->setupUi(this);
 
-    g_scProcessSctruct=nullptr;
-    g_scProcessSctruct=nullptr;
-    g_scProcessDumpToFile=nullptr;
-    g_scProcessMemoryHex=nullptr;
-    g_scProcessMemoryStrings=nullptr;
-    g_scProcessMemorySignatures=nullptr;
-    g_scProcessFileViewer=nullptr;
-    g_scProcessFileCopyFileName=nullptr;
+    memset(shortCuts,0,sizeof shortCuts);
 
     connect(&dynStructsEngine,SIGNAL(errorMessage(QString)),this,SLOT(errorMessageSlot(QString)));
 
@@ -176,6 +169,16 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
         connect(&actionMemorySignatures,SIGNAL(triggered()),this,SLOT(_memorySignatures()));
         menuMemory.addAction(&actionMemorySignatures);
 
+        QAction actionMemoryMap(tr("Memory map"),this);
+        actionMemoryMap.setShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORYMAP));
+        connect(&actionMemoryMap,SIGNAL(triggered()),this,SLOT(_memoryMap()));
+        menuMemory.addAction(&actionMemoryMap);
+
+        QAction actionModules(tr("Modules"),this);
+        actionModules.setShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MODULES));
+        connect(&actionModules,SIGNAL(triggered()),this,SLOT(_modules()));
+        menuMemory.addAction(&actionModules);
+
         menuContext.addMenu(&menuMemory);
 
         QMenu menuFile(tr("File"),this);
@@ -299,6 +302,32 @@ void XProcessWidget::_memorySignatures()
 
             pd.close();
         }
+    }
+}
+
+void XProcessWidget::_memoryMap()
+{
+    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
+
+    if(listSelected.count())
+    {
+        qint64 nPID=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_PID).toLongLong();
+
+        qDebug("_memoryMap");
+        // TODO
+    }
+}
+
+void XProcessWidget::_modules()
+{
+    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
+
+    if(listSelected.count())
+    {
+        qint64 nPID=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_PID).toLongLong();
+
+        qDebug("_modules");
+        // TODO
     }
 }
 
@@ -449,27 +478,41 @@ void XProcessWidget::on_pushButtonSignatures_clicked()
     _memorySignatures();
 }
 
+void XProcessWidget::on_pushButtonProcessMemoryMap_clicked()
+{
+    _memoryMap();
+}
+
+void XProcessWidget::on_pushButtonProcessModules_clicked()
+{
+    _modules();
+}
+
 void XProcessWidget::registerShortcuts(bool bState)
 {
     if(bState)
     {
-        if(!g_scProcessSctruct)             g_scProcessSctruct                  =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_STRUCTS),             this,SLOT(_structs()));
-        if(!g_scProcessDumpToFile)          g_scProcessDumpToFile               =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_DUMPTOFILE),          this,SLOT(_dumpToFile()));
-        if(!g_scProcessMemoryHex)           g_scProcessMemoryHex                =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_HEX),          this,SLOT(_memoryHex()));
-        if(!g_scProcessMemoryStrings)       g_scProcessMemoryStrings            =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_STRINGS),      this,SLOT(_memoryStrings()));
-        if(!g_scProcessMemorySignatures)    g_scProcessMemorySignatures         =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_SIGNATURES),   this,SLOT(_memorySignatures()));
-        if(!g_scProcessFileViewer)          g_scProcessFileViewer               =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_FILE_VIEWER),         this,SLOT(_fileViewer()));
-        if(!g_scProcessFileCopyFileName)    g_scProcessFileCopyFileName         =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_FILE_COPYFILENAME),   this,SLOT(_fileCopyFileName()));
+        if(!shortCuts[SC_PROCESSSCTRUCT])               shortCuts[SC_PROCESSSCTRUCT]                    =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_STRUCTS),             this,SLOT(_structs()));
+        if(!shortCuts[SC_PROCESSDUMPTOFILE])            shortCuts[SC_PROCESSDUMPTOFILE]                 =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_DUMPTOFILE),          this,SLOT(_dumpToFile()));
+        if(!shortCuts[SC_PROCESSMEMORYHEX])             shortCuts[SC_PROCESSMEMORYHEX]                  =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_HEX),          this,SLOT(_memoryHex()));
+        if(!shortCuts[SC_PROCESSMEMORYSTRINGS])         shortCuts[SC_PROCESSMEMORYSTRINGS]              =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_STRINGS),      this,SLOT(_memoryStrings()));
+        if(!shortCuts[SC_PROCESSMEMORYSIGNATURES])      shortCuts[SC_PROCESSMEMORYSIGNATURES]           =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_SIGNATURES),   this,SLOT(_memorySignatures()));
+        if(!shortCuts[SC_PROCESSFILEVIEWER])            shortCuts[SC_PROCESSFILEVIEWER]                 =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_FILE_VIEWER),         this,SLOT(_fileViewer()));
+        if(!shortCuts[SC_PROCESSFILECOPYFILENAME])      shortCuts[SC_PROCESSFILECOPYFILENAME]           =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_FILE_COPYFILENAME),   this,SLOT(_fileCopyFileName()));
+        if(!shortCuts[SC_PROCESSMEMORYMAP])             shortCuts[SC_PROCESSMEMORYMAP]                  =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORYMAP),           this,SLOT(_memoryMap()));
+        if(!shortCuts[SC_PROCESSMODULES])               shortCuts[SC_PROCESSMODULES]                    =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MODULES),             this,SLOT(_modules()));
     }
     else
     {
-        if(g_scProcessSctruct)              {delete g_scProcessSctruct;                 g_scProcessSctruct=nullptr;}
-        if(g_scProcessDumpToFile)           {delete g_scProcessDumpToFile;              g_scProcessDumpToFile=nullptr;}
-        if(g_scProcessMemoryHex)            {delete g_scProcessMemoryHex;               g_scProcessMemoryHex=nullptr;}
-        if(g_scProcessMemoryStrings)        {delete g_scProcessMemoryStrings;           g_scProcessMemoryStrings=nullptr;}
-        if(g_scProcessMemorySignatures)     {delete g_scProcessMemorySignatures;        g_scProcessMemorySignatures=nullptr;}
-        if(g_scProcessFileViewer)           {delete g_scProcessFileViewer;              g_scProcessFileViewer=nullptr;}
-        if(g_scProcessFileCopyFileName)     {delete g_scProcessFileCopyFileName;        g_scProcessFileCopyFileName=nullptr;}
+        if(shortCuts[SC_PROCESSSCTRUCT])                {delete shortCuts[SC_PROCESSSCTRUCT];                   shortCuts[SC_PROCESSSCTRUCT]=nullptr;}
+        if(shortCuts[SC_PROCESSDUMPTOFILE])             {delete shortCuts[SC_PROCESSDUMPTOFILE];                shortCuts[SC_PROCESSDUMPTOFILE]=nullptr;}
+        if(shortCuts[SC_PROCESSMEMORYHEX])              {delete shortCuts[SC_PROCESSMEMORYHEX];                 shortCuts[SC_PROCESSMEMORYHEX]=nullptr;}
+        if(shortCuts[SC_PROCESSMEMORYSTRINGS])          {delete shortCuts[SC_PROCESSMEMORYSTRINGS];             shortCuts[SC_PROCESSMEMORYSTRINGS]=nullptr;}
+        if(shortCuts[SC_PROCESSMEMORYSIGNATURES])       {delete shortCuts[SC_PROCESSMEMORYSIGNATURES];          shortCuts[SC_PROCESSMEMORYSIGNATURES]=nullptr;}
+        if(shortCuts[SC_PROCESSFILEVIEWER])             {delete shortCuts[SC_PROCESSFILEVIEWER];                shortCuts[SC_PROCESSFILEVIEWER]=nullptr;}
+        if(shortCuts[SC_PROCESSFILECOPYFILENAME])       {delete shortCuts[SC_PROCESSFILECOPYFILENAME];          shortCuts[SC_PROCESSFILECOPYFILENAME]=nullptr;}
+        if(shortCuts[SC_PROCESSMEMORYMAP])              {delete shortCuts[SC_PROCESSMEMORYMAP];                 shortCuts[SC_PROCESSMEMORYMAP]=nullptr;}
+        if(shortCuts[SC_PROCESSMODULES])                {delete shortCuts[SC_PROCESSMODULES];                   shortCuts[SC_PROCESSMODULES]=nullptr;}
     }
 }
 

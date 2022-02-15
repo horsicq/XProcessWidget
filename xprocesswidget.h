@@ -63,6 +63,20 @@ class XProcessWidget : public XShortcutsWidget
         CBDATA_IMAGESIZE
     };
 
+    enum SC
+    {
+        SC_PROCESSSCTRUCT=0,
+        SC_PROCESSDUMPTOFILE,
+        SC_PROCESSMEMORYHEX,
+        SC_PROCESSMEMORYSTRINGS,
+        SC_PROCESSMEMORYSIGNATURES,
+        SC_PROCESSMEMORYMAP,
+        SC_PROCESSMODULES,
+        SC_PROCESSFILEVIEWER,
+        SC_PROCESSFILECOPYFILENAME,
+        __SC_SIZE
+    };
+
 public:
 //    struct OPTIONS
 //    {
@@ -82,6 +96,8 @@ private slots:
     void _memoryHex();
     void _memoryStrings();
     void _memorySignatures();
+    void _memoryMap();
+    void _modules();
     void _fileViewer();
     void _fileCopyFileName();
     void _structs();
@@ -93,7 +109,9 @@ private slots:
     void on_pushButtonProcessStrings_clicked();
     void on_pushButtonSignatures_clicked();
     void on_pushButtonProcessesFileViewer_clicked();
-    void errorMessageSlot(QString sErrorMessage);
+    void on_pushButtonProcessMemoryMap_clicked();
+    void on_pushButtonProcessModules_clicked();
+    void errorMessageSlot(QString sErrorMessage);    
 
 protected:
     virtual void registerShortcuts(bool bState);
@@ -103,13 +121,7 @@ private:
 
 //    OPTIONS g_options;
     XDynStructsEngine dynStructsEngine;
-    QShortcut *g_scProcessSctruct;
-    QShortcut *g_scProcessDumpToFile;
-    QShortcut *g_scProcessMemoryHex;
-    QShortcut *g_scProcessMemoryStrings;
-    QShortcut *g_scProcessMemorySignatures;
-    QShortcut *g_scProcessFileViewer;
-    QShortcut *g_scProcessFileCopyFileName;
+    QShortcut *shortCuts[__SC_SIZE];
 };
 
 #endif // XPROCESSWIDGET_H

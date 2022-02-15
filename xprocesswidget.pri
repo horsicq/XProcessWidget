@@ -25,3 +25,13 @@ SOURCES += \
     XCONFIG += xdynstructswidget
     include($$PWD/../XDynStructsWidget/xdynstructswidget.pri)
 }
+
+!contains(XCONFIG, xprocessmemorymapwidget) {
+    XCONFIG += xprocessmemorymapwidget
+    include($$PWD/../XProcessMemoryMapWidget/xprocessmemorymapwidget.pri)
+}
+
+!contains(XCONFIG, xprocessmoduleswidget) {
+    XCONFIG += xprocessmoduleswidget
+    include($$PWD/../XProcessModulesWidget/xprocessmoduleswidget.pri)
+}
