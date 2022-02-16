@@ -313,8 +313,11 @@ void XProcessWidget::_memoryMap()
     {
         qint64 nPID=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_PID).toLongLong();
 
-        qDebug("_memoryMap");
-        // TODO
+        DialogXProcessMemoryMap dialogMemoryMap(this);
+
+        dialogMemoryMap.setData(nPID);
+
+        dialogMemoryMap.exec();
     }
 }
 
@@ -326,8 +329,11 @@ void XProcessWidget::_modules()
     {
         qint64 nPID=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_PID).toLongLong();
 
-        qDebug("_modules");
-        // TODO
+        DialogXProcessModules dialogModules(this);
+
+        dialogModules.setData(nPID);
+
+        dialogModules.exec();
     }
 }
 
@@ -504,15 +510,14 @@ void XProcessWidget::registerShortcuts(bool bState)
     }
     else
     {
-        if(shortCuts[SC_PROCESSSCTRUCT])                {delete shortCuts[SC_PROCESSSCTRUCT];                   shortCuts[SC_PROCESSSCTRUCT]=nullptr;}
-        if(shortCuts[SC_PROCESSDUMPTOFILE])             {delete shortCuts[SC_PROCESSDUMPTOFILE];                shortCuts[SC_PROCESSDUMPTOFILE]=nullptr;}
-        if(shortCuts[SC_PROCESSMEMORYHEX])              {delete shortCuts[SC_PROCESSMEMORYHEX];                 shortCuts[SC_PROCESSMEMORYHEX]=nullptr;}
-        if(shortCuts[SC_PROCESSMEMORYSTRINGS])          {delete shortCuts[SC_PROCESSMEMORYSTRINGS];             shortCuts[SC_PROCESSMEMORYSTRINGS]=nullptr;}
-        if(shortCuts[SC_PROCESSMEMORYSIGNATURES])       {delete shortCuts[SC_PROCESSMEMORYSIGNATURES];          shortCuts[SC_PROCESSMEMORYSIGNATURES]=nullptr;}
-        if(shortCuts[SC_PROCESSFILEVIEWER])             {delete shortCuts[SC_PROCESSFILEVIEWER];                shortCuts[SC_PROCESSFILEVIEWER]=nullptr;}
-        if(shortCuts[SC_PROCESSFILECOPYFILENAME])       {delete shortCuts[SC_PROCESSFILECOPYFILENAME];          shortCuts[SC_PROCESSFILECOPYFILENAME]=nullptr;}
-        if(shortCuts[SC_PROCESSMEMORYMAP])              {delete shortCuts[SC_PROCESSMEMORYMAP];                 shortCuts[SC_PROCESSMEMORYMAP]=nullptr;}
-        if(shortCuts[SC_PROCESSMODULES])                {delete shortCuts[SC_PROCESSMODULES];                   shortCuts[SC_PROCESSMODULES]=nullptr;}
+        for(qint32 i=0;i<__SC_SIZE;i++)
+        {
+            if(shortCuts[i])
+            {
+                delete shortCuts[i];
+                shortCuts[i]=nullptr;
+            }
+        }
     }
 }
 

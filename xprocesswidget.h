@@ -30,6 +30,8 @@
 #include "dialogsearchstrings.h"
 #include "dialogxdynstructs.h"
 #include "dialogsearchsignatures.h"
+#include "dialogxprocessmemorymap.h"
+#include "dialogxprocessmodules.h"
 
 #ifdef Q_OS_WIN
 #include "dialogpe.h"
