@@ -101,7 +101,9 @@ private slots:
     void _memoryMap();
     void _modules();
     void _fileViewer();
-    void _fileCopyFileName();
+    void _copyPID();
+    void _copyName();
+    void _copyFilename();
     void _structs();
     void _dumpToFile();
     void on_pushButtonProcessesReload_clicked();

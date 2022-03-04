@@ -170,12 +170,12 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
         menuMemory.addAction(&actionMemorySignatures);
 
         QAction actionMemoryMap(tr("Memory map"),this);
-        actionMemoryMap.setShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORYMAP));
+        actionMemoryMap.setShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_MEMORYMAP));
         connect(&actionMemoryMap,SIGNAL(triggered()),this,SLOT(_memoryMap()));
         menuMemory.addAction(&actionMemoryMap);
 
         QAction actionModules(tr("Modules"),this);
-        actionModules.setShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MODULES));
+        actionModules.setShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_MODULES));
         connect(&actionModules,SIGNAL(triggered()),this,SLOT(_modules()));
         menuMemory.addAction(&actionModules);
 
@@ -198,12 +198,26 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
         connect(&actionFileViewer,SIGNAL(triggered()),this,SLOT(_fileViewer()));
         menuFile.addAction(&actionFileViewer);
 
-        QAction actionFileCopyFileName(tr("Copy filename"),this);
-        actionFileCopyFileName.setShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_FILE_COPYFILENAME));
-        connect(&actionFileCopyFileName,SIGNAL(triggered()),this,SLOT(_fileCopyFileName()));
-        menuFile.addAction(&actionFileCopyFileName);
-
         menuContext.addMenu(&menuFile);
+
+        QMenu menuCopy(tr("Copy"),this);
+
+        QAction actionCopyPID(QString("PID"),this);
+        actionCopyPID.setShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_COPY_PID));
+        connect(&actionCopyPID,SIGNAL(triggered()),this,SLOT(_copyPID()));
+        menuCopy.addAction(&actionCopyPID);
+
+        QAction actionCopyName(tr("Name"),this);
+        actionCopyName.setShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_COPY_NAME));
+        connect(&actionCopyName,SIGNAL(triggered()),this,SLOT(_copyName()));
+        menuCopy.addAction(&actionCopyName);
+
+        QAction actionCopyFileName(tr("Filename"),this);
+        actionCopyFileName.setShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_COPY_FILENAME));
+        connect(&actionCopyFileName,SIGNAL(triggered()),this,SLOT(_copyFilename()));
+        menuCopy.addAction(&actionCopyFileName);
+
+        menuContext.addMenu(&menuCopy);
 
         QAction actionDumpToFile(tr("Dump to file"),this);
         actionDumpToFile.setShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_DUMPTOFILE));
@@ -386,7 +400,33 @@ void XProcessWidget::_fileViewer()
     }
 }
 
-void XProcessWidget::_fileCopyFileName()
+void XProcessWidget::_copyPID()
+{
+    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
+
+    if(listSelected.count())
+    {
+        QString sFilePath=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_PID).toString();
+
+        QClipboard *clipboard=QApplication::clipboard();
+        clipboard->setText(sFilePath);
+    }
+}
+
+void XProcessWidget::_copyName()
+{
+    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
+
+    if(listSelected.count())
+    {
+        QString sFilePath=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_NAME).toString();
+
+        QClipboard *clipboard=QApplication::clipboard();
+        clipboard->setText(sFilePath);
+    }
+}
+
+void XProcessWidget::_copyFilename()
 {
     QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
 
@@ -504,9 +544,9 @@ void XProcessWidget::registerShortcuts(bool bState)
         if(!shortCuts[SC_PROCESSMEMORYSTRINGS])         shortCuts[SC_PROCESSMEMORYSTRINGS]              =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_STRINGS),      this,SLOT(_memoryStrings()));
         if(!shortCuts[SC_PROCESSMEMORYSIGNATURES])      shortCuts[SC_PROCESSMEMORYSIGNATURES]           =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_SIGNATURES),   this,SLOT(_memorySignatures()));
         if(!shortCuts[SC_PROCESSFILEVIEWER])            shortCuts[SC_PROCESSFILEVIEWER]                 =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_FILE_VIEWER),         this,SLOT(_fileViewer()));
-        if(!shortCuts[SC_PROCESSFILECOPYFILENAME])      shortCuts[SC_PROCESSFILECOPYFILENAME]           =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_FILE_COPYFILENAME),   this,SLOT(_fileCopyFileName()));
-        if(!shortCuts[SC_PROCESSMEMORYMAP])             shortCuts[SC_PROCESSMEMORYMAP]                  =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORYMAP),           this,SLOT(_memoryMap()));
-        if(!shortCuts[SC_PROCESSMODULES])               shortCuts[SC_PROCESSMODULES]                    =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MODULES),             this,SLOT(_modules()));
+        if(!shortCuts[SC_PROCESSFILECOPYFILENAME])      shortCuts[SC_PROCESSFILECOPYFILENAME]           =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_COPY_FILENAME),       this,SLOT(_copyFilename()));
+        if(!shortCuts[SC_PROCESSMEMORYMAP])             shortCuts[SC_PROCESSMEMORYMAP]                  =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_MEMORYMAP),    this,SLOT(_memoryMap()));
+        if(!shortCuts[SC_PROCESSMODULES])               shortCuts[SC_PROCESSMODULES]                    =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_MODULES),      this,SLOT(_modules()));
     }
     else
     {
