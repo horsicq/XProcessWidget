@@ -108,6 +108,7 @@ void XProcessWidget::reload()
         pItemID->setData(Qt::UserRole+CBDATA_FILEPATH,listProcesses.at(i).sFilePath);
         pItemID->setData(Qt::UserRole+CBDATA_IMAGEADDRESS,listProcesses.at(i).nImageAddress);
         pItemID->setData(Qt::UserRole+CBDATA_IMAGESIZE,listProcesses.at(i).nImageSize);
+        pItemID->setTextAlignment(Qt::AlignRight|Qt::AlignVCenter);
         ui->tableWidgetProcesses->setItem(i,COLUMN_ID,pItemID);
 
         QTableWidgetItem *pItemName=new QTableWidgetItem;
