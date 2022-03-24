@@ -50,6 +50,10 @@ XProcessWidget::XProcessWidget(QWidget *pParent) :
 
     ui->labelBuild->setText(XProcess::getOsInfo().sBuild);
 
+    ui->comboBoxMode->addItem(tr("User mode"));
+    ui->comboBoxMode->addItem(tr("Kernel mode"));
+//    ui->comboBoxMode->addItem(QString("kldbgdrv"));
+
     reload();
 }
 
