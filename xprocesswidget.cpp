@@ -410,12 +410,12 @@ void XProcessWidget::_fileViewer()
 
             options.sTitle=sFilePath;
             options.nStartType=SELF::TYPE_HEURISTICSCAN;
-            options.sSearchSignaturesPath=g_options.sSearchSignaturesPath;
+//            options.sSearchSignaturesPath=g_options.sSearchSignaturesPath;
             options.nImageBase=-1;
 
             DialogELF dialogELF(this);
             dialogELF.setData(&file,options);
-            dialogELF.setShortcuts(getShortcuts());
+            dialogELF.setGlobal(getShortcuts(),getGlobalOptions());
 
             dialogELF.exec();
         #endif

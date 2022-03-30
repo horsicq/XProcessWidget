@@ -25,7 +25,9 @@
 #include "xprocess.h"
 #include "xpe.h"
 #include "xshortcutswidget.h"
+#ifdef Q_OS_WIN
 #include "xwiniodriver.h"
+#endif
 #include "dialoghexview.h"
 #include "dialogsearchstrings.h"
 #include "dialogxdynstructs.h"
