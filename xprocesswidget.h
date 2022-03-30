@@ -120,6 +120,11 @@ private:
 
     XDynStructsEngine g_dynStructsEngine;
     QShortcut *g_shortCuts[__SC_SIZE];
+
+#ifdef Q_OS_WIN
+    bool g_bIsDriverLoaded;
+    QString g_sServiceName;
+#endif
 };
 
 #endif // XPROCESSWIDGET_H

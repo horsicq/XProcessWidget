@@ -26,6 +26,9 @@ XProcessWidget::XProcessWidget(QWidget *pParent) :
     ui(new Ui::XProcessWidget)
 {
     ui->setupUi(this);
+#ifdef Q_OS_WIN
+    g_bIsDriverLoaded=false;
+#endif
 
     memset(g_shortCuts,0,sizeof g_shortCuts);
 
@@ -51,7 +54,9 @@ XProcessWidget::XProcessWidget(QWidget *pParent) :
     ui->labelBuild->setText(XProcess::getOsInfo().sBuild);
 
     ui->comboBoxMode->addItem(tr("User mode"));
+#ifdef Q_OS_WIN
     ui->comboBoxMode->addItem(tr("Kernel mode"));
+#endif
 //    ui->comboBoxMode->addItem(QString("kldbgdrv"));
 
     reload();
@@ -59,6 +64,13 @@ XProcessWidget::XProcessWidget(QWidget *pParent) :
 
 XProcessWidget::~XProcessWidget()
 {
+#ifdef Q_OS_WIN
+    if(g_bIsDriverLoaded)
+    {
+        XWinIODriver().unloadDriver(g_sServiceName);
+    }
+#endif
+
     delete ui;
 }
 
@@ -594,28 +606,44 @@ void XProcessWidget::errorMessageSlot(QString sErrorMessage)
 
 void XProcessWidget::on_comboBoxMode_currentIndexChanged(int nIndex)
 {
+#ifdef Q_OS_WIN
     if(nIndex==1) // Kernel mode
-    {
-        // TODO try to load Driver
-        QString sFileName="TEST.FILE";
-
-        if(true)
+    { 
+        if(!g_bIsDriverLoaded)
         {
-            QMessageBox::critical(this,tr("Error"),QString("%1: %2").arg(tr("Cannot load file"),sFileName));
+            QString sDriverFileName=getGlobalOptions()->getValue(XOptions::ID_IODRIVER_FILENAME).toString();
+            QString sServiceName=getGlobalOptions()->getValue(XOptions::ID_IODRIVER_SERVICENAME).toString();
+
+            sDriverFileName=XBinary::convertPathName(sDriverFileName);
+
+            g_bIsDriverLoaded=XWinIODriver().loadDriver(sDriverFileName,sServiceName);
+
+            if(g_bIsDriverLoaded)
+            {
+                g_sServiceName=sServiceName;
+            }
+        }
+
+        if(!g_bIsDriverLoaded)
+        {
+            QMessageBox::critical(this,tr("Error"),QString("%1").arg(tr("Cannot load driver")));
 
             ui->comboBoxMode->setCurrentIndex(0);
         }
     }
+#endif
 }
 
 XDynStructsEngine::IOMODE XProcessWidget::getCurrentIOMode()
 {
-    XDynStructsEngine::IOMODE result=XDynStructsEngine::IOMODE_PROCESSUSER;
+    XDynStructsEngine::IOMODE result=XDynStructsEngine::IOMODE_PROCESS_USER;
 
+#ifdef Q_OS_WIN
     if(ui->comboBoxMode->currentIndex()==1)
     {
-        result=XDynStructsEngine::IOMODE_PROCESSKERNEL;
+        result=XDynStructsEngine::IOMODE_PROCESS_KERNEL;
     }
+#endif
 
     return result;
 }
