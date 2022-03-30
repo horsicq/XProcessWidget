@@ -23,9 +23,9 @@
 
 #include "xoptions.h"
 #include "xprocess.h"
-#include "xprocessdevice.h"
 #include "xpe.h"
 #include "xshortcutswidget.h"
+#include "xwiniodriver.h"
 #include "dialoghexview.h"
 #include "dialogsearchstrings.h"
 #include "dialogxdynstructs.h"
@@ -80,15 +80,8 @@ class XProcessWidget : public XShortcutsWidget
     };
 
 public:
-//    struct OPTIONS
-//    {
-//        QString sStructsPath;
-//        QString sSearchSignaturesPath;
-//    };
-
     explicit XProcessWidget(QWidget *pParent=nullptr);
     ~XProcessWidget();
-//    void setOptions(OPTIONS options);
     void setGlobal(XShortcuts *pShortcuts,XOptions *pXOptions);
 
 private slots:
@@ -116,6 +109,8 @@ private slots:
     void on_pushButtonProcessMemoryMap_clicked();
     void on_pushButtonProcessModules_clicked();
     void errorMessageSlot(QString sErrorMessage);    
+    void on_comboBoxMode_currentIndexChanged(int nIndex);
+    XDynStructsEngine::IOMODE getCurrentIOMode();
 
 protected:
     virtual void registerShortcuts(bool bState);
@@ -123,9 +118,8 @@ protected:
 private:
     Ui::XProcessWidget *ui;
 
-//    OPTIONS g_options;
-    XDynStructsEngine dynStructsEngine;
-    QShortcut *shortCuts[__SC_SIZE];
+    XDynStructsEngine g_dynStructsEngine;
+    QShortcut *g_shortCuts[__SC_SIZE];
 };
 
 #endif // XPROCESSWIDGET_H

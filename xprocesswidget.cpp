@@ -27,9 +27,9 @@ XProcessWidget::XProcessWidget(QWidget *pParent) :
 {
     ui->setupUi(this);
 
-    memset(shortCuts,0,sizeof shortCuts);
+    memset(g_shortCuts,0,sizeof g_shortCuts);
 
-    connect(&dynStructsEngine,SIGNAL(errorMessage(QString)),this,SLOT(errorMessageSlot(QString)));
+    connect(&g_dynStructsEngine,SIGNAL(errorMessage(QString)),this,SLOT(errorMessageSlot(QString)));
 
     // mb TODO auto refresh
 
@@ -62,23 +62,11 @@ XProcessWidget::~XProcessWidget()
     delete ui;
 }
 
-//void XProcessWidget::setOptions(OPTIONS options)
-//{
-//    g_options=options;
-
-//    XDynStructsEngine::OPTIONS dynStructsOptions={};
-//    dynStructsOptions.bCustom=true;
-//    dynStructsOptions.bGeneral=true;
-//    dynStructsOptions.bSystem=true;
-
-//    dynStructsEngine.setStructsPath(options.sStructsPath,dynStructsOptions);
-//}
-
 void XProcessWidget::setGlobal(XShortcuts *pShortcuts,XOptions *pXOptions)
 {
     // TODO
     XShortcutsWidget::setGlobal(pShortcuts,pXOptions);
-    dynStructsEngine.setOptions(pXOptions);
+    g_dynStructsEngine.setOptions(pXOptions);
 }
 
 void XProcessWidget::reload()
@@ -244,22 +232,29 @@ void XProcessWidget::_memoryHex()
         qint64 nImageSize=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_IMAGESIZE).toLongLong();
         QString sName=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_NAME).toString();
 
-        XProcessDevice pd;
-        if(pd.openPID(nPID,nImageAddress,nImageSize,QIODevice::ReadOnly))
+        XDynStructsEngine dynStructsEngine;
+        dynStructsEngine.setOptions(getGlobalOptions());
+        dynStructsEngine.setProcessId(nPID,getCurrentIOMode());
+
+        XIODevice *pIODevice=dynStructsEngine.createIODevice(nImageAddress,nImageSize);
+
+        if(pIODevice->open(QIODevice::ReadOnly))
         {
             XHexView::OPTIONS options={};
 
             options.sTitle=sName;
             options.nStartAddress=nImageAddress;
 
-            DialogHexView dialogHexView(this,&pd,options);
+            DialogHexView dialogHexView(this,pIODevice,options);
 
             dialogHexView.setGlobal(getShortcuts(),getGlobalOptions());
 
             dialogHexView.exec();
 
-            pd.close();
+            pIODevice->close();
         }
+
+        delete pIODevice;
     }
 }
 
@@ -274,8 +269,13 @@ void XProcessWidget::_memoryStrings()
         qint64 nImageSize=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_IMAGESIZE).toLongLong();
         QString sName=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_NAME).toString();
 
-        XProcessDevice pd;
-        if(pd.openPID(nPID,nImageAddress,nImageSize,QIODevice::ReadOnly))
+        XDynStructsEngine dynStructsEngine;
+        dynStructsEngine.setOptions(getGlobalOptions());
+        dynStructsEngine.setProcessId(nPID,getCurrentIOMode());
+
+        XIODevice *pIODevice=dynStructsEngine.createIODevice(nImageAddress,nImageSize);
+
+        if(pIODevice->open(QIODevice::ReadOnly))
         {
             SearchStringsWidget::OPTIONS options={};
             options.bAnsi=true;
@@ -286,13 +286,15 @@ void XProcessWidget::_memoryStrings()
 
             DialogSearchStrings dialogSearchStrings(this);
 
-            dialogSearchStrings.setData(&pd,options,true);
+            dialogSearchStrings.setData(pIODevice,options,true);
             dialogSearchStrings.setGlobal(getShortcuts(),getGlobalOptions());
 
             dialogSearchStrings.exec();
 
-            pd.close();
+            pIODevice->close();
         }
+
+        delete pIODevice;
     }
 }
 
@@ -307,20 +309,27 @@ void XProcessWidget::_memorySignatures()
         qint64 nImageSize=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_IMAGESIZE).toLongLong();
 //        QString sName=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_NAME).toString();
 
-        XProcessDevice pd;
-        if(pd.openPID(nPID,nImageAddress,nImageSize,QIODevice::ReadOnly))
+        XDynStructsEngine dynStructsEngine;
+        dynStructsEngine.setOptions(getGlobalOptions());
+        dynStructsEngine.setProcessId(nPID,getCurrentIOMode());
+
+        XIODevice *pIODevice=dynStructsEngine.createIODevice(nImageAddress,nImageSize);
+
+        if(pIODevice->open(QIODevice::ReadOnly))
         {
             DialogSearchSignatures dialogSearchSignatures(this);
 
             SearchSignaturesWidget::OPTIONS options={};
 
-            dialogSearchSignatures.setData(&pd,XBinary::FT_REGION,options,false);
+            dialogSearchSignatures.setData(pIODevice,XBinary::FT_REGION,options,false);
             dialogSearchSignatures.setGlobal(getShortcuts(),getGlobalOptions());
 
             dialogSearchSignatures.exec();
 
-            pd.close();
+            pIODevice->close();
         }
+
+        delete pIODevice;
     }
 }
 
@@ -453,11 +462,11 @@ void XProcessWidget::_structs()
         qint64 nProcessId=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_PID).toLongLong();
         qint64 nImageAddress=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_IMAGEADDRESS).toLongLong();
 
-        dynStructsEngine.setProcessId(nProcessId);
+        g_dynStructsEngine.setProcessId(nProcessId,getCurrentIOMode());
 
         DialogXDynStructs dialogXDynStructs(this);
 
-        dialogXDynStructs.setData(&dynStructsEngine,nImageAddress);
+        dialogXDynStructs.setData(&g_dynStructsEngine,nImageAddress);
         dialogXDynStructs.setGlobal(getShortcuts(),getGlobalOptions());
 
         dialogXDynStructs.exec();
@@ -475,21 +484,28 @@ void XProcessWidget::_dumpToFile()
         qint64 nImageSize=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_IMAGESIZE).toLongLong();
         QString sName=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_NAME).toString();
 
-        XProcessDevice pd;
-        if(pd.openPID(nPID,nImageAddress,nImageSize,QIODevice::ReadOnly))
+        XDynStructsEngine dynStructsEngine;
+        dynStructsEngine.setOptions(getGlobalOptions());
+        dynStructsEngine.setProcessId(nPID,getCurrentIOMode());
+
+        XIODevice *pIODevice=dynStructsEngine.createIODevice(nImageAddress,nImageSize);
+
+        if(pIODevice->open(QIODevice::ReadOnly))
         {
             QString sSaveFileName=QString("%1.%2.bin").arg(sName,tr("Dump"));
             QString sFileName=QFileDialog::getSaveFileName(this,tr("Save dump"),sSaveFileName,QString("%1 (*.bin)").arg(tr("Raw data")));
 
             if(!sFileName.isEmpty())
             {
-                DialogDumpProcess dialogDumpProcess(this,&pd,0,nImageSize,sFileName,DumpProcess::DT_OFFSET);
+                DialogDumpProcess dialogDumpProcess(this,pIODevice,0,nImageSize,sFileName,DumpProcess::DT_OFFSET);
 
                 dialogDumpProcess.exec();
 
-                pd.close();
+                pIODevice->close();
             }
         }
+
+        delete pIODevice;
     }
 }
 
@@ -543,24 +559,24 @@ void XProcessWidget::registerShortcuts(bool bState)
 {
     if(bState)
     {
-        if(!shortCuts[SC_PROCESSSCTRUCT])               shortCuts[SC_PROCESSSCTRUCT]                    =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_STRUCTS),             this,SLOT(_structs()));
-        if(!shortCuts[SC_PROCESSDUMPTOFILE])            shortCuts[SC_PROCESSDUMPTOFILE]                 =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_DUMPTOFILE),          this,SLOT(_dumpToFile()));
-        if(!shortCuts[SC_PROCESSMEMORYHEX])             shortCuts[SC_PROCESSMEMORYHEX]                  =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_HEX),          this,SLOT(_memoryHex()));
-        if(!shortCuts[SC_PROCESSMEMORYSTRINGS])         shortCuts[SC_PROCESSMEMORYSTRINGS]              =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_STRINGS),      this,SLOT(_memoryStrings()));
-        if(!shortCuts[SC_PROCESSMEMORYSIGNATURES])      shortCuts[SC_PROCESSMEMORYSIGNATURES]           =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_SIGNATURES),   this,SLOT(_memorySignatures()));
-        if(!shortCuts[SC_PROCESSFILEVIEWER])            shortCuts[SC_PROCESSFILEVIEWER]                 =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_FILE_VIEWER),         this,SLOT(_fileViewer()));
-        if(!shortCuts[SC_PROCESSFILECOPYFILENAME])      shortCuts[SC_PROCESSFILECOPYFILENAME]           =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_COPY_FILENAME),       this,SLOT(_copyFilename()));
-        if(!shortCuts[SC_PROCESSMEMORYMAP])             shortCuts[SC_PROCESSMEMORYMAP]                  =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_MEMORYMAP),    this,SLOT(_memoryMap()));
-        if(!shortCuts[SC_PROCESSMODULES])               shortCuts[SC_PROCESSMODULES]                    =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_MODULES),      this,SLOT(_modules()));
+        if(!g_shortCuts[SC_PROCESSSCTRUCT])               g_shortCuts[SC_PROCESSSCTRUCT]                    =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_STRUCTS),             this,SLOT(_structs()));
+        if(!g_shortCuts[SC_PROCESSDUMPTOFILE])            g_shortCuts[SC_PROCESSDUMPTOFILE]                 =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_DUMPTOFILE),          this,SLOT(_dumpToFile()));
+        if(!g_shortCuts[SC_PROCESSMEMORYHEX])             g_shortCuts[SC_PROCESSMEMORYHEX]                  =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_HEX),          this,SLOT(_memoryHex()));
+        if(!g_shortCuts[SC_PROCESSMEMORYSTRINGS])         g_shortCuts[SC_PROCESSMEMORYSTRINGS]              =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_STRINGS),      this,SLOT(_memoryStrings()));
+        if(!g_shortCuts[SC_PROCESSMEMORYSIGNATURES])      g_shortCuts[SC_PROCESSMEMORYSIGNATURES]           =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_SIGNATURES),   this,SLOT(_memorySignatures()));
+        if(!g_shortCuts[SC_PROCESSFILEVIEWER])            g_shortCuts[SC_PROCESSFILEVIEWER]                 =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_FILE_VIEWER),         this,SLOT(_fileViewer()));
+        if(!g_shortCuts[SC_PROCESSFILECOPYFILENAME])      g_shortCuts[SC_PROCESSFILECOPYFILENAME]           =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_COPY_FILENAME),       this,SLOT(_copyFilename()));
+        if(!g_shortCuts[SC_PROCESSMEMORYMAP])             g_shortCuts[SC_PROCESSMEMORYMAP]                  =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_MEMORYMAP),    this,SLOT(_memoryMap()));
+        if(!g_shortCuts[SC_PROCESSMODULES])               g_shortCuts[SC_PROCESSMODULES]                    =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_MODULES),      this,SLOT(_modules()));
     }
     else
     {
         for(qint32 i=0;i<__SC_SIZE;i++)
         {
-            if(shortCuts[i])
+            if(g_shortCuts[i])
             {
-                delete shortCuts[i];
-                shortCuts[i]=nullptr;
+                delete g_shortCuts[i];
+                g_shortCuts[i]=nullptr;
             }
         }
     }
@@ -574,4 +590,32 @@ void XProcessWidget::on_pushButtonProcessesFileViewer_clicked()
 void XProcessWidget::errorMessageSlot(QString sErrorMessage)
 {
     QMessageBox::critical(XOptions::getMainWidget(this),tr("Error"),sErrorMessage);
+}
+
+void XProcessWidget::on_comboBoxMode_currentIndexChanged(int nIndex)
+{
+    if(nIndex==1) // Kernel mode
+    {
+        // TODO try to load Driver
+        QString sFileName="TEST.FILE";
+
+        if(true)
+        {
+            QMessageBox::critical(this,tr("Error"),QString("%1: %2").arg(tr("Cannot load file"),sFileName));
+
+            ui->comboBoxMode->setCurrentIndex(0);
+        }
+    }
+}
+
+XDynStructsEngine::IOMODE XProcessWidget::getCurrentIOMode()
+{
+    XDynStructsEngine::IOMODE result=XDynStructsEngine::IOMODE_PROCESSUSER;
+
+    if(ui->comboBoxMode->currentIndex()==1)
+    {
+        result=XDynStructsEngine::IOMODE_PROCESSKERNEL;
+    }
+
+    return result;
 }
