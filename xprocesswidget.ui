@@ -104,7 +104,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButtonSignatures">
+      <widget class="QPushButton" name="pushButtonProcessesSignatures">
        <property name="text">
         <string>Signatures</string>
        </property>

@@ -331,10 +331,11 @@ void XProcessWidget::_memorySignatures()
         {
             DialogSearchSignatures dialogSearchSignatures(this);
 
+            dialogSearchSignatures.setGlobal(getShortcuts(),getGlobalOptions());
+
             SearchSignaturesWidget::OPTIONS options={};
 
             dialogSearchSignatures.setData(pIODevice,XBinary::FT_REGION,options,false);
-            dialogSearchSignatures.setGlobal(getShortcuts(),getGlobalOptions());
 
             dialogSearchSignatures.exec();
 
@@ -552,7 +553,7 @@ void XProcessWidget::on_pushButtonProcessStrings_clicked()
     _memoryStrings();
 }
 
-void XProcessWidget::on_pushButtonSignatures_clicked()
+void XProcessWidget::on_pushButtonProcessesSignatures_clicked()
 {
     _memorySignatures();
 }

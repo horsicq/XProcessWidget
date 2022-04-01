@@ -84,6 +84,7 @@ class XProcessWidget : public XShortcutsWidget
 public:
     explicit XProcessWidget(QWidget *pParent=nullptr);
     ~XProcessWidget();
+
     void setGlobal(XShortcuts *pShortcuts,XOptions *pXOptions);
 
 private slots:
@@ -106,7 +107,7 @@ private slots:
     void on_pushButtonProcessesSave_clicked();
     void on_pushButtonProcessHex_clicked();
     void on_pushButtonProcessStrings_clicked();
-    void on_pushButtonSignatures_clicked();
+    void on_pushButtonProcessesSignatures_clicked();
     void on_pushButtonProcessesFileViewer_clicked();
     void on_pushButtonProcessMemoryMap_clicked();
     void on_pushButtonProcessModules_clicked();
@@ -122,7 +123,6 @@ private:
 
     XDynStructsEngine g_dynStructsEngine;
     QShortcut *g_shortCuts[__SC_SIZE];
-
 #ifdef Q_OS_WIN
     bool g_bIsDriverLoaded;
     QString g_sServiceName;
