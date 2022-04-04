@@ -94,7 +94,7 @@ void XProcessWidget::reload()
         nPID=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_PID).toLongLong();
     }
 
-    QList<XProcess::PROCESS_INFO> listProcesses=XProcess::getProcessesList();
+    QList<XProcess::PROCESS_INFO> listProcesses=XProcess::getProcessesList(ui->checkBoxShowAll->isChecked());
 
     qint32 nCount=listProcesses.count();
 
@@ -647,4 +647,9 @@ XDynStructsEngine::IOMODE XProcessWidget::getCurrentIOMode()
 #endif
 
     return result;
+}
+
+void XProcessWidget::on_checkBoxShowAll_toggled(bool bChecked)
+{
+    reload();
 }

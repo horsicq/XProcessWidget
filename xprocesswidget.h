@@ -114,6 +114,7 @@ private slots:
     void errorMessageSlot(QString sErrorMessage);    
     void on_comboBoxMode_currentIndexChanged(int nIndex);
     XDynStructsEngine::IOMODE getCurrentIOMode();
+    void on_checkBoxShowAll_toggled(bool bChecked);
 
 protected:
     virtual void registerShortcuts(bool bState);
