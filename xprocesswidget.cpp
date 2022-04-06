@@ -292,7 +292,7 @@ void XProcessWidget::_memoryStrings()
             SearchStringsWidget::OPTIONS options={};
             options.bAnsi=true;
             options.bUnicode=true;
-            options.bCStrings=true;
+            options.bCStrings=false;
             options.sTitle=sName;
             options.nBaseAddress=nImageAddress;
 
