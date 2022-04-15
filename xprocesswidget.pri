@@ -1,6 +1,8 @@
 INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
 
+DEFINES += USE_XPROCESS
+
 FORMS += \
     $$PWD/xprocesswidget.ui
 
@@ -9,7 +11,6 @@ HEADERS += \
 
 SOURCES += \
     $$PWD/xprocesswidget.cpp
-
 
 !contains(XCONFIG, xprocess) {
     XCONFIG += xprocess

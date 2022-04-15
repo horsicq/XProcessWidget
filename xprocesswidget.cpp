@@ -94,7 +94,7 @@ void XProcessWidget::reload()
         nPID=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_PID).toLongLong();
     }
 
-    QList<XBinary::PROCESS_INFO> listProcesses=XProcess::getProcessesList(ui->checkBoxShowAll->isChecked());
+    QList<XProcess::PROCESS_INFO> listProcesses=XProcess::getProcessesList(ui->checkBoxShowAll->isChecked());
 
     qint32 nCount=listProcesses.count();
 
@@ -196,7 +196,9 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
     #ifdef Q_OS_LINUX
         sFileViewer=QString("ELF %1").arg(tr("Viewer"));
     #endif
-        // TODO mac
+    #ifdef Q_OS_OSX
+        sFileViewer=QString("MACH-O %1").arg(tr("Viewer"));
+    #endif
 
         QAction actionFileViewer(sFileViewer,this);
         actionFileViewer.setShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_FILE_VIEWER));
@@ -397,7 +399,6 @@ void XProcessWidget::_fileViewer()
 
             options.sTitle=sFilePath;
             options.nStartType=SPE::TYPE_HEURISTICSCAN;
-//            options.sSearchSignaturesPath=g_options.sSearchSignaturesPath;
             options.nImageBase=-1;
 
             DialogPE dialogPE(this);
@@ -411,7 +412,6 @@ void XProcessWidget::_fileViewer()
 
             options.sTitle=sFilePath;
             options.nStartType=SELF::TYPE_HEURISTICSCAN;
-//            options.sSearchSignaturesPath=g_options.sSearchSignaturesPath;
             options.nImageBase=-1;
 
             DialogELF dialogELF(this);
@@ -420,7 +420,19 @@ void XProcessWidget::_fileViewer()
 
             dialogELF.exec();
         #endif
-            // TODO OSX
+        #ifdef Q_OS_OSX
+            FW_DEF::OPTIONS options={};
+
+            options.sTitle=sFilePath;
+            options.nStartType=SMACH::TYPE_HEURISTICSCAN;
+            options.nImageBase=-1;
+
+            DialogMACH dialogMach(this);
+            dialogMach.setData(&file,options);
+            dialogMach.setGlobal(getShortcuts(),getGlobalOptions());
+
+            dialogMach.exec();
+        #endif
 
             file.close();
         }

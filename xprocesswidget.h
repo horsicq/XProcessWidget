@@ -41,6 +41,9 @@
 #ifdef Q_OS_LINUX
 #include "dialogelf.h"
 #endif
+#ifdef Q_OS_OSX
+#include "dialogmach.h"
+#endif
 
 namespace Ui {
 class XProcessWidget;
