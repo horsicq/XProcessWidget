@@ -205,6 +205,11 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
         connect(&actionFileViewer,SIGNAL(triggered()),this,SLOT(_fileViewer()));
         menuFile.addAction(&actionFileViewer);
 
+        QAction actionFileFolder(tr("Folder"),this);
+        actionFileFolder.setShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_FILE_FOLDER));
+        connect(&actionFileFolder,SIGNAL(triggered()),this,SLOT(_fileFolder()));
+        menuFile.addAction(&actionFileFolder);
+
         menuContext.addMenu(&menuFile);
 
         QMenu menuCopy(tr("Copy"),this);
@@ -237,7 +242,7 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
 
 void XProcessWidget::_memoryHex()
 {
-    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
+    QList<QTableWidgetItem *> listSelected=ui->tableWidgetProcesses->selectedItems();
 
     if(listSelected.count())
     {
@@ -274,7 +279,7 @@ void XProcessWidget::_memoryHex()
 
 void XProcessWidget::_memoryStrings()
 {
-    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
+    QList<QTableWidgetItem *> listSelected=ui->tableWidgetProcesses->selectedItems();
 
     if(listSelected.count())
     {
@@ -314,7 +319,7 @@ void XProcessWidget::_memoryStrings()
 
 void XProcessWidget::_memorySignatures()
 {
-    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
+    QList<QTableWidgetItem *> listSelected=ui->tableWidgetProcesses->selectedItems();
 
     if(listSelected.count())
     {
@@ -350,7 +355,7 @@ void XProcessWidget::_memorySignatures()
 
 void XProcessWidget::_memoryMap()
 {
-    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
+    QList<QTableWidgetItem *> listSelected=ui->tableWidgetProcesses->selectedItems();
 
     if(listSelected.count())
     {
@@ -366,7 +371,7 @@ void XProcessWidget::_memoryMap()
 
 void XProcessWidget::_modules()
 {
-    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
+    QList<QTableWidgetItem *> listSelected=ui->tableWidgetProcesses->selectedItems();
 
     if(listSelected.count())
     {
@@ -382,7 +387,7 @@ void XProcessWidget::_modules()
 
 void XProcessWidget::_fileViewer()
 {
-    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
+    QList<QTableWidgetItem *> listSelected=ui->tableWidgetProcesses->selectedItems();
 
     if(listSelected.count())
     {
@@ -439,9 +444,23 @@ void XProcessWidget::_fileViewer()
     }
 }
 
+void XProcessWidget::_fileFolder()
+{
+    QList<QTableWidgetItem *> listSelected=ui->tableWidgetProcesses->selectedItems();
+
+    if(listSelected.count())
+    {
+        QString sFilePath=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_FILEPATH).toString();
+
+        QString sDirectory=QFileInfo(sFilePath).absolutePath();
+
+        QDesktopServices::openUrl(QUrl::fromLocalFile(sDirectory));
+    }
+}
+
 void XProcessWidget::_copyPID()
 {
-    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
+    QList<QTableWidgetItem *> listSelected=ui->tableWidgetProcesses->selectedItems();
 
     if(listSelected.count())
     {
@@ -454,7 +473,7 @@ void XProcessWidget::_copyPID()
 
 void XProcessWidget::_copyName()
 {
-    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
+    QList<QTableWidgetItem *> listSelected=ui->tableWidgetProcesses->selectedItems();
 
     if(listSelected.count())
     {
@@ -467,7 +486,7 @@ void XProcessWidget::_copyName()
 
 void XProcessWidget::_copyFilename()
 {
-    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
+    QList<QTableWidgetItem *> listSelected=ui->tableWidgetProcesses->selectedItems();
 
     if(listSelected.count())
     {
@@ -480,7 +499,7 @@ void XProcessWidget::_copyFilename()
 
 void XProcessWidget::_structs()
 {
-    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
+    QList<QTableWidgetItem *> listSelected=ui->tableWidgetProcesses->selectedItems();
 
     if(listSelected.count())
     {
@@ -500,7 +519,7 @@ void XProcessWidget::_structs()
 
 void XProcessWidget::_dumpToFile()
 {
-    QList<QTableWidgetItem*> listSelected=ui->tableWidgetProcesses->selectedItems();
+    QList<QTableWidgetItem *> listSelected=ui->tableWidgetProcesses->selectedItems();
 
     if(listSelected.count())
     {
@@ -590,6 +609,7 @@ void XProcessWidget::registerShortcuts(bool bState)
         if(!g_shortCuts[SC_PROCESSMEMORYSTRINGS])         g_shortCuts[SC_PROCESSMEMORYSTRINGS]              =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_STRINGS),      this,SLOT(_memoryStrings()));
         if(!g_shortCuts[SC_PROCESSMEMORYSIGNATURES])      g_shortCuts[SC_PROCESSMEMORYSIGNATURES]           =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_SIGNATURES),   this,SLOT(_memorySignatures()));
         if(!g_shortCuts[SC_PROCESSFILEVIEWER])            g_shortCuts[SC_PROCESSFILEVIEWER]                 =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_FILE_VIEWER),         this,SLOT(_fileViewer()));
+        if(!g_shortCuts[SC_PROCESSFILEFOLDER])            g_shortCuts[SC_PROCESSFILEFOLDER]                 =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_FILE_FOLDER),         this,SLOT(_fileFolder()));
         if(!g_shortCuts[SC_PROCESSFILECOPYFILENAME])      g_shortCuts[SC_PROCESSFILECOPYFILENAME]           =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_COPY_FILENAME),       this,SLOT(_copyFilename()));
         if(!g_shortCuts[SC_PROCESSMEMORYMAP])             g_shortCuts[SC_PROCESSMEMORYMAP]                  =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_MEMORYMAP),    this,SLOT(_memoryMap()));
         if(!g_shortCuts[SC_PROCESSMODULES])               g_shortCuts[SC_PROCESSMODULES]                    =new QShortcut(getShortcuts()->getShortcut(XShortcuts::ID_PROCESS_MEMORY_MODULES),      this,SLOT(_modules()));

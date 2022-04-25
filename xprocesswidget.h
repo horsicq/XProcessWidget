@@ -21,6 +21,7 @@
 #ifndef XPROCESSWIDGET_H
 #define XPROCESSWIDGET_H
 
+#include <QDesktopServices>
 #include "xoptions.h"
 #include "xprocess.h"
 #include "xpe.h"
@@ -80,6 +81,7 @@ class XProcessWidget : public XShortcutsWidget
         SC_PROCESSMEMORYMAP,
         SC_PROCESSMODULES,
         SC_PROCESSFILEVIEWER,
+        SC_PROCESSFILEFOLDER,
         SC_PROCESSFILECOPYFILENAME,
         __SC_SIZE
     };
@@ -100,6 +102,7 @@ private slots:
     void _memoryMap();
     void _modules();
     void _fileViewer();
+    void _fileFolder();
     void _copyPID();
     void _copyName();
     void _copyFilename();
