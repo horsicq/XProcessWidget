@@ -252,7 +252,7 @@ void XProcessWidget::_memoryHex()
 
         XIODevice *pIODevice=dynStructsEngine.createIODevice(nImageAddress,nImageSize);
 
-        if(pIODevice->open(QIODevice::ReadOnly))
+        if(pIODevice&&(pIODevice->open(QIODevice::ReadOnly)))
         {
             XHexView::OPTIONS options={};
 
@@ -289,7 +289,7 @@ void XProcessWidget::_memoryStrings()
 
         XIODevice *pIODevice=dynStructsEngine.createIODevice(nImageAddress,nImageSize);
 
-        if(pIODevice->open(QIODevice::ReadOnly))
+        if(pIODevice&&(pIODevice->open(QIODevice::ReadOnly)))
         {
             SearchStringsWidget::OPTIONS options={};
             options.bAnsi=true;
@@ -329,7 +329,7 @@ void XProcessWidget::_memorySignatures()
 
         XIODevice *pIODevice=dynStructsEngine.createIODevice(nImageAddress,nImageSize);
 
-        if(pIODevice->open(QIODevice::ReadOnly))
+        if(pIODevice&&(pIODevice->open(QIODevice::ReadOnly)))
         {
             DialogSearchSignatures dialogSearchSignatures(this);
 
@@ -515,7 +515,7 @@ void XProcessWidget::_dumpToFile()
 
         XIODevice *pIODevice=dynStructsEngine.createIODevice(nImageAddress,nImageSize);
 
-        if(pIODevice->open(QIODevice::ReadOnly))
+        if(pIODevice&&(pIODevice->open(QIODevice::ReadOnly)))
         {
             QString sSaveFileName=QString("%1.%2.bin").arg(sName,tr("Dump"));
             QString sFileName=QFileDialog::getSaveFileName(this,tr("Save dump"),sSaveFileName,QString("%1 (*.bin)").arg(tr("Raw data")));
