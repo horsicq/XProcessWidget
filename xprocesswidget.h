@@ -83,6 +83,8 @@ class XProcessWidget : public XShortcutsWidget
         SC_PROCESSFILEVIEWER,
         SC_PROCESSFILEFOLDER,
         SC_PROCESSFILECOPYFILENAME,
+        SC_PROCESSFILECOPYNAME,
+        SC_PROCESSFILECOPYPID,
         __SC_SIZE
     };
 
