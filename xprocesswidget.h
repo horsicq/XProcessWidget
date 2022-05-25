@@ -103,8 +103,8 @@ private slots:
     void _memorySignatures();
     void _memoryMap();
     void _modules();
-    void _fileViewer();
-    void _fileFolder();
+    void _showInViewer();
+    void _showInFolder();
     void _copyPID();
     void _copyName();
     void _copyFilename();

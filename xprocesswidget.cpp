@@ -186,7 +186,7 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
 
         menuContext.addMenu(&menuMemory);
 
-        QMenu menuFile(tr("File"),this);
+        QMenu menuShowIn(tr("Show in"),this);
 
         QString sFileViewer=tr("Viewer");
 
@@ -200,17 +200,17 @@ void XProcessWidget::on_tableWidgetProcesses_customContextMenuRequested(const QP
         sFileViewer=QString("MACH-O %1").arg(tr("Viewer"));
     #endif
 
-        QAction actionFileViewer(sFileViewer,this);
-        actionFileViewer.setShortcut(getShortcuts()->getShortcut(X_ID_PROCESS_SHOWIN_VIEWER));
-        connect(&actionFileViewer,SIGNAL(triggered()),this,SLOT(_fileViewer()));
-        menuFile.addAction(&actionFileViewer);
+        QAction actionShowInViewer(sFileViewer,this);
+        actionShowInViewer.setShortcut(getShortcuts()->getShortcut(X_ID_PROCESS_SHOWIN_VIEWER));
+        connect(&actionShowInViewer,SIGNAL(triggered()),this,SLOT(_showInViewer()));
+        menuShowIn.addAction(&actionShowInViewer);
 
-        QAction actionFileFolder(tr("Folder"),this);
-        actionFileFolder.setShortcut(getShortcuts()->getShortcut(X_ID_PROCESS_SHOWIN_FOLDER));
-        connect(&actionFileFolder,SIGNAL(triggered()),this,SLOT(_fileFolder()));
-        menuFile.addAction(&actionFileFolder);
+        QAction actionShowInFolder(tr("Folder"),this);
+        actionShowInFolder.setShortcut(getShortcuts()->getShortcut(X_ID_PROCESS_SHOWIN_FOLDER));
+        connect(&actionShowInFolder,SIGNAL(triggered()),this,SLOT(_showInFolder()));
+        menuShowIn.addAction(&actionShowInFolder);
 
-        menuContext.addMenu(&menuFile);
+        menuContext.addMenu(&menuShowIn);
 
         QMenu menuCopy(tr("Copy"),this);
 
@@ -385,7 +385,7 @@ void XProcessWidget::_modules()
     }
 }
 
-void XProcessWidget::_fileViewer()
+void XProcessWidget::_showInViewer()
 {
     QList<QTableWidgetItem *> listSelected=ui->tableWidgetProcesses->selectedItems();
 
@@ -444,7 +444,7 @@ void XProcessWidget::_fileViewer()
     }
 }
 
-void XProcessWidget::_fileFolder()
+void XProcessWidget::_showInFolder()
 {
     QList<QTableWidgetItem *> listSelected=ui->tableWidgetProcesses->selectedItems();
 
@@ -452,9 +452,7 @@ void XProcessWidget::_fileFolder()
     {
         QString sFilePath=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_FILEPATH).toString();
 
-        QString sDirectory=QFileInfo(sFilePath).absolutePath();
-
-        QDesktopServices::openUrl(QUrl::fromLocalFile(sDirectory));
+        XOptions::showInFolder(sFilePath);
     }
 }
 
@@ -608,8 +606,8 @@ void XProcessWidget::registerShortcuts(bool bState)
         if(!g_shortCuts[SC_PROCESSMEMORYHEX])               g_shortCuts[SC_PROCESSMEMORYHEX]                =new QShortcut(getShortcuts()->getShortcut(X_ID_PROCESS_MEMORY_HEX),            this,SLOT(_memoryHex()));
         if(!g_shortCuts[SC_PROCESSMEMORYSTRINGS])           g_shortCuts[SC_PROCESSMEMORYSTRINGS]            =new QShortcut(getShortcuts()->getShortcut(X_ID_PROCESS_MEMORY_STRINGS),        this,SLOT(_memoryStrings()));
         if(!g_shortCuts[SC_PROCESSMEMORYSIGNATURES])        g_shortCuts[SC_PROCESSMEMORYSIGNATURES]         =new QShortcut(getShortcuts()->getShortcut(X_ID_PROCESS_MEMORY_SIGNATURES),     this,SLOT(_memorySignatures()));
-        if(!g_shortCuts[SC_PROCESSFILEVIEWER])              g_shortCuts[SC_PROCESSFILEVIEWER]               =new QShortcut(getShortcuts()->getShortcut(X_ID_PROCESS_SHOWIN_VIEWER),         this,SLOT(_fileViewer()));
-        if(!g_shortCuts[SC_PROCESSFILEFOLDER])              g_shortCuts[SC_PROCESSFILEFOLDER]               =new QShortcut(getShortcuts()->getShortcut(X_ID_PROCESS_SHOWIN_FOLDER),         this,SLOT(_fileFolder()));
+        if(!g_shortCuts[SC_PROCESSFILEVIEWER])              g_shortCuts[SC_PROCESSFILEVIEWER]               =new QShortcut(getShortcuts()->getShortcut(X_ID_PROCESS_SHOWIN_VIEWER),         this,SLOT(_showInViewer()));
+        if(!g_shortCuts[SC_PROCESSFILEFOLDER])              g_shortCuts[SC_PROCESSFILEFOLDER]               =new QShortcut(getShortcuts()->getShortcut(X_ID_PROCESS_SHOWIN_FOLDER),         this,SLOT(_showInFolder()));
         if(!g_shortCuts[SC_PROCESSFILECOPYFILENAME])        g_shortCuts[SC_PROCESSFILECOPYFILENAME]         =new QShortcut(getShortcuts()->getShortcut(X_ID_PROCESS_COPY_FILENAME),         this,SLOT(_copyFilename()));
         if(!g_shortCuts[SC_PROCESSFILECOPYNAME])            g_shortCuts[SC_PROCESSFILECOPYFILENAME]         =new QShortcut(getShortcuts()->getShortcut(X_ID_PROCESS_COPY_NAME),             this,SLOT(_copyName()));
         if(!g_shortCuts[SC_PROCESSFILECOPYPID])             g_shortCuts[SC_PROCESSFILECOPYFILENAME]         =new QShortcut(getShortcuts()->getShortcut(X_ID_PROCESS_COPY_PID),              this,SLOT(_copyPID()));
@@ -631,7 +629,7 @@ void XProcessWidget::registerShortcuts(bool bState)
 
 void XProcessWidget::on_pushButtonProcessesFileViewer_clicked()
 {
-    _fileViewer();
+    _showInViewer();
 }
 
 void XProcessWidget::errorMessageSlot(QString sErrorMessage)
