@@ -106,8 +106,8 @@ void XProcessWidget::reload()
     for(qint32 i=0;i<nCount;i++)
     {
         QTableWidgetItem *pItemID=new QTableWidgetItem;
-        pItemID->setData(Qt::DisplayRole,listProcesses.at(i).nID);
-        pItemID->setData(Qt::UserRole+CBDATA_PID,listProcesses.at(i).nID);
+        pItemID->setData(Qt::DisplayRole,(quint32)(listProcesses.at(i).nID));
+        pItemID->setData(Qt::UserRole+CBDATA_PID,(quint32)(listProcesses.at(i).nID));
         pItemID->setData(Qt::UserRole+CBDATA_NAME,listProcesses.at(i).sName);
         pItemID->setData(Qt::UserRole+CBDATA_FILEPATH,listProcesses.at(i).sFilePath);
         pItemID->setData(Qt::UserRole+CBDATA_IMAGEADDRESS,listProcesses.at(i).nImageAddress);
