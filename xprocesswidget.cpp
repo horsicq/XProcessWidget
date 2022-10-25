@@ -464,8 +464,8 @@ void XProcessWidget::_copyPID()
     {
         QString sFilePath=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_PID).toString();
 
-        QClipboard *clipboard=QApplication::clipboard();
-        clipboard->setText(sFilePath);
+        QClipboard *pClipboard=QApplication::clipboard();
+        pClipboard->setText(sFilePath);
     }
 }
 
@@ -477,8 +477,8 @@ void XProcessWidget::_copyName()
     {
         QString sFilePath=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_NAME).toString();
 
-        QClipboard *clipboard=QApplication::clipboard();
-        clipboard->setText(sFilePath);
+        QClipboard *pClipboard=QApplication::clipboard();
+        pClipboard->setText(sFilePath);
     }
 }
 
@@ -490,8 +490,8 @@ void XProcessWidget::_copyFilename()
     {
         QString sFilePath=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_FILEPATH).toString();
 
-        QClipboard *clipboard=QApplication::clipboard();
-        clipboard->setText(sFilePath);
+        QClipboard *pClipboard=QApplication::clipboard();
+        pClipboard->setText(sFilePath);
     }
 }
 
