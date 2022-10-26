@@ -3,14 +3,14 @@ DEPENDPATH += $$PWD
 
 DEFINES += USE_XPROCESS
 
-FORMS += \
-    $$PWD/xprocesswidget.ui
-
 HEADERS += \
     $$PWD/xprocesswidget.h
 
 SOURCES += \
     $$PWD/xprocesswidget.cpp
+
+FORMS += \
+    $$PWD/xprocesswidget.ui
 
 !contains(XCONFIG, xprocess) {
     XCONFIG += xprocess
