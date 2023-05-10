@@ -264,7 +264,7 @@ void XProcessWidget::_memoryHex()
             options.sTitle=sName;
             options.nStartAddress=nImageAddress;
 
-            DialogHexView dialogHexView(this,pIODevice,options);
+            DialogHexView dialogHexView(this,pIODevice,options, nullptr); // TODO XInfoDB!
 
             dialogHexView.setGlobal(getShortcuts(),getGlobalOptions());
 
