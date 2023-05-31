@@ -403,7 +403,7 @@ void XProcessWidget::_showInViewer()
             FW_DEF::OPTIONS options={};
 
             options.sTitle=sFilePath;
-            options.nStartType=SPE::TYPE_HEURISTICSCAN;
+            options.nStartType=SPE::TYPE_NFDSCAN;
             options.nImageBase=-1;
 
             DialogPE dialogPE(this);
@@ -416,7 +416,7 @@ void XProcessWidget::_showInViewer()
             FW_DEF::OPTIONS options={};
 
             options.sTitle=sFilePath;
-            options.nStartType=SELF::TYPE_HEURISTICSCAN;
+            options.nStartType=SELF::TYPE_NFDSCAN;
             options.nImageBase=-1;
 
             DialogELF dialogELF(this);
@@ -429,7 +429,7 @@ void XProcessWidget::_showInViewer()
             FW_DEF::OPTIONS options={};
 
             options.sTitle=sFilePath;
-            options.nStartType=SMACH::TYPE_HEURISTICSCAN;
+            options.nStartType=SMACH::TYPE_NFDSCAN;
             options.nImageBase=-1;
 
             DialogMACH dialogMach(this);
