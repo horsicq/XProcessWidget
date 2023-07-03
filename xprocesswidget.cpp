@@ -664,6 +664,8 @@ void XProcessWidget::on_comboBoxMode_currentIndexChanged(int nIndex)
             ui->comboBoxMode->setCurrentIndex(0);
         }
     }
+#else
+    Q_UNUSED(nIndex)
 #endif
 }
 
@@ -683,5 +685,7 @@ XDynStructsEngine::IOMODE XProcessWidget::getCurrentIOMode()
 
 void XProcessWidget::on_checkBoxShowAll_toggled(bool bChecked)
 {
+    Q_UNUSED(bChecked)
+
     reload();
 }
