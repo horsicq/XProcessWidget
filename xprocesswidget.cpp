@@ -305,7 +305,7 @@ void XProcessWidget::_memoryStrings()
 
             DialogSearchStrings dialogSearchStrings(this);
 
-            dialogSearchStrings.setData(pIODevice,options,true);
+            dialogSearchStrings.setData(pIODevice,XBinary::FT_REGION,options,true);
             dialogSearchStrings.setGlobal(getShortcuts(),getGlobalOptions());
 
             dialogSearchStrings.exec();
