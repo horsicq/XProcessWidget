@@ -50,30 +50,26 @@ namespace Ui {
 class XProcessWidget;
 }
 
-class XProcessWidget : public XShortcutsWidget
-{
+class XProcessWidget : public XShortcutsWidget {
     Q_OBJECT
 
-    enum COLUMN
-    {
-        COLUMN_ID=0,
+    enum COLUMN {
+        COLUMN_ID = 0,
         COLUMN_NAME,
         COLUMN_FILENAME,
         COLUMN_size
     };
 
-    enum CBDATA
-    {
-        CBDATA_PID=0,
+    enum CBDATA {
+        CBDATA_PID = 0,
         CBDATA_NAME,
         CBDATA_FILEPATH,
         CBDATA_IMAGEADDRESS,
         CBDATA_IMAGESIZE
     };
 
-    enum SC
-    {
-        SC_PROCESSSCTRUCT=0,
+    enum SC {
+        SC_PROCESSSCTRUCT = 0,
         SC_PROCESSDUMPTOFILE,
         SC_PROCESSMEMORYHEX,
         SC_PROCESSMEMORYSTRINGS,
@@ -89,10 +85,10 @@ class XProcessWidget : public XShortcutsWidget
     };
 
 public:
-    explicit XProcessWidget(QWidget *pParent=nullptr);
+    explicit XProcessWidget(QWidget *pParent = nullptr);
     ~XProcessWidget();
 
-    void setGlobal(XShortcuts *pShortcuts,XOptions *pXOptions);
+    void setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions);
 
 private slots:
     void reload();
@@ -119,7 +115,7 @@ private slots:
     void on_pushButtonProcessesFileViewer_clicked();
     void on_pushButtonProcessMemoryMap_clicked();
     void on_pushButtonProcessModules_clicked();
-    void errorMessageSlot(QString sErrorMessage);    
+    void errorMessageSlot(QString sErrorMessage);
     void on_comboBoxMode_currentIndexChanged(int nIndex);
     XDynStructsEngine::IOMODE getCurrentIOMode();
     void on_checkBoxShowAll_toggled(bool bChecked);
@@ -138,4 +134,4 @@ private:
 #endif
 };
 
-#endif // XPROCESSWIDGET_H
+#endif  // XPROCESSWIDGET_H

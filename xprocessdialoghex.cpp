@@ -21,16 +21,14 @@
 #include "xprocessdialoghex.h"
 #include "ui_xprocessdialoghex.h"
 
-XProcessDialogHex::XProcessDialogHex(QWidget *parent, XBinary *pBinary) :
-    QDialog(parent),
-    ui(new Ui::XProcessDialogHex)
+XProcessDialogHex::XProcessDialogHex(QWidget *parent, XBinary *pBinary) : QDialog(parent), ui(new Ui::XProcessDialogHex)
 {
     ui->setupUi(this);
 
-    options={};
-    options.memoryMap=pBinary->getMemoryMap();
+    options = {};
+    options.memoryMap = pBinary->getMemoryMap();
 
-    ui->widgetHex->setData(pBinary->getDevice(),&options);
+    ui->widgetHex->setData(pBinary->getDevice(), &options);
 }
 
 XProcessDialogHex::~XProcessDialogHex()

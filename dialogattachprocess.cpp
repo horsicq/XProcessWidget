@@ -21,9 +21,7 @@
 #include "dialogattachprocess.h"
 #include "ui_dialogattachprocess.h"
 
-DialogAttachProcess::DialogAttachProcess(QWidget *pParent) :
-    QDialog(pParent),
-    ui(new Ui::DialogAttachProcess)
+DialogAttachProcess::DialogAttachProcess(QWidget *pParent) : QDialog(pParent), ui(new Ui::DialogAttachProcess)
 {
     ui->setupUi(this);
 }
@@ -51,5 +49,4 @@ void DialogAttachProcess::on_pushButtonReload_clicked()
 
 void DialogAttachProcess::reload()
 {
-
 }

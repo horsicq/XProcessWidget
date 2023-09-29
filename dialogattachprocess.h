@@ -28,13 +28,11 @@ namespace Ui {
 class DialogAttachProcess;
 }
 
-class DialogAttachProcess : public QDialog
-{
+class DialogAttachProcess : public QDialog {
     Q_OBJECT
 
 public:
-
-    explicit DialogAttachProcess(QWidget *pParent=nullptr);
+    explicit DialogAttachProcess(QWidget *pParent = nullptr);
     ~DialogAttachProcess();
 
 private slots:
@@ -47,4 +45,4 @@ private:
     Ui::DialogAttachProcess *ui;
 };
 
-#endif // DIALOGATTACHPROCESS_H
+#endif  // DIALOGATTACHPROCESS_H

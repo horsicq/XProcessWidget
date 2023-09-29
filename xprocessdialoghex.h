@@ -28,12 +28,11 @@ namespace Ui {
 class XProcessDialogHex;
 }
 
-class XProcessDialogHex : public QDialog
-{
+class XProcessDialogHex : public QDialog {
     Q_OBJECT
 
 public:
-    explicit XProcessDialogHex(QWidget *parent,XBinary *pBinary);
+    explicit XProcessDialogHex(QWidget *parent, XBinary *pBinary);
     ~XProcessDialogHex();
 
 private slots:
@@ -45,4 +44,4 @@ private:
     QHexView::OPTIONS options;
 };
 
-#endif // XPROCESSDIALOGHEX_H
+#endif  // XPROCESSDIALOGHEX_H
