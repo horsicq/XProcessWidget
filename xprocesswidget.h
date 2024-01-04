@@ -26,12 +26,14 @@
 #include "xprocess.h"
 #include "xpe.h"
 #include "xshortcutswidget.h"
-#ifdef Q_OS_WIN
+#ifdef X_WINIODRIVER
 #include "xwiniodriver.h"
 #endif
 #include "dialoghexview.h"
 #include "dialogsearchstrings.h"
+#ifdef XDYNSTRUCTS
 #include "dialogxdynstructs.h"
+#endif
 #include "dialogsearchsignatures.h"
 #include "dialogxprocessmemorymap.h"
 #include "dialogxprocessmodules.h"
@@ -117,7 +119,9 @@ private slots:
     void on_pushButtonProcessModules_clicked();
     void errorMessageSlot(QString sErrorMessage);
     void on_comboBoxMode_currentIndexChanged(int nIndex);
+#ifdef XDYNSTRUCTS
     XDynStructsEngine::IOMODE getCurrentIOMode();
+#endif
     void on_checkBoxShowAll_toggled(bool bChecked);
 
 protected:
@@ -125,10 +129,11 @@ protected:
 
 private:
     Ui::XProcessWidget *ui;
-
+#ifdef XDYNSTRUCTS
     XDynStructsEngine g_dynStructsEngine;
+#endif
     QShortcut *g_shortCuts[__SC_SIZE];
-#ifdef Q_OS_WIN
+#ifdef X_WINIODRIVER
     bool g_bIsDriverLoaded;
     QString g_sServiceName;
 #endif

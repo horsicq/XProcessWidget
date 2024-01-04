@@ -24,14 +24,14 @@
 XProcessWidget::XProcessWidget(QWidget *pParent) : XShortcutsWidget(pParent), ui(new Ui::XProcessWidget)
 {
     ui->setupUi(this);
-#ifdef Q_OS_WIN
+#ifdef X_WINIODRIVER
     g_bIsDriverLoaded = false;
 #endif
 
     memset(g_shortCuts, 0, sizeof g_shortCuts);
-
+#ifdef XDYNSTRUCTS
     connect(&g_dynStructsEngine, SIGNAL(errorMessage(QString)), this, SLOT(errorMessageSlot(QString)));
-
+#endif
     // mb TODO auto refresh
 
     ui->tableWidgetProcesses->setColumnCount(COLUMN_size);
@@ -52,7 +52,7 @@ XProcessWidget::XProcessWidget(QWidget *pParent) : XShortcutsWidget(pParent), ui
     ui->labelBuild->setText(XProcess::getOsInfo().sBuild);
 
     ui->comboBoxMode->addItem(tr("User mode"));
-#ifdef Q_OS_WIN
+#ifdef X_WINIODRIVER
     ui->comboBoxMode->addItem(tr("Kernel mode"));
 #endif
     //    ui->comboBoxMode->addItem(QString("kldbgdrv"));
@@ -62,7 +62,7 @@ XProcessWidget::XProcessWidget(QWidget *pParent) : XShortcutsWidget(pParent), ui
 
 XProcessWidget::~XProcessWidget()
 {
-#ifdef Q_OS_WIN
+#ifdef X_WINIODRIVER
     if (g_bIsDriverLoaded) {
         XWinIODriver().unloadDriver(g_sServiceName);
     }
@@ -75,7 +75,7 @@ void XProcessWidget::setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions)
 {
     // TODO
     XShortcutsWidget::setGlobal(pShortcuts, pXOptions);
-    g_dynStructsEngine.setOptions(pXOptions);
+    // g_dynStructsEngine.setOptions(pXOptions);
 }
 
 void XProcessWidget::reload()
@@ -241,28 +241,28 @@ void XProcessWidget::_memoryHex()
         qint64 nImageSize = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGESIZE).toLongLong();
         QString sName = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_NAME).toString();
 
-        XDynStructsEngine dynStructsEngine;
-        dynStructsEngine.setOptions(getGlobalOptions());
-        dynStructsEngine.setProcessId(nPID, getCurrentIOMode());
+        // XDynStructsEngine dynStructsEngine;
+        // dynStructsEngine.setOptions(getGlobalOptions());
+        // dynStructsEngine.setProcessId(nPID, getCurrentIOMode());
 
-        XIODevice *pIODevice = dynStructsEngine.createIODevice(nImageAddress, nImageSize);
+        // XIODevice *pIODevice = dynStructsEngine.createIODevice(nImageAddress, nImageSize);
 
-        if (pIODevice && (pIODevice->open(QIODevice::ReadOnly))) {
-            XHexView::OPTIONS options = {};
+        // if (pIODevice && (pIODevice->open(QIODevice::ReadOnly))) {
+        //     XHexView::OPTIONS options = {};
 
-            options.sTitle = sName;
-            options.nStartAddress = nImageAddress;
+        //     options.sTitle = sName;
+        //     options.nStartAddress = nImageAddress;
 
-            DialogHexView dialogHexView(this, pIODevice, options, nullptr);  // TODO XInfoDB!
+        //     DialogHexView dialogHexView(this, pIODevice, options, nullptr);  // TODO XInfoDB!
 
-            dialogHexView.setGlobal(getShortcuts(), getGlobalOptions());
+        //     dialogHexView.setGlobal(getShortcuts(), getGlobalOptions());
 
-            dialogHexView.exec();
+        //     dialogHexView.exec();
 
-            pIODevice->close();
-        }
+        //     pIODevice->close();
+        // }
 
-        delete pIODevice;
+        // delete pIODevice;
     }
 }
 
@@ -276,31 +276,31 @@ void XProcessWidget::_memoryStrings()
         qint64 nImageSize = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGESIZE).toLongLong();
         QString sName = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_NAME).toString();
 
-        XDynStructsEngine dynStructsEngine;
-        dynStructsEngine.setOptions(getGlobalOptions());
-        dynStructsEngine.setProcessId(nPID, getCurrentIOMode());
+        // XDynStructsEngine dynStructsEngine;
+        // dynStructsEngine.setOptions(getGlobalOptions());
+        // dynStructsEngine.setProcessId(nPID, getCurrentIOMode());
 
-        XIODevice *pIODevice = dynStructsEngine.createIODevice(nImageAddress, nImageSize);
+        // XIODevice *pIODevice = dynStructsEngine.createIODevice(nImageAddress, nImageSize);
 
-        if (pIODevice && (pIODevice->open(QIODevice::ReadOnly))) {
-            SearchStringsWidget::OPTIONS options = {};
-            options.bAnsi = true;
-            options.bUnicode = true;
-            options.bCStrings = false;
-            options.sTitle = sName;
-            options.nBaseAddress = nImageAddress;
+        // if (pIODevice && (pIODevice->open(QIODevice::ReadOnly))) {
+        //     SearchStringsWidget::OPTIONS options = {};
+        //     options.bAnsi = true;
+        //     options.bUnicode = true;
+        //     options.bCStrings = false;
+        //     options.sTitle = sName;
+        //     options.nBaseAddress = nImageAddress;
 
-            DialogSearchStrings dialogSearchStrings(this);
+        //     DialogSearchStrings dialogSearchStrings(this);
 
-            dialogSearchStrings.setData(pIODevice, XBinary::FT_REGION, options, true);
-            dialogSearchStrings.setGlobal(getShortcuts(), getGlobalOptions());
+        //     dialogSearchStrings.setData(pIODevice, XBinary::FT_REGION, options, true);
+        //     dialogSearchStrings.setGlobal(getShortcuts(), getGlobalOptions());
 
-            dialogSearchStrings.exec();
+        //     dialogSearchStrings.exec();
 
-            pIODevice->close();
-        }
+        //     pIODevice->close();
+        // }
 
-        delete pIODevice;
+        // delete pIODevice;
     }
 }
 
@@ -314,27 +314,27 @@ void XProcessWidget::_memorySignatures()
         qint64 nImageSize = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGESIZE).toLongLong();
         //        QString sName=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_NAME).toString();
 
-        XDynStructsEngine dynStructsEngine;
-        dynStructsEngine.setOptions(getGlobalOptions());
-        dynStructsEngine.setProcessId(nPID, getCurrentIOMode());
+        // XDynStructsEngine dynStructsEngine;
+        // dynStructsEngine.setOptions(getGlobalOptions());
+        // dynStructsEngine.setProcessId(nPID, getCurrentIOMode());
 
-        XIODevice *pIODevice = dynStructsEngine.createIODevice(nImageAddress, nImageSize);
+        // XIODevice *pIODevice = dynStructsEngine.createIODevice(nImageAddress, nImageSize);
 
-        if (pIODevice && (pIODevice->open(QIODevice::ReadOnly))) {
-            DialogSearchSignatures dialogSearchSignatures(this);
+        // if (pIODevice && (pIODevice->open(QIODevice::ReadOnly))) {
+        //     DialogSearchSignatures dialogSearchSignatures(this);
 
-            dialogSearchSignatures.setGlobal(getShortcuts(), getGlobalOptions());
+        //     dialogSearchSignatures.setGlobal(getShortcuts(), getGlobalOptions());
 
-            SearchSignaturesWidget::OPTIONS options = {};
+        //     SearchSignaturesWidget::OPTIONS options = {};
 
-            dialogSearchSignatures.setData(pIODevice, XBinary::FT_REGION, options, false);
+        //     dialogSearchSignatures.setData(pIODevice, XBinary::FT_REGION, options, false);
 
-            dialogSearchSignatures.exec();
+        //     dialogSearchSignatures.exec();
 
-            pIODevice->close();
-        }
+        //     pIODevice->close();
+        // }
 
-        delete pIODevice;
+        // delete pIODevice;
     }
 }
 
@@ -480,14 +480,14 @@ void XProcessWidget::_structs()
         qint64 nProcessId = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_PID).toLongLong();
         qint64 nImageAddress = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGEADDRESS).toLongLong();
 
-        g_dynStructsEngine.setProcessId(nProcessId, getCurrentIOMode());
+        // g_dynStructsEngine.setProcessId(nProcessId, getCurrentIOMode());
 
-        DialogXDynStructs dialogXDynStructs(this);
+        // DialogXDynStructs dialogXDynStructs(this);
 
-        dialogXDynStructs.setData(&g_dynStructsEngine, nImageAddress);
-        dialogXDynStructs.setGlobal(getShortcuts(), getGlobalOptions());
+        // dialogXDynStructs.setData(&g_dynStructsEngine, nImageAddress);
+        // dialogXDynStructs.setGlobal(getShortcuts(), getGlobalOptions());
 
-        dialogXDynStructs.exec();
+        // dialogXDynStructs.exec();
     }
 }
 
@@ -501,26 +501,26 @@ void XProcessWidget::_dumpToFile()
         qint64 nImageSize = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGESIZE).toLongLong();
         QString sName = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_NAME).toString();
 
-        XDynStructsEngine dynStructsEngine;
-        dynStructsEngine.setOptions(getGlobalOptions());
-        dynStructsEngine.setProcessId(nPID, getCurrentIOMode());
+        // XDynStructsEngine dynStructsEngine;
+        // dynStructsEngine.setOptions(getGlobalOptions());
+        // dynStructsEngine.setProcessId(nPID, getCurrentIOMode());
 
-        XIODevice *pIODevice = dynStructsEngine.createIODevice(nImageAddress, nImageSize);
+        // XIODevice *pIODevice = dynStructsEngine.createIODevice(nImageAddress, nImageSize);
 
-        if (pIODevice && (pIODevice->open(QIODevice::ReadOnly))) {
-            QString sSaveFileName = QString("%1.%2.bin").arg(sName, tr("Dump"));
-            QString sFileName = QFileDialog::getSaveFileName(this, tr("Save dump"), sSaveFileName, QString("%1 (*.bin)").arg(tr("Raw data")));
+        // if (pIODevice && (pIODevice->open(QIODevice::ReadOnly))) {
+        //     QString sSaveFileName = QString("%1.%2.bin").arg(sName, tr("Dump"));
+        //     QString sFileName = QFileDialog::getSaveFileName(this, tr("Save dump"), sSaveFileName, QString("%1 (*.bin)").arg(tr("Raw data")));
 
-            if (!sFileName.isEmpty()) {
-                DialogDumpProcess dialogDumpProcess(this, pIODevice, 0, nImageSize, sFileName, DumpProcess::DT_OFFSET);
+        //     if (!sFileName.isEmpty()) {
+        //         DialogDumpProcess dialogDumpProcess(this, pIODevice, 0, nImageSize, sFileName, DumpProcess::DT_OFFSET);
 
-                dialogDumpProcess.exec();
+        //         dialogDumpProcess.exec();
 
-                pIODevice->close();
-            }
-        }
+        //         pIODevice->close();
+        //     }
+        // }
 
-        delete pIODevice;
+        // delete pIODevice;
     }
 }
 
@@ -618,32 +618,32 @@ void XProcessWidget::errorMessageSlot(QString sErrorMessage)
 void XProcessWidget::on_comboBoxMode_currentIndexChanged(int nIndex)
 {
 #ifdef Q_OS_WIN
-    if (nIndex == 1)  // Kernel mode
-    {
-        if (!g_bIsDriverLoaded) {
-            QString sDriverFileName = getGlobalOptions()->getValue(XOptions::ID_IODRIVER_FILENAME).toString();
-            QString sServiceName = getGlobalOptions()->getValue(XOptions::ID_IODRIVER_SERVICENAME).toString();
+    // if (nIndex == 1)  // Kernel mode
+    // {
+    //     if (!g_bIsDriverLoaded) {
+    //         QString sDriverFileName = getGlobalOptions()->getValue(XOptions::ID_IODRIVER_FILENAME).toString();
+    //         QString sServiceName = getGlobalOptions()->getValue(XOptions::ID_IODRIVER_SERVICENAME).toString();
 
-            sDriverFileName = XBinary::convertPathName(sDriverFileName);
+    //         sDriverFileName = XBinary::convertPathName(sDriverFileName);
 
-            g_bIsDriverLoaded = XWinIODriver().loadDriver(sDriverFileName, sServiceName);
+    //         g_bIsDriverLoaded = XWinIODriver().loadDriver(sDriverFileName, sServiceName);
 
-            if (g_bIsDriverLoaded) {
-                g_sServiceName = sServiceName;
-            }
-        }
+    //         if (g_bIsDriverLoaded) {
+    //             g_sServiceName = sServiceName;
+    //         }
+    //     }
 
-        if (!g_bIsDriverLoaded) {
-            QMessageBox::critical(this, tr("Error"), QString("%1").arg(tr("Cannot load driver")));
+    //     if (!g_bIsDriverLoaded) {
+    //         QMessageBox::critical(this, tr("Error"), QString("%1").arg(tr("Cannot load driver")));
 
-            ui->comboBoxMode->setCurrentIndex(0);
-        }
-    }
+    //         ui->comboBoxMode->setCurrentIndex(0);
+    //     }
+    // }
 #else
     Q_UNUSED(nIndex)
 #endif
 }
-
+#ifdef XDYNSTRUCTS
 XDynStructsEngine::IOMODE XProcessWidget::getCurrentIOMode()
 {
     XDynStructsEngine::IOMODE result = XDynStructsEngine::IOMODE_PROCESS_USER;
@@ -656,7 +656,7 @@ XDynStructsEngine::IOMODE XProcessWidget::getCurrentIOMode()
 
     return result;
 }
-
+#endif
 void XProcessWidget::on_checkBoxShowAll_toggled(bool bChecked)
 {
     Q_UNUSED(bChecked)
