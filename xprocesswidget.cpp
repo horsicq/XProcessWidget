@@ -529,11 +529,6 @@ void XProcessWidget::on_pushButtonProcessesReload_clicked()
     reload();
 }
 
-void XProcessWidget::on_pushButtonProcessStructs_clicked()
-{
-    _structs();
-}
-
 void XProcessWidget::on_pushButtonProcessesSave_clicked()
 {
     QString sFileName = QString("%1.txt").arg(tr("Processes"));
@@ -542,31 +537,6 @@ void XProcessWidget::on_pushButtonProcessesSave_clicked()
     if (!sFileName.isEmpty()) {
         XOptions::saveTableWidget(ui->tableWidgetProcesses, sFileName);
     }
-}
-
-void XProcessWidget::on_pushButtonProcessHex_clicked()
-{
-    _memoryHex();
-}
-
-void XProcessWidget::on_pushButtonProcessStrings_clicked()
-{
-    _memoryStrings();
-}
-
-void XProcessWidget::on_pushButtonProcessesSignatures_clicked()
-{
-    _memorySignatures();
-}
-
-void XProcessWidget::on_pushButtonProcessMemoryMap_clicked()
-{
-    _memoryMap();
-}
-
-void XProcessWidget::on_pushButtonProcessModules_clicked()
-{
-    _modules();
 }
 
 void XProcessWidget::registerShortcuts(bool bState)
@@ -603,11 +573,6 @@ void XProcessWidget::registerShortcuts(bool bState)
             }
         }
     }
-}
-
-void XProcessWidget::on_pushButtonProcessesFileViewer_clicked()
-{
-    _showInViewer();
 }
 
 void XProcessWidget::errorMessageSlot(QString sErrorMessage)

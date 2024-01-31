@@ -39,6 +39,13 @@
       </widget>
      </item>
      <item>
+      <widget class="QCheckBox" name="checkBoxShowAll">
+       <property name="text">
+        <string>Show all</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -75,79 +82,6 @@
       <widget class="QPushButton" name="pushButtonProcessesReload">
        <property name="text">
         <string>Reload</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QCheckBox" name="checkBoxShowAll">
-       <property name="text">
-        <string>Show all</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButtonProcessStructs">
-       <property name="text">
-        <string>Structs</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButtonProcessHex">
-       <property name="text">
-        <string>Hex</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButtonProcessStrings">
-       <property name="text">
-        <string>Strings</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButtonProcessesSignatures">
-       <property name="text">
-        <string>Signatures</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButtonProcessesFileViewer">
-       <property name="text">
-        <string>Viewer</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButtonProcessMemoryMap">
-       <property name="text">
-        <string>Memory map</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButtonProcessModules">
-       <property name="text">
-        <string>Modules</string>
        </property>
       </widget>
      </item>

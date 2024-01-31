@@ -109,14 +109,7 @@ private slots:
     void _structs();
     void _dumpToFile();
     void on_pushButtonProcessesReload_clicked();
-    void on_pushButtonProcessStructs_clicked();
     void on_pushButtonProcessesSave_clicked();
-    void on_pushButtonProcessHex_clicked();
-    void on_pushButtonProcessStrings_clicked();
-    void on_pushButtonProcessesSignatures_clicked();
-    void on_pushButtonProcessesFileViewer_clicked();
-    void on_pushButtonProcessMemoryMap_clicked();
-    void on_pushButtonProcessModules_clicked();
     void errorMessageSlot(QString sErrorMessage);
     void on_comboBoxMode_currentIndexChanged(int nIndex);
 #ifdef XDYNSTRUCTS
