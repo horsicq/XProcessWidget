@@ -90,6 +90,7 @@ void XProcessWidget::reload()
         nPID = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_PID).toLongLong();
     }
 
+    // TODO ProgressDialog
     QList<XProcess::PROCESS_INFO> listProcesses = XProcess::getProcessesList(ui->checkBoxShowAll->isChecked());
 
     qint32 nCount = listProcesses.count();
@@ -121,7 +122,7 @@ void XProcessWidget::reload()
 
     ui->tableWidgetProcesses->setSortingEnabled(true);
 
-    // Restore row
+    // Restore row if selected
     if (nPID != -1) {
         for (qint32 i = 0; i < nCount; i++) {
             qint64 _nPID = ui->tableWidgetProcesses->item(i, COLUMN_ID)->data(Qt::UserRole + CBDATA_PID).toLongLong();
