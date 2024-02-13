@@ -26,6 +26,14 @@ XProcessWidgetAdvanced::XProcessWidgetAdvanced(QWidget *pParent) :
     ui(new Ui::XProcessWidgetAdvanced)
 {
     ui->setupUi(this);
+
+    ui->comboBoxMode->blockSignals(true);
+
+    ui->comboBoxMode->addItem(tr("All"), XProcess::PIO_VALID);
+    ui->comboBoxMode->addItem(QString(".NET"), XProcess::PIO_NET);
+
+
+    ui->comboBoxMode->blockSignals(false);
 }
 
 XProcessWidgetAdvanced::~XProcessWidgetAdvanced()
@@ -39,7 +47,10 @@ void XProcessWidgetAdvanced::reload()
     // TODO
     DialogHandleInfoProcess dip(XOptions::getMainWidget(this));
 
-    dip.setData(&listProcessInfo);
+    XProcess::PROCESS_INFO_OPTIONS piOptions = {};
+    piOptions.pio = (XProcess::PIO)(ui->comboBoxMode->currentData().toInt());
+
+    dip.setData(piOptions, &listProcessInfo);
 
     dip.showDialogDelay();
 
@@ -101,5 +112,21 @@ void XProcessWidgetAdvanced::registerShortcuts(bool bState)
 
 void XProcessWidgetAdvanced::on_pushButtonReloadProcesses_clicked()
 {
+    reload();
+}
+
+void XProcessWidgetAdvanced::on_pushButtonSaveProcesses_clicked()
+{
+    QString sResultFileName = QString("%1.txt").arg(tr("Processes"));
+
+    QAbstractItemModel *pModel = ui->tableViewProcesses->model();
+
+    XShortcutsWidget::saveTableModel(pModel, sResultFileName);
+}
+
+void XProcessWidgetAdvanced::on_comboBoxMode_currentIndexChanged(int nIndex)
+{
+    Q_UNUSED(nIndex)
+
     reload();
 }

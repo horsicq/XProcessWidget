@@ -31,7 +31,7 @@ public:
     explicit DialogHandleInfoProcess(QWidget *parent = nullptr);
     ~DialogHandleInfoProcess();
 
-    void setData(QList<XProcess::PROCESS_INFO> *pListProcesses);
+    void setData(XProcess::PROCESS_INFO_OPTIONS piOptions, QList<XProcess::PROCESS_INFO> *pListProcesses);
 
 private:
     XProcess *g_pXProcess;

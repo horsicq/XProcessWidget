@@ -44,8 +44,8 @@ DialogHandleInfoProcess::~DialogHandleInfoProcess()
     delete g_pXProcess;
 }
 
-void DialogHandleInfoProcess::setData(QList<XProcess::PROCESS_INFO> *pListProcesses)
+void DialogHandleInfoProcess::setData(XProcess::PROCESS_INFO_OPTIONS piOptions, QList<XProcess::PROCESS_INFO> *pListProcesses)
 {
-    g_pXProcess->setDataGetProcessesInfo(pListProcesses, getPdStruct());
+    g_pXProcess->setDataGetProcessesInfo(piOptions, pListProcesses, getPdStruct());
     g_pThread->start();
 }
