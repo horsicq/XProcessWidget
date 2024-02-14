@@ -27,13 +27,12 @@ XProcessWidgetAdvanced::XProcessWidgetAdvanced(QWidget *pParent) :
 {
     ui->setupUi(this);
 
-    ui->comboBoxMode->blockSignals(true);
+    ui->comboBoxProcessesMode->blockSignals(true);
 
-    ui->comboBoxMode->addItem(tr("All"), XProcess::PIO_VALID);
-    ui->comboBoxMode->addItem(QString(".NET"), XProcess::PIO_NET);
+    ui->comboBoxProcessesMode->addItem(tr("All"), XProcess::PIO_VALID);
+    ui->comboBoxProcessesMode->addItem(QString(".NET"), XProcess::PIO_NET);
 
-
-    ui->comboBoxMode->blockSignals(false);
+    ui->comboBoxProcessesMode->blockSignals(false);
 }
 
 XProcessWidgetAdvanced::~XProcessWidgetAdvanced()
@@ -48,7 +47,7 @@ void XProcessWidgetAdvanced::reload()
     DialogHandleInfoProcess dip(XOptions::getMainWidget(this));
 
     XProcess::PROCESS_INFO_OPTIONS piOptions = {};
-    piOptions.pio = (XProcess::PIO)(ui->comboBoxMode->currentData().toInt());
+    piOptions.pio = (XProcess::PIO)(ui->comboBoxProcessesMode->currentData().toInt());
 
     dip.setData(piOptions, &listProcessInfo);
 
@@ -58,12 +57,28 @@ void XProcessWidgetAdvanced::reload()
         QAbstractItemModel *pOldModel = ui->tableViewProcesses->model();
 
         qint32 nNumberOfRecords = listProcessInfo.count();
+        qint32 nNumberOfRows = 0;
 
-        QStandardItemModel *pModel = new QStandardItemModel(nNumberOfRecords, COLUMN_SIZE);
+        if ((piOptions.pio == XProcess::PIO_ALL) || (piOptions.pio == XProcess::PIO_VALID)) {
+            nNumberOfRows = __COLUMN_ALL_SIZE;
+        } else if (piOptions.pio == XProcess::PIO_NET) {
+            nNumberOfRows = __COLUMN_NET_SIZE;
+        }
 
-        pModel->setHeaderData(COLUMN_PID, Qt::Horizontal, QString("PID"));
-        pModel->setHeaderData(COLUMN_NAME, Qt::Horizontal, tr("Name"));
-        pModel->setHeaderData(COLUMN_FILENAME, Qt::Horizontal, tr("File name"));
+        QStandardItemModel *pModel = new QStandardItemModel(nNumberOfRecords, nNumberOfRows);
+
+        if ((piOptions.pio == XProcess::PIO_ALL) || (piOptions.pio == XProcess::PIO_VALID)) {
+            pModel->setHeaderData(COLUMN_ALL_PID, Qt::Horizontal, QString("PID"));
+            pModel->setHeaderData(COLUMN_ALL_NAME, Qt::Horizontal, tr("Name"));
+            pModel->setHeaderData(COLUMN_ALL_INFO, Qt::Horizontal, tr("Info"));
+            pModel->setHeaderData(COLUMN_ALL_FILENAME, Qt::Horizontal, tr("File name"));
+        } else if (piOptions.pio == XProcess::PIO_NET) {
+            pModel->setHeaderData(COLUMN_NET_PID, Qt::Horizontal, QString("PID"));
+            pModel->setHeaderData(COLUMN_NET_NAME, Qt::Horizontal, tr("Name"));
+            pModel->setHeaderData(COLUMN_NET_VERSION, Qt::Horizontal, tr("Version"));
+            pModel->setHeaderData(COLUMN_NET_INFO, Qt::Horizontal, tr("Info"));
+            pModel->setHeaderData(COLUMN_NET_FILENAME, Qt::Horizontal, tr("File name"));
+        }
 
         for (qint32 i = 0; i < nNumberOfRecords; i++) {
             {
@@ -75,33 +90,82 @@ void XProcessWidgetAdvanced::reload()
                 // pItem->setData(extractor_data.listRecords.at(i).nSize, Qt::UserRole + 1);
                 // pItem->setData(extractor_data.listRecords.at(i).sExt, Qt::UserRole + 2);
 
-                pModel->setItem(i, COLUMN_PID, pItem);
+                if ((piOptions.pio == XProcess::PIO_ALL) || (piOptions.pio == XProcess::PIO_VALID)) {
+                    pModel->setItem(i, COLUMN_ALL_PID, pItem);
+                } else if (piOptions.pio == XProcess::PIO_NET) {
+                    pModel->setItem(i, COLUMN_NET_PID, pItem);
+                }
             }
             {
                 QStandardItem *pItem = new QStandardItem;
 
                 pItem->setText(listProcessInfo.at(i).sName);
-                pModel->setItem(i, COLUMN_NAME, pItem);
+
+                if ((piOptions.pio == XProcess::PIO_ALL) || (piOptions.pio == XProcess::PIO_VALID)) {
+                    pModel->setItem(i, COLUMN_ALL_NAME, pItem);
+                } else if (piOptions.pio == XProcess::PIO_NET) {
+                    pModel->setItem(i, COLUMN_NET_NAME, pItem);
+                }
+            }
+            if (piOptions.pio == XProcess::PIO_NET) {
+                QStandardItem *pItem = new QStandardItem;
+
+                pItem->setText(listProcessInfo.at(i).sInfoExtra);
+                pModel->setItem(i, COLUMN_NET_INFO, pItem);
+            }
+            {
+                QStandardItem *pItem = new QStandardItem;
+
+                pItem->setText(listProcessInfo.at(i).sInfo);
+
+                if ((piOptions.pio == XProcess::PIO_ALL) || (piOptions.pio == XProcess::PIO_VALID)) {
+                    pModel->setItem(i, COLUMN_ALL_INFO, pItem);
+                } else if (piOptions.pio == XProcess::PIO_NET) {
+                    pModel->setItem(i, COLUMN_NET_INFO, pItem);
+                }
             }
             {
                 QStandardItem *pItem = new QStandardItem;
 
                 pItem->setText(listProcessInfo.at(i).sFilePath);
-                pModel->setItem(i, COLUMN_FILENAME, pItem);
+
+                if ((piOptions.pio == XProcess::PIO_ALL) || (piOptions.pio == XProcess::PIO_VALID)) {
+                    pModel->setItem(i, COLUMN_ALL_FILENAME, pItem);
+                } else if (piOptions.pio == XProcess::PIO_NET) {
+                    pModel->setItem(i, COLUMN_NET_FILENAME, pItem);
+                }
             }
         }
 
-        XOptions::setModelTextAlignment(pModel, COLUMN_PID, Qt::AlignRight | Qt::AlignVCenter);
-        XOptions::setModelTextAlignment(pModel, COLUMN_NAME, Qt::AlignLeft | Qt::AlignVCenter);
-        XOptions::setModelTextAlignment(pModel, COLUMN_FILENAME, Qt::AlignLeft | Qt::AlignVCenter);
+        if ((piOptions.pio == XProcess::PIO_ALL) || (piOptions.pio == XProcess::PIO_VALID)) {
+            XOptions::setModelTextAlignment(pModel, COLUMN_ALL_PID, Qt::AlignRight | Qt::AlignVCenter);
+            XOptions::setModelTextAlignment(pModel, COLUMN_ALL_NAME, Qt::AlignLeft | Qt::AlignVCenter);
+            XOptions::setModelTextAlignment(pModel, COLUMN_ALL_FILENAME, Qt::AlignLeft | Qt::AlignVCenter);
+        } else if (piOptions.pio == XProcess::PIO_NET) {
+            XOptions::setModelTextAlignment(pModel, COLUMN_NET_PID, Qt::AlignRight | Qt::AlignVCenter);
+            XOptions::setModelTextAlignment(pModel, COLUMN_NET_NAME, Qt::AlignLeft | Qt::AlignVCenter);
+            XOptions::setModelTextAlignment(pModel, COLUMN_NET_FILENAME, Qt::AlignLeft | Qt::AlignVCenter);
+        }
 
         ui->tableViewProcesses->setModel(pModel);
 
         deleteOldAbstractModel(&pOldModel);
 
-        ui->tableViewProcesses->horizontalHeader()->setSectionResizeMode(COLUMN_FILENAME, QHeaderView::Stretch);
-        ui->tableViewProcesses->sortByColumn(COLUMN_PID, Qt::AscendingOrder);
+        if ((piOptions.pio == XProcess::PIO_ALL) || (piOptions.pio == XProcess::PIO_VALID)) {
+            ui->tableViewProcesses->horizontalHeader()->setSectionResizeMode(COLUMN_ALL_FILENAME, QHeaderView::Stretch);
+        } else if (piOptions.pio == XProcess::PIO_NET) {
+            ui->tableViewProcesses->horizontalHeader()->setSectionResizeMode(COLUMN_NET_FILENAME, QHeaderView::Stretch);
+        }
+
+        ui->tableViewProcesses->sortByColumn(0, Qt::AscendingOrder);
     }
+}
+
+void XProcessWidgetAdvanced::setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions)
+{
+    pXOptions->setComboBox(ui->comboBoxProcessesScan, XOptions::ID_SCAN_ENGINE);
+
+    XShortcutsWidget::setGlobal(pShortcuts, pXOptions);
 }
 
 void XProcessWidgetAdvanced::registerShortcuts(bool bState)

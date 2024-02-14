@@ -33,11 +33,21 @@ class XProcessWidgetAdvanced : public XShortcutsWidget
 {
     Q_OBJECT
 
-    enum COLUMN {
-        COLUMN_PID = 0,
-        COLUMN_NAME,
-        COLUMN_FILENAME,
-        COLUMN_SIZE
+    enum COLUMN_ALL {
+        COLUMN_ALL_PID = 0,
+        COLUMN_ALL_NAME,
+        COLUMN_ALL_INFO,
+        COLUMN_ALL_FILENAME,
+        __COLUMN_ALL_SIZE
+    };
+
+    enum COLUMN_NET {
+        COLUMN_NET_PID = 0,
+        COLUMN_NET_NAME,
+        COLUMN_NET_VERSION,
+        COLUMN_NET_INFO,
+        COLUMN_NET_FILENAME,
+        __COLUMN_NET_SIZE
     };
 
 public:
@@ -45,6 +55,7 @@ public:
     ~XProcessWidgetAdvanced();
 
     void reload();
+    void setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions);
 
 protected:
     virtual void registerShortcuts(bool bState);
