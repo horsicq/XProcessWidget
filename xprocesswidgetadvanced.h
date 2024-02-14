@@ -63,7 +63,7 @@ protected:
 private slots:
     void on_pushButtonReloadProcesses_clicked();
     void on_pushButtonSaveProcesses_clicked();
-    void on_comboBoxMode_currentIndexChanged(int nIndex);
+    void on_comboBoxProcessesMode_currentIndexChanged(int nIndex);
 
 private:
     Ui::XProcessWidgetAdvanced *ui;

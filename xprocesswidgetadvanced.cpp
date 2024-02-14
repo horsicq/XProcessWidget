@@ -188,7 +188,7 @@ void XProcessWidgetAdvanced::on_pushButtonSaveProcesses_clicked()
     XShortcutsWidget::saveTableModel(pModel, sResultFileName);
 }
 
-void XProcessWidgetAdvanced::on_comboBoxMode_currentIndexChanged(int nIndex)
+void XProcessWidgetAdvanced::on_comboBoxProcessesMode_currentIndexChanged(int nIndex)
 {
     Q_UNUSED(nIndex)
 
