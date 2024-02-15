@@ -22,7 +22,7 @@
 #define DIALOGHANDLEINFOPROCESS_H
 
 #include "xdialogprocess.h"
-#include "xprocess.h"
+#include "xhandleinfo.h"
 
 class DialogHandleInfoProcess : public XDialogProcess
 {
@@ -31,10 +31,10 @@ public:
     explicit DialogHandleInfoProcess(QWidget *parent = nullptr);
     ~DialogHandleInfoProcess();
 
-    void setData(XProcess::PROCESS_INFO_OPTIONS piOptions, QList<XProcess::PROCESS_INFO> *pListProcesses);
+    void setData(XhandleInfo::HANDLE_INFO_OPTIONS hiOptions, QList<XProcess::PROCESS_INFO> *pListProcesses);
 
 private:
-    XProcess *g_pXProcess;
+    XhandleInfo *g_pXhandleInfo;
     QThread *g_pThread;
 };
 

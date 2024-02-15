@@ -22,14 +22,14 @@
 
 DialogHandleInfoProcess::DialogHandleInfoProcess(QWidget *parent) : XDialogProcess(parent)
 {
-    g_pXProcess = new XProcess;
+    g_pXhandleInfo = new XhandleInfo;
     g_pThread = new QThread;
 
-    g_pXProcess->moveToThread(g_pThread);
+    g_pXhandleInfo->moveToThread(g_pThread);
 
-    connect(g_pThread, SIGNAL(started()), g_pXProcess, SLOT(processGetProcessesInfo()));
-    connect(g_pXProcess, SIGNAL(completed(qint64)), this, SLOT(onCompleted(qint64)));
-    connect(g_pXProcess, SIGNAL(errorMessage(QString)), this, SLOT(errorMessageSlot(QString)));
+    connect(g_pThread, SIGNAL(started()), g_pXhandleInfo, SLOT(process()));
+    connect(g_pXhandleInfo, SIGNAL(completed(qint64)), this, SLOT(onCompleted(qint64)));
+    connect(g_pXhandleInfo, SIGNAL(errorMessage(QString)), this, SLOT(errorMessageSlot(QString)));
 }
 
 DialogHandleInfoProcess::~DialogHandleInfoProcess()
@@ -41,11 +41,11 @@ DialogHandleInfoProcess::~DialogHandleInfoProcess()
     g_pThread->wait();
 
     delete g_pThread;
-    delete g_pXProcess;
+    delete g_pXhandleInfo;
 }
 
-void DialogHandleInfoProcess::setData(XProcess::PROCESS_INFO_OPTIONS piOptions, QList<XProcess::PROCESS_INFO> *pListProcesses)
+void DialogHandleInfoProcess::setData(XhandleInfo::HANDLE_INFO_OPTIONS hiOptions, QList<XProcess::PROCESS_INFO> *pListProcesses)
 {
-    g_pXProcess->setDataGetProcessesInfo(piOptions, pListProcesses, getPdStruct());
+    g_pXhandleInfo->setData(hiOptions, pListProcesses, getPdStruct());
     g_pThread->start();
 }

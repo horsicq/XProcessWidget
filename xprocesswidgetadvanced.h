@@ -36,7 +36,7 @@ class XProcessWidgetAdvanced : public XShortcutsWidget
     enum COLUMN_ALL {
         COLUMN_ALL_PID = 0,
         COLUMN_ALL_NAME,
-        COLUMN_ALL_INFO,
+        COLUMN_ALL_PROTECTION,
         COLUMN_ALL_FILENAME,
         __COLUMN_ALL_SIZE
     };
@@ -45,7 +45,7 @@ class XProcessWidgetAdvanced : public XShortcutsWidget
         COLUMN_NET_PID = 0,
         COLUMN_NET_NAME,
         COLUMN_NET_VERSION,
-        COLUMN_NET_INFO,
+        COLUMN_NET_PROTECTION,
         COLUMN_NET_FILENAME,
         __COLUMN_NET_SIZE
     };
@@ -63,7 +63,6 @@ protected:
 private slots:
     void on_pushButtonReloadProcesses_clicked();
     void on_pushButtonSaveProcesses_clicked();
-    void on_comboBoxProcessesMode_currentIndexChanged(int nIndex);
 
 private:
     Ui::XProcessWidgetAdvanced *ui;

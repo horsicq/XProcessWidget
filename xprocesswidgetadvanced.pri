@@ -4,9 +4,13 @@ DEPENDPATH += $$PWD
 DEFINES += USE_XPROCESS
 
 HEADERS += \
+    $$PWD/dialoghandleinfoprocess.h \
+    $$PWD/xhandleinfo.h \
     $$PWD/xprocesswidgetadvanced.h
 
 SOURCES += \
+    $$PWD/dialoghandleinfoprocess.cpp \
+    $$PWD/xhandleinfo.cpp \
     $$PWD/xprocesswidgetadvanced.cpp
 
 FORMS += \
@@ -20,11 +24,6 @@ FORMS += \
 !contains(XCONFIG, allformatwidgets) {
     XCONFIG += allformatwidgets
     include($$PWD/../FormatWidgets/allformatwidgets.pri)
-}
-
-!contains(XCONFIG, xdynstructswidget) {
-    XCONFIG += xdynstructswidget
-    include($$PWD/../XDynStructsWidget/xdynstructswidget.pri)
 }
 
 !contains(XCONFIG, xprocessmemorymapwidget) {
