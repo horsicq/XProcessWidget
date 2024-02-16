@@ -21,9 +21,7 @@
 #include "xprocesswidgetadvanced.h"
 #include "ui_xprocesswidgetadvanced.h"
 
-XProcessWidgetAdvanced::XProcessWidgetAdvanced(QWidget *pParent) :
-    XShortcutsWidget(pParent),
-    ui(new Ui::XProcessWidgetAdvanced)
+XProcessWidgetAdvanced::XProcessWidgetAdvanced(QWidget *pParent) : XShortcutsWidget(pParent), ui(new Ui::XProcessWidgetAdvanced)
 {
     ui->setupUi(this);
 
@@ -192,4 +190,3 @@ void XProcessWidgetAdvanced::on_pushButtonSaveProcesses_clicked()
 
     XShortcutsWidget::saveTableModel(pModel, sResultFileName);
 }
-

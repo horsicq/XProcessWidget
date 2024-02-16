@@ -29,8 +29,7 @@ namespace Ui {
 class XProcessWidgetAdvanced;
 }
 
-class XProcessWidgetAdvanced : public XShortcutsWidget
-{
+class XProcessWidgetAdvanced : public XShortcutsWidget {
     Q_OBJECT
 
     enum COLUMN_ALL {
@@ -68,4 +67,4 @@ private:
     Ui::XProcessWidgetAdvanced *ui;
 };
 
-#endif // XPROCESSWIDGETADVANCED_H
+#endif  // XPROCESSWIDGETADVANCED_H

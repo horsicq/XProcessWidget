@@ -24,8 +24,7 @@
 #include "xdialogprocess.h"
 #include "xhandleinfo.h"
 
-class DialogHandleInfoProcess : public XDialogProcess
-{
+class DialogHandleInfoProcess : public XDialogProcess {
     Q_OBJECT
 public:
     explicit DialogHandleInfoProcess(QWidget *parent = nullptr);
@@ -38,4 +37,4 @@ private:
     QThread *g_pThread;
 };
 
-#endif // DIALOGHANDLEINFOPROCESS_H
+#endif  // DIALOGHANDLEINFOPROCESS_H

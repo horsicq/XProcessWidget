@@ -25,8 +25,7 @@
 #include "staticscan.h"
 #include "die_script.h"
 
-class XhandleInfo : public QObject
-{
+class XhandleInfo : public QObject {
     Q_OBJECT
 public:
     enum INFOCLASS {
@@ -67,4 +66,4 @@ private:
     DiE_Script *g_pDieScript;
 };
 
-#endif // XHANDLEINFO_H
+#endif  // XHANDLEINFO_H

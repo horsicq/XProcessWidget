@@ -20,8 +20,7 @@
  */
 #include "xhandleinfo.h"
 
-XhandleInfo::XhandleInfo(QObject *pParent)
-    : QObject(pParent)
+XhandleInfo::XhandleInfo(QObject *pParent) : QObject(pParent)
 {
     g_pListProcesses = nullptr;
     g_pPdStruct = nullptr;
@@ -110,7 +109,7 @@ void XhandleInfo::process()
 
                     if (!bAdd) {
                         if (g_hiOptions.pio == PIO_NET) {
-    #ifdef Q_OS_WIN
+#ifdef Q_OS_WIN
                             if (XProcess::isModulePesent("clr.dll", &listModules, g_pPdStruct)) {
                                 record.sInfoExtra += "clr.dll";
                                 bAdd = true;
@@ -125,7 +124,7 @@ void XhandleInfo::process()
                             }
 
                             // TODO Check version
-    #endif
+#endif
                         }
                     }
                 }
@@ -136,7 +135,7 @@ void XhandleInfo::process()
                     QFile file;
                     file.setFileName(record.sFilePath);
                     if (file.open(QIODevice::ReadOnly)) {
-                    #ifdef Q_OS_WIN
+#ifdef Q_OS_WIN
                         XPE pe(&file);
                         if (pe.isValid(g_pPdStruct)) {
                             XPE::CLI_INFO cliInfo = pe.getCliInfo(true);
@@ -149,7 +148,7 @@ void XhandleInfo::process()
                                 }
                             }
                         }
-                    #endif
+#endif
                         file.close();
                     }
                 }
