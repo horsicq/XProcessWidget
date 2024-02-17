@@ -182,6 +182,11 @@ void XProcessWidgetAdvanced::on_pushButtonReloadProcesses_clicked()
     reload();
 }
 
+void XProcessWidgetAdvanced::on_comboBoxProcessesScan_clicked()
+{
+    reload();
+}
+
 void XProcessWidgetAdvanced::on_pushButtonSaveProcesses_clicked()
 {
     QString sResultFileName = QString("%1.txt").arg(tr("Processes"));

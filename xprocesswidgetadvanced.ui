@@ -87,13 +87,6 @@
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QCheckBox" name="checkBoxScanProcessesAll">
-          <property name="text">
-           <string>All</string>
-          </property>
-         </widget>
-        </item>
        </layout>
       </widget>
      </item>

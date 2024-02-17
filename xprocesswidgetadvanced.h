@@ -61,6 +61,7 @@ protected:
 
 private slots:
     void on_pushButtonReloadProcesses_clicked();
+    void on_comboBoxProcessesScan_clicked();
     void on_pushButtonSaveProcesses_clicked();
 
 private:
