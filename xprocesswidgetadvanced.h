@@ -21,6 +21,7 @@
 #ifndef XPROCESSWIDGETADVANCED_H
 #define XPROCESSWIDGETADVANCED_H
 
+#include "dialogdumpprocessmemory.h"
 #include "dialoghandleinfoprocess.h"
 #include "xoptions.h"
 #include "xshortcutswidget.h"
@@ -49,6 +50,14 @@ class XProcessWidgetAdvanced : public XShortcutsWidget {
         __COLUMN_NET_SIZE
     };
 
+    enum USERROLE
+    {
+        USERROLE_PID = 0,
+        USERROLE_ADDRESS,
+        USERROLE_SIZE,
+        USERROLE_FILENAME
+    };
+
 public:
     explicit XProcessWidgetAdvanced(QWidget *pParent = nullptr);
     ~XProcessWidgetAdvanced();
@@ -63,6 +72,9 @@ private slots:
     void on_pushButtonReloadProcesses_clicked();
     void on_comboBoxProcessesScan_clicked();
     void on_pushButtonSaveProcesses_clicked();
+    void on_tableViewProcesses_customContextMenuRequested(const QPoint &pos);
+    void _dumpProcess();
+    void _showInFolderSlot();
 
 private:
     Ui::XProcessWidgetAdvanced *ui;

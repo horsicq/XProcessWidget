@@ -4,16 +4,19 @@ DEPENDPATH += $$PWD
 DEFINES += USE_XPROCESS
 
 HEADERS += \
+    $$PWD/dialogdumpprocessmemory.h \
     $$PWD/dialoghandleinfoprocess.h \
     $$PWD/xhandleinfo.h \
     $$PWD/xprocesswidgetadvanced.h
 
 SOURCES += \
+    $$PWD/dialogdumpprocessmemory.cpp \
     $$PWD/dialoghandleinfoprocess.cpp \
     $$PWD/xhandleinfo.cpp \
     $$PWD/xprocesswidgetadvanced.cpp
 
 FORMS += \
+    $$PWD/dialogdumpprocessmemory.ui \
     $$PWD/xprocesswidgetadvanced.ui
 
 !contains(XCONFIG, xprocess) {

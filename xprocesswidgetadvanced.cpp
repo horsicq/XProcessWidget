@@ -89,9 +89,10 @@ void XProcessWidgetAdvanced::reload()
 
                 pItem->setData((qint32)(listProcessInfo.at(i).nID), Qt::DisplayRole);
 
-                // pItem->setData(extractor_data.listRecords.at(i).nOffset, Qt::UserRole + 0);
-                // pItem->setData(extractor_data.listRecords.at(i).nSize, Qt::UserRole + 1);
-                // pItem->setData(extractor_data.listRecords.at(i).sExt, Qt::UserRole + 2);
+                pItem->setData((qint32)(listProcessInfo.at(i).nID), Qt::UserRole + USERROLE_PID);
+                pItem->setData(listProcessInfo.at(i).nImageAddress, Qt::UserRole + USERROLE_ADDRESS);
+                pItem->setData(listProcessInfo.at(i).nImageSize, Qt::UserRole + USERROLE_SIZE);
+                pItem->setData(listProcessInfo.at(i).sFilePath, Qt::UserRole + USERROLE_FILENAME);
 
                 if ((piOptions.pio == XhandleInfo::PIO_ALL) || (piOptions.pio == XhandleInfo::PIO_VALID)) {
                     pModel->setItem(i, COLUMN_ALL_PID, pItem);
@@ -195,3 +196,48 @@ void XProcessWidgetAdvanced::on_pushButtonSaveProcesses_clicked()
 
     XShortcutsWidget::saveTableModel(pModel, sResultFileName);
 }
+
+void XProcessWidgetAdvanced::on_tableViewProcesses_customContextMenuRequested(const QPoint &pos)
+{
+    qint32 nRow = ui->tableViewProcesses->currentIndex().row();
+
+    if (nRow != -1) {
+        QMenu menuContext(this);
+
+        QMenu menuShowIn(tr("Show in"),this);
+
+        QAction actionDumpToFile(tr("Dump to file"),this);
+        actionDumpToFile.setShortcut(getShortcuts()->getShortcut(X_ID_MODULES_DUMPTOFILE));
+        connect(&actionDumpToFile,SIGNAL(triggered()),this,SLOT(_dumpProcess()));
+
+        QAction actionShowInFolder(tr("Folder"),this);
+        actionShowInFolder.setShortcut(getShortcuts()->getShortcut(X_ID_MODULES_SHOWIN_FOLDER));
+        connect(&actionShowInFolder,SIGNAL(triggered()),this,SLOT(_showInFolderSlot()));
+
+        menuContext.addAction(&actionDumpToFile);
+        menuShowIn.addAction(&actionShowInFolder);
+        menuContext.addMenu(&menuShowIn);
+
+        menuContext.exec(ui->tableViewProcesses->viewport()->mapToGlobal(pos));
+    }
+}
+
+void XProcessWidgetAdvanced::_dumpProcess()
+{
+    // TODO
+}
+
+void XProcessWidgetAdvanced::_showInFolderSlot()
+{
+    qint32 nRow=ui->tableViewProcesses->currentIndex().row();
+
+    if(nRow!=-1)
+    {
+        QModelIndex index=ui->tableViewProcesses->selectionModel()->selectedIndexes().at(0);
+
+        QString sFilePath=ui->tableViewProcesses->model()->data(index,Qt::UserRole+USERROLE_FILENAME).toString();
+
+        XOptions::showInFolder(sFilePath);
+    }
+}
+
