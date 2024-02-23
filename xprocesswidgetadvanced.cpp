@@ -183,11 +183,6 @@ void XProcessWidgetAdvanced::on_pushButtonReloadProcesses_clicked()
     reload();
 }
 
-void XProcessWidgetAdvanced::on_comboBoxProcessesScan_clicked()
-{
-    reload();
-}
-
 void XProcessWidgetAdvanced::on_pushButtonSaveProcesses_clicked()
 {
     QString sResultFileName = QString("%1.txt").arg(tr("Processes"));
@@ -224,7 +219,20 @@ void XProcessWidgetAdvanced::on_tableViewProcesses_customContextMenuRequested(co
 
 void XProcessWidgetAdvanced::_dumpProcess()
 {
-    // TODO
+    qint32 nRow=ui->tableViewProcesses->currentIndex().row();
+
+    if(nRow!=-1)
+    {
+        QModelIndex index=ui->tableViewProcesses->selectionModel()->selectedIndexes().at(0);
+
+        X_ID nProcessID=ui->tableViewProcesses->model()->data(index,Qt::UserRole+USERROLE_PID).toULongLong();
+
+        DialogDumpProcessMemory ddpm(this);
+
+        ddpm.setData(nProcessID);
+
+        ddpm.exec();
+    }
 }
 
 void XProcessWidgetAdvanced::_showInFolderSlot()

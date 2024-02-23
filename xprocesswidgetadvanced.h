@@ -70,7 +70,6 @@ protected:
 
 private slots:
     void on_pushButtonReloadProcesses_clicked();
-    void on_comboBoxProcessesScan_clicked();
     void on_pushButtonSaveProcesses_clicked();
     void on_tableViewProcesses_customContextMenuRequested(const QPoint &pos);
     void _dumpProcess();

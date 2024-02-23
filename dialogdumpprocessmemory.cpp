@@ -26,6 +26,16 @@ DialogDumpProcessMemory::DialogDumpProcessMemory(QWidget *parent) :
     ui(new Ui::DialogDumpProcessMemory)
 {
     ui->setupUi(this);
+
+    g_nProcessID = 0;
+
+    {
+        ui->comboBoxMode->blockSignals(true);
+
+        ui->comboBoxMode->addItem(QString("User/ReadProcessMemory"), MODE_USER_READPROCESSMEMORY);
+
+        ui->comboBoxMode->blockSignals(false);
+    }
 }
 
 DialogDumpProcessMemory::~DialogDumpProcessMemory()
@@ -33,12 +43,23 @@ DialogDumpProcessMemory::~DialogDumpProcessMemory()
     delete ui;
 }
 
-void DialogDumpProcessMemory::on_pushButtonCancel_clicked()
+void DialogDumpProcessMemory::setData(X_ID nProcessID)
+{
+    g_nProcessID = nProcessID;
+    // TODO
+#ifdef QT_DEBUG
+    qDebug("ProcessID: %d", (qint32)nProcessID);
+#endif
+}
+
+void DialogDumpProcessMemory::on_pushButtonClose_clicked()
 {
     this->close();
 }
 
-void DialogDumpProcessMemory::on_pushButtonOK_clicked()
+void DialogDumpProcessMemory::on_pushButtonDump_clicked()
 {
-    this->close();
+#ifdef QT_DEBUG
+    qDebug("on_pushButtonDump_clicked");
+#endif
 }

@@ -22,6 +22,7 @@
 #define DIALOGDUMPPROCESSMEMORY_H
 
 #include <QDialog>
+#include "xprocess.h"
 
 namespace Ui {
 class DialogDumpProcessMemory;
@@ -31,16 +32,23 @@ class DialogDumpProcessMemory : public QDialog
 {
     Q_OBJECT
 
+    enum MODE {
+        MODE_USER_READPROCESSMEMORY
+    };
+
 public:
     explicit DialogDumpProcessMemory(QWidget *parent = nullptr);
     ~DialogDumpProcessMemory();
 
+    void setData(X_ID nProcessID);
+
 private slots:
-    void on_pushButtonCancel_clicked();
-    void on_pushButtonOK_clicked();
+    void on_pushButtonClose_clicked();
+    void on_pushButtonDump_clicked();
 
 private:
     Ui::DialogDumpProcessMemory *ui;
+    X_ID g_nProcessID;
 };
 
 #endif // DIALOGDUMPPROCESSMEMORY_H
