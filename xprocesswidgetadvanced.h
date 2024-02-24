@@ -50,8 +50,7 @@ class XProcessWidgetAdvanced : public XShortcutsWidget {
         __COLUMN_NET_SIZE
     };
 
-    enum USERROLE
-    {
+    enum USERROLE {
         USERROLE_PID = 0,
         USERROLE_ADDRESS,
         USERROLE_SIZE,

@@ -28,8 +28,7 @@ namespace Ui {
 class DialogDumpProcessMemory;
 }
 
-class DialogDumpProcessMemory : public QDialog
-{
+class DialogDumpProcessMemory : public QDialog {
     Q_OBJECT
 
     enum MODE {
@@ -51,4 +50,4 @@ private:
     X_ID g_nProcessID;
 };
 
-#endif // DIALOGDUMPPROCESSMEMORY_H
+#endif  // DIALOGDUMPPROCESSMEMORY_H

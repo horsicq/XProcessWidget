@@ -48,7 +48,7 @@ void XProcessWidgetAdvanced::reload()
     piOptions.infoClass = XhandleInfo::INFOCLASS_PROCESSES;
     piOptions.pio = (XhandleInfo::PIO)(ui->comboBoxProcessesMode->currentData().toInt());
     piOptions.sScanEngine = ui->comboBoxProcessesScan->currentData().toString();
-//    piOptions.bIsScanAll = ui->checkBoxScanProcessesAll->isChecked();
+    //    piOptions.bIsScanAll = ui->checkBoxScanProcessesAll->isChecked();
     piOptions.sDieDatabase = getGlobalOptions()->getDatabasePath();
     piOptions.sDieDatabaseCustom = getGlobalOptions()->getCustomDatabasePath();
 
@@ -199,15 +199,15 @@ void XProcessWidgetAdvanced::on_tableViewProcesses_customContextMenuRequested(co
     if (nRow != -1) {
         QMenu menuContext(this);
 
-        QMenu menuShowIn(tr("Show in"),this);
+        QMenu menuShowIn(tr("Show in"), this);
 
-        QAction actionDumpToFile(tr("Dump to file"),this);
+        QAction actionDumpToFile(tr("Dump to file"), this);
         actionDumpToFile.setShortcut(getShortcuts()->getShortcut(X_ID_MODULES_DUMPTOFILE));
-        connect(&actionDumpToFile,SIGNAL(triggered()),this,SLOT(_dumpProcess()));
+        connect(&actionDumpToFile, SIGNAL(triggered()), this, SLOT(_dumpProcess()));
 
-        QAction actionShowInFolder(tr("Folder"),this);
+        QAction actionShowInFolder(tr("Folder"), this);
         actionShowInFolder.setShortcut(getShortcuts()->getShortcut(X_ID_MODULES_SHOWIN_FOLDER));
-        connect(&actionShowInFolder,SIGNAL(triggered()),this,SLOT(_showInFolderSlot()));
+        connect(&actionShowInFolder, SIGNAL(triggered()), this, SLOT(_showInFolderSlot()));
 
         menuContext.addAction(&actionDumpToFile);
         menuShowIn.addAction(&actionShowInFolder);
@@ -219,13 +219,12 @@ void XProcessWidgetAdvanced::on_tableViewProcesses_customContextMenuRequested(co
 
 void XProcessWidgetAdvanced::_dumpProcess()
 {
-    qint32 nRow=ui->tableViewProcesses->currentIndex().row();
+    qint32 nRow = ui->tableViewProcesses->currentIndex().row();
 
-    if(nRow!=-1)
-    {
-        QModelIndex index=ui->tableViewProcesses->selectionModel()->selectedIndexes().at(0);
+    if (nRow != -1) {
+        QModelIndex index = ui->tableViewProcesses->selectionModel()->selectedIndexes().at(0);
 
-        X_ID nProcessID=ui->tableViewProcesses->model()->data(index,Qt::UserRole+USERROLE_PID).toULongLong();
+        X_ID nProcessID = ui->tableViewProcesses->model()->data(index, Qt::UserRole + USERROLE_PID).toULongLong();
 
         DialogDumpProcessMemory ddpm(this);
 
@@ -237,15 +236,13 @@ void XProcessWidgetAdvanced::_dumpProcess()
 
 void XProcessWidgetAdvanced::_showInFolderSlot()
 {
-    qint32 nRow=ui->tableViewProcesses->currentIndex().row();
+    qint32 nRow = ui->tableViewProcesses->currentIndex().row();
 
-    if(nRow!=-1)
-    {
-        QModelIndex index=ui->tableViewProcesses->selectionModel()->selectedIndexes().at(0);
+    if (nRow != -1) {
+        QModelIndex index = ui->tableViewProcesses->selectionModel()->selectedIndexes().at(0);
 
-        QString sFilePath=ui->tableViewProcesses->model()->data(index,Qt::UserRole+USERROLE_FILENAME).toString();
+        QString sFilePath = ui->tableViewProcesses->model()->data(index, Qt::UserRole + USERROLE_FILENAME).toString();
 
         XOptions::showInFolder(sFilePath);
     }
 }
-

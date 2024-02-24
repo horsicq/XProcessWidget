@@ -21,9 +21,7 @@
 #include "dialogdumpprocessmemory.h"
 #include "ui_dialogdumpprocessmemory.h"
 
-DialogDumpProcessMemory::DialogDumpProcessMemory(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::DialogDumpProcessMemory)
+DialogDumpProcessMemory::DialogDumpProcessMemory(QWidget *parent) : QDialog(parent), ui(new Ui::DialogDumpProcessMemory)
 {
     ui->setupUi(this);
 
