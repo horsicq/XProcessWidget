@@ -26,13 +26,24 @@ DialogDumpProcessMemory::DialogDumpProcessMemory(QWidget *parent) : QDialog(pare
     ui->setupUi(this);
 
     g_nProcessID = 0;
+    g_processInfo = {};
 
     {
         ui->comboBoxMode->blockSignals(true);
-
+#ifdef Q_OS_WIN
         ui->comboBoxMode->addItem(QString("User/ReadProcessMemory"), MODE_USER_READPROCESSMEMORY);
-
+#endif
         ui->comboBoxMode->blockSignals(false);
+    }
+
+    {
+        ui->comboBoxMethod->blockSignals(true);
+
+        ui->comboBoxMethod->addItem(tr("Raw dump"), METHOD_RAWDUMP);
+#ifdef Q_OS_WIN
+        ui->comboBoxMethod->addItem(tr("Rebuild image"), METHOD_REBUILDIMAGE);
+#endif
+        ui->comboBoxMethod->blockSignals(false);
     }
 }
 
@@ -44,10 +55,11 @@ DialogDumpProcessMemory::~DialogDumpProcessMemory()
 void DialogDumpProcessMemory::setData(X_ID nProcessID)
 {
     g_nProcessID = nProcessID;
-    // TODO
-#ifdef QT_DEBUG
-    qDebug("ProcessID: %d", (qint32)nProcessID);
-#endif
+
+    g_processInfo = XProcess::getInfoByProcessID(nProcessID);
+
+    ui->lineEditImageBase->setValue32_64(g_processInfo.nImageAddress);
+    ui->lineEditImageSize->setValue32_64(g_processInfo.nImageSize);
 }
 
 void DialogDumpProcessMemory::on_pushButtonClose_clicked()
@@ -57,7 +69,13 @@ void DialogDumpProcessMemory::on_pushButtonClose_clicked()
 
 void DialogDumpProcessMemory::on_pushButtonDump_clicked()
 {
-#ifdef QT_DEBUG
-    qDebug("on_pushButtonDump_clicked");
-#endif
+    MODE mode = (MODE)(ui->comboBoxMode->currentData().toULongLong());
+    METHOD method = (METHOD)(ui->comboBoxMethod->currentData().toULongLong());
+
+    QString sSaveFileName = XBinary::getResultFileName(g_processInfo.sFilePath, QString("%1.bin").arg(g_processInfo.sName));
+    QString sFileName = QFileDialog::getSaveFileName(this, tr("Save dump"), sSaveFileName, QString("%1 (*.bin)").arg(tr("Raw data")));
+
+    if (!sFileName.isEmpty()) {
+
+    }
 }
