@@ -68,6 +68,8 @@ protected:
     virtual void registerShortcuts(bool bState);
 
 private slots:
+    void on_comboBoxProcessesMode_currentIndexChanged(int nIndex);
+    void on_comboBoxProcessesMethod_currentIndexChanged(int nIndex);
     void on_pushButtonReloadProcesses_clicked();
     void on_pushButtonSaveProcesses_clicked();
     void on_tableViewProcesses_customContextMenuRequested(const QPoint &pos);

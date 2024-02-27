@@ -34,16 +34,16 @@ class DialogDumpProcessMemory : public QDialog {
         MODE_USER_READPROCESSMEMORY = 0
     };
 
+public:
     enum METHOD {
         METHOD_RAWDUMP = 0,
         METHOD_REBUILDIMAGE
     };
 
-public:
     explicit DialogDumpProcessMemory(QWidget *parent = nullptr);
     ~DialogDumpProcessMemory();
 
-    void setData(X_ID nProcessID);
+    void setData(X_ID nProcessID, METHOD method);
 
 private slots:
     void on_pushButtonClose_clicked();

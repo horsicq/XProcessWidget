@@ -178,6 +178,20 @@ void XProcessWidgetAdvanced::registerShortcuts(bool bState)
     // TODO
 }
 
+void XProcessWidgetAdvanced::on_comboBoxProcessesMode_currentIndexChanged(int nIndex)
+{
+    Q_UNUSED(nIndex)
+
+    reload();
+}
+
+void XProcessWidgetAdvanced::on_comboBoxProcessesMethod_currentIndexChanged(int nIndex)
+{
+    Q_UNUSED(nIndex)
+
+    reload();
+}
+
 void XProcessWidgetAdvanced::on_pushButtonReloadProcesses_clicked()
 {
     reload();
@@ -228,7 +242,7 @@ void XProcessWidgetAdvanced::_dumpProcess()
 
         DialogDumpProcessMemory ddpm(this);
 
-        ddpm.setData(nProcessID);
+        ddpm.setData(nProcessID, DialogDumpProcessMemory::METHOD_REBUILDIMAGE);
 
         ddpm.exec();
     }

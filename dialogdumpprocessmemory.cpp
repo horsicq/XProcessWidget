@@ -52,7 +52,7 @@ DialogDumpProcessMemory::~DialogDumpProcessMemory()
     delete ui;
 }
 
-void DialogDumpProcessMemory::setData(X_ID nProcessID)
+void DialogDumpProcessMemory::setData(X_ID nProcessID, METHOD method)
 {
     g_nProcessID = nProcessID;
 
@@ -60,6 +60,14 @@ void DialogDumpProcessMemory::setData(X_ID nProcessID)
 
     ui->lineEditImageBase->setValue32_64(g_processInfo.nImageAddress);
     ui->lineEditImageSize->setValue32_64(g_processInfo.nImageSize);
+
+    if (METHOD_RAWDUMP) {
+        ui->stackedWidgetDump->setCurrentWidget(ui->pageRaw);
+    } else if (method == METHOD_REBUILDIMAGE) {
+        ui->stackedWidgetDump->setCurrentWidget(ui->pageRebuild);
+    } else {
+        ui->stackedWidgetDump->setCurrentWidget(ui->pageRaw);
+    }
 }
 
 void DialogDumpProcessMemory::on_pushButtonClose_clicked()
@@ -77,5 +85,20 @@ void DialogDumpProcessMemory::on_pushButtonDump_clicked()
 
     if (!sFileName.isEmpty()) {
 
+        if (mode == MODE_USER_READPROCESSMEMORY) {
+            if (method == METHOD_RAWDUMP) {
+                DialogDumpProcess dialogDumpProcess(this);
+                dialogDumpProcess.setData(g_nProcessID, DumpProcess::DT_DUMP_PROCESS_USER_READPROCESSMEMORY_RAWDUMP, sFileName);
+                dialogDumpProcess.exec();
+            } else if (method == METHOD_REBUILDIMAGE) {
+                DialogDumpProcess dialogDumpProcess(this);
+#ifdef Q_OS_WIN
+                const XPE::FIXDUMP_OPTIONS &fixDumpOptions = {};
+
+                dialogDumpProcess.setData(g_nProcessID, DumpProcess::DT_DUMP_PROCESS_USER_READPROCESSMEMORY_REBUILD, sFileName, fixDumpOptions);
+#endif
+                dialogDumpProcess.exec();
+            }
+        }
     }
 }
