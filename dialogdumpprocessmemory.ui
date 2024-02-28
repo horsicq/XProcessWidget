@@ -148,7 +148,8 @@
    </item>
    <item>
     <widget class="QStackedWidget" name="stackedWidgetDump">
-     <widget class="QWidget" name="pageRaw">
+     <widget class="QWidget" name="pageRaw"/>
+     <widget class="QWidget" name="pageRebuild">
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <property name="leftMargin">
         <number>0</number>
@@ -218,6 +219,13 @@
               <widget class="XLineEditHEX" name="lineEditImportAddressOfCode"/>
              </item>
              <item>
+              <widget class="QPushButton" name="pushButtonCodeDisasm">
+               <property name="text">
+                <string>Disasm</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <spacer name="horizontalSpacer_3">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -229,13 +237,6 @@
                 </size>
                </property>
               </spacer>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButtonCodeDisasm">
-               <property name="text">
-                <string>Disasm</string>
-               </property>
-              </widget>
              </item>
              <item>
               <widget class="QPushButton" name="pushButtonImportScan">
@@ -255,7 +256,6 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="pageRebuild"/>
     </widget>
    </item>
    <item>

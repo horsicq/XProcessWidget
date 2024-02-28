@@ -61,12 +61,13 @@ void DialogDumpProcessMemory::setData(X_ID nProcessID, METHOD method)
     ui->lineEditImageBase->setValue32_64(g_processInfo.nImageAddress);
     ui->lineEditImageSize->setValue32_64(g_processInfo.nImageSize);
 
-    if (METHOD_RAWDUMP) {
-        ui->stackedWidgetDump->setCurrentWidget(ui->pageRaw);
-    } else if (method == METHOD_REBUILDIMAGE) {
-        ui->stackedWidgetDump->setCurrentWidget(ui->pageRebuild);
-    } else {
-        ui->stackedWidgetDump->setCurrentWidget(ui->pageRaw);
+    qint32 nNumberOfRecords = ui->comboBoxMethod->count();
+
+    for (qint32 i = 0; i < nNumberOfRecords; i++) {
+        if ((METHOD)(ui->comboBoxMethod->itemData(i).toULongLong()) == method) {
+            ui->comboBoxMethod->setCurrentIndex(i);
+            break;
+        }
     }
 }
 
@@ -84,7 +85,7 @@ void DialogDumpProcessMemory::on_pushButtonDump_clicked()
     QString sFileName = QFileDialog::getSaveFileName(this, tr("Save dump"), sSaveFileName, QString("%1 (*.dmp)").arg(tr("Raw data")));
 
     if (!sFileName.isEmpty()) {
-
+    #ifdef Q_OS_WIN
         if (mode == MODE_USER_READPROCESSMEMORY) {
             if (method == METHOD_RAWDUMP) {
                 DialogDumpProcess dialogDumpProcess(this);
@@ -92,13 +93,38 @@ void DialogDumpProcessMemory::on_pushButtonDump_clicked()
                 dialogDumpProcess.exec();
             } else if (method == METHOD_REBUILDIMAGE) {
                 DialogDumpProcess dialogDumpProcess(this);
-#ifdef Q_OS_WIN
+
                 const XPE::FIXDUMP_OPTIONS &fixDumpOptions = {};
 
                 dialogDumpProcess.setData(g_nProcessID, DumpProcess::DT_DUMP_PROCESS_USER_READPROCESSMEMORY_REBUILD, sFileName, fixDumpOptions);
-#endif
+
                 dialogDumpProcess.exec();
             }
         }
+    #endif
     }
 }
+
+void DialogDumpProcessMemory::on_comboBoxMethod_currentIndexChanged(int nIndex)
+{
+    Q_UNUSED(nIndex)
+
+    METHOD method = (METHOD)(ui->comboBoxMethod->currentData().toULongLong());
+
+    if (method == METHOD_RAWDUMP) {
+        ui->stackedWidgetDump->setCurrentWidget(ui->pageRaw);
+    } else if (method == METHOD_REBUILDIMAGE) {
+        ui->stackedWidgetDump->setCurrentWidget(ui->pageRebuild);
+    }
+}
+
+void DialogDumpProcessMemory::on_pushButtonCodeDisasm_clicked()
+{
+    // TODO
+}
+
+void DialogDumpProcessMemory::on_pushButtonImportScan_clicked()
+{
+    // TODO
+}
+

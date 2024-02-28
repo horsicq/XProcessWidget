@@ -31,7 +31,10 @@ class DialogDumpProcessMemory : public QDialog {
     Q_OBJECT
 
     enum MODE {
-        MODE_USER_READPROCESSMEMORY = 0
+        NODE_UNKNOWN = 0,
+    #ifdef Q_OS_WIN
+        MODE_USER_READPROCESSMEMORY
+    #endif
     };
 
 public:
@@ -48,6 +51,9 @@ public:
 private slots:
     void on_pushButtonClose_clicked();
     void on_pushButtonDump_clicked();
+    void on_comboBoxMethod_currentIndexChanged(int nIndex);
+    void on_pushButtonCodeDisasm_clicked();
+    void on_pushButtonImportScan_clicked();
 
 private:
     Ui::DialogDumpProcessMemory *ui;
