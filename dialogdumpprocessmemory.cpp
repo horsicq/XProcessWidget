@@ -80,8 +80,8 @@ void DialogDumpProcessMemory::on_pushButtonDump_clicked()
     MODE mode = (MODE)(ui->comboBoxMode->currentData().toULongLong());
     METHOD method = (METHOD)(ui->comboBoxMethod->currentData().toULongLong());
 
-    QString sSaveFileName = XBinary::getResultFileName(g_processInfo.sFilePath, QString("%1.bin").arg(g_processInfo.sName));
-    QString sFileName = QFileDialog::getSaveFileName(this, tr("Save dump"), sSaveFileName, QString("%1 (*.bin)").arg(tr("Raw data")));
+    QString sSaveFileName = XBinary::getResultFileName(g_processInfo.sFilePath, QString("dmp"));
+    QString sFileName = QFileDialog::getSaveFileName(this, tr("Save dump"), sSaveFileName, QString("%1 (*.dmp)").arg(tr("Raw data")));
 
     if (!sFileName.isEmpty()) {
 
