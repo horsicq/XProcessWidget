@@ -85,7 +85,7 @@ void DialogDumpProcessMemory::on_pushButtonDump_clicked()
     QString sFileName = QFileDialog::getSaveFileName(this, tr("Save dump"), sSaveFileName, QString("%1 (*.dmp)").arg(tr("Raw data")));
 
     if (!sFileName.isEmpty()) {
-    #ifdef Q_OS_WIN
+#ifdef Q_OS_WIN
         if (mode == MODE_USER_READPROCESSMEMORY) {
             if (method == METHOD_RAWDUMP) {
                 DialogDumpProcess dialogDumpProcess(this);
@@ -101,7 +101,7 @@ void DialogDumpProcessMemory::on_pushButtonDump_clicked()
                 dialogDumpProcess.exec();
             }
         }
-    #endif
+#endif
     }
 }
 
@@ -127,4 +127,3 @@ void DialogDumpProcessMemory::on_pushButtonImportScan_clicked()
 {
     // TODO
 }
-

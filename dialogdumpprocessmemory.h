@@ -32,9 +32,9 @@ class DialogDumpProcessMemory : public QDialog {
 
     enum MODE {
         NODE_UNKNOWN = 0,
-    #ifdef Q_OS_WIN
+#ifdef Q_OS_WIN
         MODE_USER_READPROCESSMEMORY
-    #endif
+#endif
     };
 
 public:
