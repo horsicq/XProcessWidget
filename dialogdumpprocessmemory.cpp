@@ -105,9 +105,9 @@ void DialogDumpProcessMemory::setData(X_ID nProcessID, METHOD method)
     ui->checkBoxSetImageBase->setChecked(g_fixDumpOptions.bSetImageBase);
     ui->lineEditImageBase->setEnabled(g_fixDumpOptions.bSetImageBase);
 #ifndef Q_OS_WIN64
-    ui->lineEditEntryPoint->setValue_uint32(g_fixDumpOptions.nImageBase);
+    ui->lineEditImageBase->setValue_uint32(g_fixDumpOptions.nImageBase);
 #else
-    ui->lineEditEntryPoint->setValue_uint64(g_fixDumpOptions.nImageBase);
+    ui->lineEditImageBase->setValue_uint64(g_fixDumpOptions.nImageBase);
 #endif
 #endif
 }
