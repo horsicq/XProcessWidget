@@ -45,6 +45,10 @@ DialogDumpProcessMemory::DialogDumpProcessMemory(QWidget *parent) : QDialog(pare
 #endif
         ui->comboBoxMethod->blockSignals(false);
     }
+
+#ifdef Q_OS_WIN
+    g_fixDumpOptions = {};
+#endif
 }
 
 DialogDumpProcessMemory::~DialogDumpProcessMemory()
@@ -58,8 +62,8 @@ void DialogDumpProcessMemory::setData(X_ID nProcessID, METHOD method)
 
     g_processInfo = XProcess::getInfoByProcessID(nProcessID);
 
-    ui->lineEditImageBase->setValue32_64(g_processInfo.nImageAddress);
-    ui->lineEditImageSize->setValue32_64(g_processInfo.nImageSize);
+    ui->lineEditProcessImageBase->setValue32_64(g_processInfo.nImageAddress);
+    ui->lineEditProcessImageSize->setValue32_64(g_processInfo.nImageSize);
 
     qint32 nNumberOfRecords = ui->comboBoxMethod->count();
 
@@ -69,6 +73,43 @@ void DialogDumpProcessMemory::setData(X_ID nProcessID, METHOD method)
             break;
         }
     }
+
+    if (g_processInfo.nImageSize) {
+        XProcess xprocess(g_processInfo.nID, g_processInfo.nImageAddress, g_processInfo.nImageSize);
+
+        if (xprocess.open(QIODevice::ReadOnly)) {
+    #ifdef Q_OS_WIN
+            XPE pe(&xprocess, true, g_processInfo.nImageAddress);
+
+            if (pe.isValid()) {
+                g_fixDumpOptions = pe.getFixDumpOptions();
+            }
+    #endif
+            xprocess.close();
+        }
+    }
+
+#ifdef Q_OS_WIN
+    ui->checkBoxOptimizeSize->setChecked(g_fixDumpOptions.bOptimizeSize);
+    ui->checkBoxCleanHeader->setChecked(g_fixDumpOptions.bCleanHeader);
+    ui->checkBoxFixSizeOfHeaders->setChecked(g_fixDumpOptions.bFixSizeOfSections);
+    ui->checkBoxSetFileAlignment->setChecked(g_fixDumpOptions.bSetFileAlignment);
+    ui->lineEditFileAlignment->setEnabled(g_fixDumpOptions.bSetFileAlignment);
+    ui->lineEditFileAlignment->setValue_uint32(g_fixDumpOptions.nFileAlignment);
+    ui->checkBoxSetSectionAlignment->setChecked(g_fixDumpOptions.bSetSectionAlignment);
+    ui->lineEditSectionAlignment->setEnabled(g_fixDumpOptions.bSetSectionAlignment);
+    ui->lineEditSectionAlignment->setValue_uint32(g_fixDumpOptions.nSectionAlignment);
+    ui->checkBoxSetEntryPoint->setChecked(g_fixDumpOptions.bSetEntryPoint);
+    ui->lineEditEntryPoint->setEnabled(g_fixDumpOptions.bSetEntryPoint);
+    ui->lineEditEntryPoint->setValue_uint32(g_fixDumpOptions.nEntryPoint);
+    ui->checkBoxSetImageBase->setChecked(g_fixDumpOptions.bSetImageBase);
+    ui->lineEditImageBase->setEnabled(g_fixDumpOptions.bSetImageBase);
+#ifndef Q_OS_WIN64
+    ui->lineEditEntryPoint->setValue_uint32(g_fixDumpOptions.nImageBase);
+#else
+    ui->lineEditEntryPoint->setValue_uint64(g_fixDumpOptions.nImageBase);
+#endif
+#endif
 }
 
 void DialogDumpProcessMemory::on_pushButtonClose_clicked()
@@ -94,9 +135,7 @@ void DialogDumpProcessMemory::on_pushButtonDump_clicked()
             } else if (method == METHOD_REBUILDIMAGE) {
                 DialogDumpProcess dialogDumpProcess(this);
 
-                const XPE::FIXDUMP_OPTIONS &fixDumpOptions = {};
-
-                dialogDumpProcess.setData(g_nProcessID, DumpProcess::DT_DUMP_PROCESS_USER_READPROCESSMEMORY_REBUILD, sFileName, fixDumpOptions);
+                dialogDumpProcess.setData(g_nProcessID, DumpProcess::DT_DUMP_PROCESS_USER_READPROCESSMEMORY_REBUILD, sFileName, g_fixDumpOptions);
 
                 dialogDumpProcess.exec();
             }
@@ -127,3 +166,29 @@ void DialogDumpProcessMemory::on_pushButtonImportScan_clicked()
 {
     // TODO
 }
+
+void DialogDumpProcessMemory::on_checkBoxSetFileAlignment_toggled(bool bChecked)
+{
+    ui->lineEditFileAlignment->setEnabled(bChecked);
+}
+
+void DialogDumpProcessMemory::on_checkBoxSetSectionAlignment_clicked(bool bChecked)
+{
+    ui->lineEditSectionAlignment->setEnabled(bChecked);
+}
+
+void DialogDumpProcessMemory::on_checkBoxSetEntryPoint_clicked(bool bChecked)
+{
+    ui->lineEditEntryPoint->setEnabled(bChecked);
+}
+
+void DialogDumpProcessMemory::on_checkBoxSetImageBase_clicked(bool bChecked)
+{
+    ui->lineEditImageBase->setEnabled(bChecked);
+}
+
+void DialogDumpProcessMemory::on_checkBoxAddImportSection_clicked(bool bChecked)
+{
+    ui->groupBoxImport->setEnabled(bChecked);
+}
+

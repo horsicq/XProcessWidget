@@ -54,11 +54,17 @@ private slots:
     void on_comboBoxMethod_currentIndexChanged(int nIndex);
     void on_pushButtonCodeDisasm_clicked();
     void on_pushButtonImportScan_clicked();
+    void on_checkBoxSetFileAlignment_toggled(bool bChecked);
+    void on_checkBoxSetSectionAlignment_clicked(bool bChecked);
+    void on_checkBoxSetEntryPoint_clicked(bool bChecked);
+    void on_checkBoxSetImageBase_clicked(bool bChecked);
+    void on_checkBoxAddImportSection_clicked(bool bChecked);
 
 private:
     Ui::DialogDumpProcessMemory *ui;
     X_ID g_nProcessID;
     XProcess::PROCESS_INFO g_processInfo;
+    XPE::FIXDUMP_OPTIONS g_fixDumpOptions;
 };
 
 #endif  // DIALOGDUMPPROCESSMEMORY_H
