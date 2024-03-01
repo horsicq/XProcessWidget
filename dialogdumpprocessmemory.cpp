@@ -26,7 +26,8 @@ DialogDumpProcessMemory::DialogDumpProcessMemory(QWidget *parent) : QDialog(pare
     ui->setupUi(this);
 
     g_nProcessID = 0;
-    g_processInfo = {};
+    g_nImageBase = 0;
+    g_nImageSize = 0;
 
     {
         ui->comboBoxMode->blockSignals(true);
@@ -49,6 +50,8 @@ DialogDumpProcessMemory::DialogDumpProcessMemory(QWidget *parent) : QDialog(pare
 #ifdef Q_OS_WIN
     g_fixDumpOptions = {};
 #endif
+
+    ui->stackedWidgetDump->setCurrentWidget(ui->pageRaw);
 }
 
 DialogDumpProcessMemory::~DialogDumpProcessMemory()
@@ -56,14 +59,15 @@ DialogDumpProcessMemory::~DialogDumpProcessMemory()
     delete ui;
 }
 
-void DialogDumpProcessMemory::setData(X_ID nProcessID, METHOD method)
+void DialogDumpProcessMemory::setData(X_ID nProcessID, XADDR nImageBase, qint64 nImageSize, QString sFileName, METHOD method)
 {
     g_nProcessID = nProcessID;
+    g_nImageBase = nImageBase;
+    g_nImageSize = nImageSize;
+    g_sFileName = sFileName;
 
-    g_processInfo = XProcess::getInfoByProcessID(nProcessID);
-
-    ui->lineEditProcessImageBase->setValue32_64(g_processInfo.nImageAddress);
-    ui->lineEditProcessImageSize->setValue32_64(g_processInfo.nImageSize);
+    ui->lineEditProcessImageBase->setValue32_64(g_nImageBase);
+    ui->lineEditProcessImageSize->setValue32_64(g_nImageSize);
 
     qint32 nNumberOfRecords = ui->comboBoxMethod->count();
 
@@ -74,8 +78,8 @@ void DialogDumpProcessMemory::setData(X_ID nProcessID, METHOD method)
         }
     }
 
-    if (g_processInfo.nImageSize) {
-        XProcess xprocess(g_processInfo.nID, g_processInfo.nImageAddress, g_processInfo.nImageSize);
+    if (g_nImageSize) {
+        XProcess xprocess(g_nProcessID, g_nImageBase, g_nImageSize);
 
         if (xprocess.open(QIODevice::ReadOnly)) {
     #ifdef Q_OS_WIN
@@ -122,7 +126,7 @@ void DialogDumpProcessMemory::on_pushButtonDump_clicked()
     MODE mode = (MODE)(ui->comboBoxMode->currentData().toULongLong());
     METHOD method = (METHOD)(ui->comboBoxMethod->currentData().toULongLong());
 
-    QString sSaveFileName = XBinary::getResultFileName(g_processInfo.sFilePath, QString("dmp"));
+    QString sSaveFileName = XBinary::getResultFileName(g_sFileName, QString("dmp"));
     QString sFileName = QFileDialog::getSaveFileName(this, tr("Save dump"), sSaveFileName, QString("%1 (*.dmp)").arg(tr("Raw data")));
 
     if (!sFileName.isEmpty()) {

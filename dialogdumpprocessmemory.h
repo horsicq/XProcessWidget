@@ -46,7 +46,7 @@ public:
     explicit DialogDumpProcessMemory(QWidget *parent = nullptr);
     ~DialogDumpProcessMemory();
 
-    void setData(X_ID nProcessID, METHOD method);
+    void setData(X_ID nProcessID, XADDR nImageBase, qint64 nImageSize, QString sFileName, METHOD method);
 
 private slots:
     void on_pushButtonClose_clicked();
@@ -63,8 +63,12 @@ private slots:
 private:
     Ui::DialogDumpProcessMemory *ui;
     X_ID g_nProcessID;
-    XProcess::PROCESS_INFO g_processInfo;
+    XADDR g_nImageBase;
+    qint64 g_nImageSize;
+    QString g_sFileName;
+#ifdef Q_OS_WIN
     XPE::FIXDUMP_OPTIONS g_fixDumpOptions;
+#endif
 };
 
 #endif  // DIALOGDUMPPROCESSMEMORY_H
