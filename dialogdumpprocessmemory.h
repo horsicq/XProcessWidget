@@ -22,6 +22,7 @@
 #define DIALOGDUMPPROCESSMEMORY_H
 
 #include "dialogdumpprocess.h"
+#include "dialogmultidisasm.h"
 
 namespace Ui {
 class DialogDumpProcessMemory;
@@ -37,6 +38,12 @@ class DialogDumpProcessMemory : public QDialog {
 #endif
     };
 
+    enum USEHEADERS {
+        USEHEADER_FILE = 0,
+        USEHEADER_MEMORY,
+        // TODO Create header
+    };
+
 public:
     enum METHOD {
         METHOD_RAWDUMP = 0,
@@ -46,19 +53,24 @@ public:
     explicit DialogDumpProcessMemory(QWidget *parent = nullptr);
     ~DialogDumpProcessMemory();
 
-    void setData(X_ID nProcessID, XADDR nImageBase, qint64 nImageSize, QString sFileName, METHOD method);
+    void setData(X_ID nProcessID, QString sFileName, METHOD method);
 
 private slots:
     void on_pushButtonClose_clicked();
     void on_pushButtonDump_clicked();
     void on_comboBoxMethod_currentIndexChanged(int nIndex);
     void on_pushButtonCodeDisasm_clicked();
-    void on_pushButtonImportScan_clicked();
     void on_checkBoxSetFileAlignment_toggled(bool bChecked);
     void on_checkBoxSetSectionAlignment_clicked(bool bChecked);
     void on_checkBoxSetEntryPoint_clicked(bool bChecked);
     void on_checkBoxSetImageBase_clicked(bool bChecked);
     void on_checkBoxAddImportSection_clicked(bool bChecked);
+    void on_pushButtonScanForIAT_clicked();
+    void on_comboBoxModule_currentIndexChanged(int nIndex);
+    void on_pushButtonGetImports_clicked();
+    void reload();
+    void on_comboBoxUseHeaders_currentIndexChanged(int nIndex);
+    void on_lineEditEntryPoint_textChanged(const QString &sArg);
 
 private:
     Ui::DialogDumpProcessMemory *ui;
@@ -66,6 +78,7 @@ private:
     XADDR g_nImageBase;
     qint64 g_nImageSize;
     QString g_sFileName;
+    QByteArray g_baHeaders;
 #ifdef Q_OS_WIN
     XPE::FIXDUMP_OPTIONS g_fixDumpOptions;
 #endif

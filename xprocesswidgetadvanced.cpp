@@ -239,13 +239,11 @@ void XProcessWidgetAdvanced::_dumpProcess()
         QModelIndex index = ui->tableViewProcesses->selectionModel()->selectedIndexes().at(0);
 
         X_ID nProcessID = ui->tableViewProcesses->model()->data(index, Qt::UserRole + USERROLE_PID).toULongLong();
-        XADDR nImageBase = ui->tableViewProcesses->model()->data(index, Qt::UserRole + USERROLE_ADDRESS).toULongLong();
-        qint64 nImageSize = ui->tableViewProcesses->model()->data(index, Qt::UserRole + USERROLE_SIZE).toLongLong();
         QString sFileName = ui->tableViewProcesses->model()->data(index, Qt::UserRole + USERROLE_FILENAME).toString();
 
         DialogDumpProcessMemory ddpm(this);
 
-        ddpm.setData(nProcessID, nImageBase, nImageSize, sFileName, DialogDumpProcessMemory::METHOD_REBUILDIMAGE);
+        ddpm.setData(nProcessID, sFileName, DialogDumpProcessMemory::METHOD_REBUILDIMAGE);
 
         ddpm.exec();
     }
