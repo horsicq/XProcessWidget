@@ -35,6 +35,10 @@ DialogDumpProcessMemory::DialogDumpProcessMemory(QWidget *parent) : QDialog(pare
 #ifdef Q_OS_WIN
         ui->comboBoxMode->addItem(QString("User/ReadProcessMemory"), MODE_USER_READPROCESSMEMORY);
 #endif
+#ifdef Q_OS_LINUX
+        ui->comboBoxMode->addItem(QString("User//proc/<pid>/mem"), MODE_USER_PROCPIDMEM);
+        ui->comboBoxMode->addItem(QString("User/ptrace"), MODE_USER_PTRACE);
+#endif
         ui->comboBoxMode->blockSignals(false);
     }
     {
@@ -99,6 +103,8 @@ void DialogDumpProcessMemory::setData(X_ID nProcessID, QString sFileName, METHOD
     }
 
     {
+        ui->comboBoxMethod->blockSignals(true);
+
         qint32 nNumberOfRecords = ui->comboBoxMethod->count();
 
         for (qint32 i = 0; i < nNumberOfRecords; i++) {
@@ -107,7 +113,11 @@ void DialogDumpProcessMemory::setData(X_ID nProcessID, QString sFileName, METHOD
                 break;
             }
         }
+
+        ui->comboBoxMethod->blockSignals(true);
     }
+
+    reload();
 }
 
 void DialogDumpProcessMemory::on_pushButtonClose_clicked()
@@ -238,13 +248,14 @@ void DialogDumpProcessMemory::reload()
             file.setFileName(g_sFileName);
 
             if (file.open(QIODevice::ReadOnly)) {
+        #ifdef Q_OS_WIN
                 XPE pe(&file);
 
                 if (pe.isValid()) {
                     g_fixDumpOptions = pe.getFixDumpOptions();
                     g_baHeaders = pe.getHeaders();
                 }
-
+        #endif
                 file.close();
             }
 

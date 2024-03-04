@@ -36,6 +36,10 @@ class DialogDumpProcessMemory : public QDialog {
 #ifdef Q_OS_WIN
         MODE_USER_READPROCESSMEMORY
 #endif
+#ifdef Q_OS_LINUX
+        MODE_USER_PROCPIDMEM,
+        MODE_USER_PTRACE
+#endif
     };
 
     enum USEHEADERS {
