@@ -143,7 +143,8 @@ void DialogDumpProcessMemory::on_pushButtonDump_clicked()
             } else if (method == METHOD_REBUILDIMAGE) {
                 DialogDumpProcess dialogDumpProcess(this);
 
-                dialogDumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_READPROCESSMEMORY_REBUILD, sFileName, g_fixDumpOptions, g_baHeaders);
+                dialogDumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_READPROCESSMEMORY_REBUILD, sFileName,
+                                          g_fixDumpOptions, g_baHeaders);
 
                 dialogDumpProcess.exec();
             }
@@ -248,14 +249,14 @@ void DialogDumpProcessMemory::reload()
             file.setFileName(g_sFileName);
 
             if (file.open(QIODevice::ReadOnly)) {
-        #ifdef Q_OS_WIN
+#ifdef Q_OS_WIN
                 XPE pe(&file);
 
                 if (pe.isValid()) {
                     g_fixDumpOptions = pe.getFixDumpOptions();
                     g_baHeaders = pe.getHeaders();
                 }
-        #endif
+#endif
                 file.close();
             }
 
@@ -263,14 +264,14 @@ void DialogDumpProcessMemory::reload()
             XProcess xprocess(g_nProcessID, g_nImageBase, g_nImageSize);
 
             if (xprocess.open(QIODevice::ReadOnly)) {
-        #ifdef Q_OS_WIN
+#ifdef Q_OS_WIN
                 XPE pe(&xprocess, true, g_nImageBase);
 
                 if (pe.isValid()) {
                     g_fixDumpOptions = pe.getFixDumpOptions();
                     g_baHeaders = pe.getHeaders();
                 }
-        #endif
+#endif
                 xprocess.close();
             }
         }
@@ -306,7 +307,6 @@ void DialogDumpProcessMemory::on_comboBoxUseHeaders_currentIndexChanged(int nInd
     reload();
 }
 
-
 void DialogDumpProcessMemory::on_lineEditEntryPoint_textChanged(const QString &sArg)
 {
     Q_UNUSED(sArg)
@@ -314,10 +314,10 @@ void DialogDumpProcessMemory::on_lineEditEntryPoint_textChanged(const QString &s
     quint32 nEntryPoint = ui->lineEditEntryPoint->getValue_uint32();
 
     if (nEntryPoint < g_nImageSize) {
-    #ifndef Q_OS_WIN64
+#ifndef Q_OS_WIN64
         ui->lineEditImportAddressOfCode->setValue_uint32(nEntryPoint + g_nImageBase);
-    #else
+#else
         ui->lineEditImportAddressOfCode->setValue_uint64(nEntryPoint + g_nImageBase);
-    #endif
+#endif
     }
 }

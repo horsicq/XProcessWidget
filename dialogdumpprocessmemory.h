@@ -37,7 +37,7 @@ class DialogDumpProcessMemory : public QDialog {
         MODE_USER_READPROCESSMEMORY
 #endif
 #ifdef Q_OS_LINUX
-        MODE_USER_PROCPIDMEM,
+            MODE_USER_PROCPIDMEM,
         MODE_USER_PTRACE
 #endif
     };
