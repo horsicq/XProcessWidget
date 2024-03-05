@@ -22,7 +22,7 @@
 #include "ui_dialogdumpprocessmemory.h"
 
 // TODO Save / Load settings
-DialogDumpProcessMemory::DialogDumpProcessMemory(QWidget *parent) : QDialog(parent), ui(new Ui::DialogDumpProcessMemory)
+DialogDumpProcessMemory::DialogDumpProcessMemory(QWidget *parent) : XShortcutsDialog(parent), ui(new Ui::DialogDumpProcessMemory)
 {
     ui->setupUi(this);
 
@@ -46,6 +46,9 @@ DialogDumpProcessMemory::DialogDumpProcessMemory(QWidget *parent) : QDialog(pare
 
         ui->comboBoxMethod->addItem(tr("Raw dump"), METHOD_RAWDUMP);
 #ifdef Q_OS_WIN
+        ui->comboBoxMethod->addItem(tr("Rebuild image"), METHOD_REBUILDIMAGE);
+#endif
+#ifdef Q_OS_LINUX
         ui->comboBoxMethod->addItem(tr("Rebuild image"), METHOD_REBUILDIMAGE);
 #endif
         ui->comboBoxMethod->blockSignals(false);
@@ -157,34 +160,40 @@ void DialogDumpProcessMemory::on_comboBoxMethod_currentIndexChanged(int nIndex)
 {
     Q_UNUSED(nIndex)
 
-    METHOD method = (METHOD)(ui->comboBoxMethod->currentData().toULongLong());
-
-    if (method == METHOD_RAWDUMP) {
-        ui->stackedWidgetDump->setCurrentWidget(ui->pageRaw);
-    } else if (method == METHOD_REBUILDIMAGE) {
-#ifdef Q_OS_WIN
-        ui->stackedWidgetDump->setCurrentWidget(ui->pagePE);
-#endif
-        reload();
-    }
+    reload();
 }
 
 void DialogDumpProcessMemory::on_pushButtonCodeDisasm_clicked()
 {
-    XProcess xprocess(g_nProcessID, g_nImageBase, g_nImageSize);
+    XADDR nAddress = ui->lineEditImportAddressOfCode->getValue_uint64();
 
-    if (xprocess.open(QIODevice::ReadOnly)) {
-        XMultiDisasmWidget::OPTIONS options = {};
-        options.bMenu_Hex = false;
-        options.nStartAddress = g_nImageBase;
-        options.nInitAddress = ui->lineEditImportAddressOfCode->getValue_uint64();
+    XProcess::MEMORY_REGION memoryRegion = XProcess::getMemoryRegionByAddress(g_nProcessID, nAddress);
 
-        DialogMultiDisasm dialogMultiDisasm(this);
-        // TODO global options
-        dialogMultiDisasm.setData(&xprocess, options);
-        dialogMultiDisasm.exec();
+    if (memoryRegion.nSize) {
+        XProcess xprocess(g_nProcessID, memoryRegion.nAddress, memoryRegion.nSize);
 
-        xprocess.close();
+        if (xprocess.open(QIODevice::ReadOnly)) {
+            XMultiDisasmWidget::OPTIONS options = {};
+            options.bMenu_Hex = false;
+            options.nStartAddress = memoryRegion.nAddress;
+            options.nInitAddress = nAddress;
+            options.bModeFixed = true;
+    #ifdef Q_PROCESSOR_X86_32
+            options.sArch = "X86";
+    #endif
+    #ifdef Q_PROCESSOR_X86_64
+            options.sArch = "X64";
+    #endif
+            options.fileType = XBinary::FT_REGION;
+
+            DialogMultiDisasm dialogMultiDisasm(this);
+            dialogMultiDisasm.setGlobal(getShortcuts(), getGlobalOptions());
+            // TODO global options
+            dialogMultiDisasm.setData(&xprocess, options);
+            dialogMultiDisasm.exec();
+
+            xprocess.close();
+        }
     }
 }
 
@@ -232,6 +241,19 @@ void DialogDumpProcessMemory::on_pushButtonGetImports_clicked()
 
 void DialogDumpProcessMemory::reload()
 {
+    METHOD method = (METHOD)(ui->comboBoxMethod->currentData().toULongLong());
+
+    if (method == METHOD_RAWDUMP) {
+        ui->stackedWidgetDump->setCurrentWidget(ui->pageRaw);
+    } else if (method == METHOD_REBUILDIMAGE) {
+#ifdef Q_OS_WIN
+        ui->stackedWidgetDump->setCurrentWidget(ui->pagePE);
+#endif
+#ifdef Q_OS_LINUX
+        ui->stackedWidgetDump->setCurrentWidget(ui->pageELF);
+#endif
+    }
+
     QString sData = ui->comboBoxModule->currentData().toString();
 
     g_sFileName = sData.section("|", 0, 0);
@@ -294,9 +316,12 @@ void DialogDumpProcessMemory::reload()
     ui->lineEditImageBase->setEnabled(g_fixDumpOptions.bSetImageBase);
 #ifndef Q_OS_WIN64
     ui->lineEditImageBase->setValue_uint32(g_fixDumpOptions.nImageBase);
+    ui->lineEditIATAddress->setValue_uint32(g_fixDumpOptions.ddIAT.VirtualAddress + ui->lineEditProcessImageBase->getValue_uint32());
 #else
     ui->lineEditImageBase->setValue_uint64(g_fixDumpOptions.nImageBase);
+    ui->lineEditIATAddress->setValue_uint64(g_fixDumpOptions.ddIAT.VirtualAddress + ui->lineEditProcessImageBase->getValue_uint64());
 #endif
+    ui->lineEditIATSize->setValue_uint32(g_fixDumpOptions.ddIAT.Size);
 #endif
 }
 
@@ -321,3 +346,14 @@ void DialogDumpProcessMemory::on_lineEditEntryPoint_textChanged(const QString &s
 #endif
     }
 }
+
+void DialogDumpProcessMemory::on_pushButtonImportLoad_clicked()
+{
+
+}
+
+void DialogDumpProcessMemory::on_pushButtonImportSave_clicked()
+{
+
+}
+

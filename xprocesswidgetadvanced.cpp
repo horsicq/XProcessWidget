@@ -242,6 +242,7 @@ void XProcessWidgetAdvanced::_dumpProcess()
         QString sFileName = ui->tableViewProcesses->model()->data(index, Qt::UserRole + USERROLE_FILENAME).toString();
 
         DialogDumpProcessMemory ddpm(this);
+        ddpm.setGlobal(getShortcuts(), getGlobalOptions());
 
         ddpm.setData(nProcessID, sFileName, DialogDumpProcessMemory::METHOD_REBUILDIMAGE);
 

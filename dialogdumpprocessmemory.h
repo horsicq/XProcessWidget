@@ -23,12 +23,13 @@
 
 #include "dialogdumpprocess.h"
 #include "dialogmultidisasm.h"
+#include "dialogxinfodbtransferprocess.h"
 
 namespace Ui {
 class DialogDumpProcessMemory;
 }
 
-class DialogDumpProcessMemory : public QDialog {
+class DialogDumpProcessMemory : public XShortcutsDialog {
     Q_OBJECT
 
     enum MODE {
@@ -37,7 +38,7 @@ class DialogDumpProcessMemory : public QDialog {
         MODE_USER_READPROCESSMEMORY
 #endif
 #ifdef Q_OS_LINUX
-            MODE_USER_PROCPIDMEM,
+        MODE_USER_PROCPIDMEM,
         MODE_USER_PTRACE
 #endif
     };
@@ -75,6 +76,8 @@ private slots:
     void reload();
     void on_comboBoxUseHeaders_currentIndexChanged(int nIndex);
     void on_lineEditEntryPoint_textChanged(const QString &sArg);
+    void on_pushButtonImportLoad_clicked();
+    void on_pushButtonImportSave_clicked();
 
 private:
     Ui::DialogDumpProcessMemory *ui;
