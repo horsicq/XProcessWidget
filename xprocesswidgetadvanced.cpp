@@ -185,13 +185,6 @@ void XProcessWidgetAdvanced::on_comboBoxProcessesMode_currentIndexChanged(int nI
     reload();
 }
 
-void XProcessWidgetAdvanced::on_comboBoxProcessesMethod_currentIndexChanged(int nIndex)
-{
-    Q_UNUSED(nIndex)
-
-    reload();
-}
-
 void XProcessWidgetAdvanced::on_pushButtonReloadProcesses_clicked()
 {
     reload();

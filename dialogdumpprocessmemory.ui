@@ -206,27 +206,18 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_9">
          <item>
-          <widget class="QComboBox" name="comboBoxUseHeaders"/>
+          <widget class="QComboBox" name="comboBoxPEUseHeaders"/>
          </item>
          <item>
           <layout class="QGridLayout" name="gridLayout">
-           <item row="5" column="1">
-            <widget class="XLineEditHEX" name="lineEditSectionAlignment"/>
-           </item>
-           <item row="1" column="2">
-            <spacer name="horizontalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+           <item row="2" column="0">
+            <widget class="QCheckBox" name="checkBoxPECleanHeader">
+             <property name="text">
+              <string>Clean header</string>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
+            </widget>
            </item>
-           <item row="7" column="2">
+           <item row="7" column="3">
             <spacer name="horizontalSpacer_7">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -239,34 +230,10 @@
              </property>
             </spacer>
            </item>
-           <item row="1" column="0">
-            <widget class="QCheckBox" name="checkBoxOptimizeSize">
-             <property name="text">
-              <string>Optimize size</string>
-             </property>
-            </widget>
+           <item row="5" column="1">
+            <widget class="XLineEditHEX" name="lineEditPESectionAlignment"/>
            </item>
-           <item row="4" column="2">
-            <spacer name="horizontalSpacer_4">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="4" column="0">
-            <widget class="QCheckBox" name="checkBoxSetFileAlignment">
-             <property name="text">
-              <string>Set file alignment</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="2">
+           <item row="2" column="3">
             <spacer name="horizontalSpacer_8">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -279,57 +246,8 @@
              </property>
             </spacer>
            </item>
-           <item row="6" column="1">
-            <widget class="XLineEditHEX" name="lineEditEntryPoint"/>
-           </item>
-           <item row="3" column="0">
-            <widget class="QCheckBox" name="checkBoxFixSizeOfHeaders">
-             <property name="text">
-              <string>Fix size of headers</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="2">
-            <spacer name="horizontalSpacer_6">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="7" column="0">
-            <widget class="QCheckBox" name="checkBoxSetImageBase">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Set image base</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="2">
-            <spacer name="horizontalSpacer_5">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
            <item row="6" column="0">
-            <widget class="QCheckBox" name="checkBoxSetEntryPoint">
+            <widget class="QCheckBox" name="checkBoxPESetEntryPoint">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -342,22 +260,98 @@
             </widget>
            </item>
            <item row="7" column="1">
-            <widget class="XLineEditHEX" name="lineEditImageBase"/>
+            <widget class="XLineEditHEX" name="lineEditPEImageBase"/>
            </item>
-           <item row="2" column="0">
-            <widget class="QCheckBox" name="checkBoxCleanHeader">
+           <item row="1" column="3">
+            <spacer name="horizontalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="4" column="1">
+            <widget class="XLineEditHEX" name="lineEditPEFileAlignment"/>
+           </item>
+           <item row="7" column="0">
+            <widget class="QCheckBox" name="checkBoxPESetImageBase">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
-              <string>Clean header</string>
+              <string>Set image base</string>
              </property>
             </widget>
            </item>
-           <item row="4" column="1">
-            <widget class="XLineEditHEX" name="lineEditFileAlignment"/>
-           </item>
            <item row="5" column="0">
-            <widget class="QCheckBox" name="checkBoxSetSectionAlignment">
+            <widget class="QCheckBox" name="checkBoxPESetSectionAlignment">
              <property name="text">
               <string>Set section alignment</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="3">
+            <spacer name="horizontalSpacer_5">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="1" column="0">
+            <widget class="QCheckBox" name="checkBoxPEOptimizeSize">
+             <property name="text">
+              <string>Optimize size</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QCheckBox" name="checkBoxPEFixSections">
+             <property name="text">
+              <string>Fix sections</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="3">
+            <spacer name="horizontalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="6" column="1">
+            <widget class="XLineEditHEX" name="lineEditPEEntryPoint"/>
+           </item>
+           <item row="4" column="0">
+            <widget class="QCheckBox" name="checkBoxPESetFileAlignment">
+             <property name="text">
+              <string>Set file alignment</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="3">
+            <widget class="QPushButton" name="pushButtonPEEntryPointDisasm">
+             <property name="text">
+              <string>Disasm</string>
              </property>
             </widget>
            </item>
@@ -381,7 +375,7 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_8">
          <item>
-          <widget class="QGroupBox" name="groupBoxCodeScan">
+          <widget class="QGroupBox" name="groupBoxPECodeScan">
            <property name="title">
             <string>Code scan</string>
            </property>
@@ -399,10 +393,10 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="XLineEditHEX" name="lineEditImportAddressOfCode"/>
+             <widget class="XLineEditHEX" name="lineEditPEImportAddressOfCode"/>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButtonCodeDisasm">
+             <widget class="QPushButton" name="pushButtonPECodeDisasm">
               <property name="text">
                <string>Disasm</string>
               </property>
@@ -422,7 +416,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButtonScanForIAT">
+             <widget class="QPushButton" name="pushButtonPEScanForIAT">
               <property name="text">
                <string>Scan for IAT</string>
               </property>
@@ -434,7 +428,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
-            <widget class="QGroupBox" name="groupBoxIATAddress">
+            <widget class="QGroupBox" name="groupBoxPEIATAddress">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -458,13 +452,13 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="XLineEditHEX" name="lineEditIATAddress"/>
+               <widget class="XLineEditHEX" name="lineEditPEIATAddress"/>
               </item>
              </layout>
             </widget>
            </item>
            <item>
-            <widget class="QGroupBox" name="groupBoxIATSize">
+            <widget class="QGroupBox" name="groupBoxPEIATSize">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -488,7 +482,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="XLineEditHEX" name="lineEditIATSize"/>
+               <widget class="XLineEditHEX" name="lineEditPEIATSize"/>
               </item>
              </layout>
             </widget>
@@ -507,7 +501,7 @@
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButtonGetImports">
+            <widget class="QPushButton" name="pushButtonPEGetImports">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -522,7 +516,7 @@
           </layout>
          </item>
          <item>
-          <widget class="QTableWidget" name="tableWidget"/>
+          <widget class="QTableWidget" name="tableWidgetPEImport"/>
          </item>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -540,14 +534,14 @@
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButtonImportLoad">
+            <widget class="QPushButton" name="pushButtonPEImportLoad">
              <property name="text">
               <string>Load</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButtonImportSave">
+            <widget class="QPushButton" name="pushButtonPEImportSave">
              <property name="text">
               <string>Save</string>
              </property>
@@ -558,10 +552,10 @@
          <item>
           <layout class="QGridLayout" name="gridLayout_2">
            <item row="0" column="1">
-            <widget class="XLineEditHEX" name="lineEditImportSectionName"/>
+            <widget class="XLineEditHEX" name="lineEditPEImportSectionName"/>
            </item>
            <item row="0" column="0">
-            <widget class="QCheckBox" name="checkBoxAddImportSection">
+            <widget class="QCheckBox" name="checkBoxPEAddImportSection">
              <property name="text">
               <string>Add import section</string>
              </property>
@@ -586,7 +580,122 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="pageELF"/>
+     <widget class="QWidget" name="pageELF">
+      <layout class="QHBoxLayout" name="horizontalLayout_7">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_11">
+         <item>
+          <widget class="QComboBox" name="comboBoxELFUseHeaders"/>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="checkBoxELFOptimizeSize">
+             <property name="text">
+              <string>Optimize size</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="XLineEditHEX" name="lineEditELFEntryPoint"/>
+           </item>
+           <item row="0" column="1">
+            <spacer name="horizontalSpacer_13">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="1" column="0">
+            <widget class="QCheckBox" name="checkBoxELFFixSegments">
+             <property name="text">
+              <string>Fix segments</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QCheckBox" name="checkBoxELFSetEntryPoint">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Set entry point</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QPushButton" name="pushButtonELFEntryPointDisasm">
+             <property name="text">
+              <string>Disasm</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_6">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_14">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>380</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
    <item>

@@ -64,20 +64,25 @@ private slots:
     void on_pushButtonClose_clicked();
     void on_pushButtonDump_clicked();
     void on_comboBoxMethod_currentIndexChanged(int nIndex);
-    void on_pushButtonCodeDisasm_clicked();
-    void on_checkBoxSetFileAlignment_toggled(bool bChecked);
-    void on_checkBoxSetSectionAlignment_clicked(bool bChecked);
-    void on_checkBoxSetEntryPoint_clicked(bool bChecked);
-    void on_checkBoxSetImageBase_clicked(bool bChecked);
-    void on_checkBoxAddImportSection_clicked(bool bChecked);
-    void on_pushButtonScanForIAT_clicked();
+    void on_pushButtonPECodeDisasm_clicked();
+    void on_checkBoxPESetFileAlignment_toggled(bool bChecked);
+    void on_checkBoxPESetSectionAlignment_clicked(bool bChecked);
+    void on_checkBoxPESetEntryPoint_clicked(bool bChecked);
+    void on_checkBoxPESetImageBase_clicked(bool bChecked);
+    void on_checkBoxPEAddImportSection_clicked(bool bChecked);
+    void on_pushButtonPEScanForIAT_clicked();
     void on_comboBoxModule_currentIndexChanged(int nIndex);
-    void on_pushButtonGetImports_clicked();
+    void on_pushButtonPEGetImports_clicked();
     void reload();
-    void on_comboBoxUseHeaders_currentIndexChanged(int nIndex);
-    void on_lineEditEntryPoint_textChanged(const QString &sArg);
-    void on_pushButtonImportLoad_clicked();
-    void on_pushButtonImportSave_clicked();
+    void on_comboBoxPEUseHeaders_currentIndexChanged(int nIndex);
+    void on_lineEditPEEntryPoint_textChanged(const QString &sArg);
+    void on_pushButtonPEImportLoad_clicked();
+    void on_pushButtonPEImportSave_clicked();
+    void on_pushButtonPEEntryPointDisasm_clicked();
+    void viewDisasm(XADDR nAddress);
+    void on_checkBoxELFSetEntryPoint_clicked(bool bChecked);
+
+    void on_pushButtonELFEntryPointDisasm_clicked();
 
 private:
     Ui::DialogDumpProcessMemory *ui;
@@ -87,7 +92,10 @@ private:
     QString g_sFileName;
     QByteArray g_baHeaders;
 #ifdef Q_OS_WIN
-    XPE::FIXDUMP_OPTIONS g_fixDumpOptions;
+    XPE::FIXDUMP_OPTIONS g_PEfixDumpOptions;
+#endif
+#ifdef Q_OS_LINUX
+    XELF::FIXDUMP_OPTIONS g_ELFfixDumpOptions;
 #endif
 };
 

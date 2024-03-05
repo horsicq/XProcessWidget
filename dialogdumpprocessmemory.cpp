@@ -55,7 +55,7 @@ DialogDumpProcessMemory::DialogDumpProcessMemory(QWidget *parent) : XShortcutsDi
     }
 
 #ifdef Q_OS_WIN
-    g_fixDumpOptions = {};
+    g_PEfixDumpOptions = {};
 #endif
 
     ui->lineEditProcessImageBase->setReadOnly(true);
@@ -97,12 +97,22 @@ void DialogDumpProcessMemory::setData(X_ID nProcessID, QString sFileName, METHOD
         ui->comboBoxModule->blockSignals(false);
     }
     {
-        ui->comboBoxUseHeaders->blockSignals(true);
+#ifdef Q_OS_WIN
+        ui->comboBoxPEUseHeaders->blockSignals(true);
 
-        ui->comboBoxUseHeaders->addItem(tr("Use header from file"), USEHEADER_FILE);
-        ui->comboBoxUseHeaders->addItem(tr("Use header from memory"), USEHEADER_MEMORY);
+        ui->comboBoxPEUseHeaders->addItem(tr("Use header from file"), USEHEADER_FILE);
+        ui->comboBoxPEUseHeaders->addItem(tr("Use header from memory"), USEHEADER_MEMORY);
 
-        ui->comboBoxUseHeaders->blockSignals(false);
+        ui->comboBoxPEUseHeaders->blockSignals(false);
+#endif
+#ifdef Q_OS_LINUX
+        ui->comboBoxELFUseHeaders->blockSignals(true);
+
+        ui->comboBoxELFUseHeaders->addItem(tr("Use header from file"), USEHEADER_FILE);
+        ui->comboBoxELFUseHeaders->addItem(tr("Use header from memory"), USEHEADER_MEMORY);
+
+        ui->comboBoxELFUseHeaders->blockSignals(false);
+#endif
     }
 
     {
@@ -117,7 +127,7 @@ void DialogDumpProcessMemory::setData(X_ID nProcessID, QString sFileName, METHOD
             }
         }
 
-        ui->comboBoxMethod->blockSignals(true);
+        ui->comboBoxMethod->blockSignals(false);
     }
 
     reload();
@@ -147,10 +157,35 @@ void DialogDumpProcessMemory::on_pushButtonDump_clicked()
                 DialogDumpProcess dialogDumpProcess(this);
 
                 dialogDumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_READPROCESSMEMORY_REBUILD, sFileName,
-                                          g_fixDumpOptions, g_baHeaders);
+                                          g_PEfixDumpOptions, g_baHeaders);
 
                 dialogDumpProcess.exec();
             }
+        }
+#endif
+#ifdef Q_OS_LINUX
+        if (mode == MODE_USER_PROCPIDMEM) {
+
+        }
+        if (method == METHOD_RAWDUMP) {
+            DialogDumpProcess dialogDumpProcess(this);
+            if (mode == MODE_USER_PROCPIDMEM) {
+                dialogDumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_PROCPIDMEM_RAWDUMP, sFileName);
+            } else if (mode == MODE_USER_PTRACE) {
+                dialogDumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_PTRACE_RAWDUMP, sFileName);
+            }
+            dialogDumpProcess.exec();
+        } else if (method == METHOD_REBUILDIMAGE) {
+            DialogDumpProcess dialogDumpProcess(this);
+            if (mode == MODE_USER_PROCPIDMEM) {
+                dialogDumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_PROCPIDMEM_REBUILD, sFileName,
+                                          g_ELFfixDumpOptions, g_baHeaders);
+            } else if (mode == MODE_USER_PTRACE) {
+                dialogDumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_PTRACE_REBUILD, sFileName,
+                                          g_ELFfixDumpOptions, g_baHeaders);
+            }
+
+            dialogDumpProcess.exec();
         }
 #endif
     }
@@ -163,66 +198,40 @@ void DialogDumpProcessMemory::on_comboBoxMethod_currentIndexChanged(int nIndex)
     reload();
 }
 
-void DialogDumpProcessMemory::on_pushButtonCodeDisasm_clicked()
+void DialogDumpProcessMemory::on_pushButtonPECodeDisasm_clicked()
 {
-    XADDR nAddress = ui->lineEditImportAddressOfCode->getValue_uint64();
+    XADDR nAddress = ui->lineEditPEImportAddressOfCode->getValue_uint64();
 
-    XProcess::MEMORY_REGION memoryRegion = XProcess::getMemoryRegionByAddress(g_nProcessID, nAddress);
-
-    if (memoryRegion.nSize) {
-        XProcess xprocess(g_nProcessID, memoryRegion.nAddress, memoryRegion.nSize);
-
-        if (xprocess.open(QIODevice::ReadOnly)) {
-            XMultiDisasmWidget::OPTIONS options = {};
-            options.bMenu_Hex = false;
-            options.nStartAddress = memoryRegion.nAddress;
-            options.nInitAddress = nAddress;
-            options.bModeFixed = true;
-    #ifdef Q_PROCESSOR_X86_32
-            options.sArch = "X86";
-    #endif
-    #ifdef Q_PROCESSOR_X86_64
-            options.sArch = "X64";
-    #endif
-            options.fileType = XBinary::FT_REGION;
-
-            DialogMultiDisasm dialogMultiDisasm(this);
-            dialogMultiDisasm.setGlobal(getShortcuts(), getGlobalOptions());
-            // TODO global options
-            dialogMultiDisasm.setData(&xprocess, options);
-            dialogMultiDisasm.exec();
-
-            xprocess.close();
-        }
-    }
+    viewDisasm(nAddress);
 }
 
-void DialogDumpProcessMemory::on_checkBoxSetFileAlignment_toggled(bool bChecked)
+void DialogDumpProcessMemory::on_checkBoxPESetFileAlignment_toggled(bool bChecked)
 {
-    ui->lineEditFileAlignment->setEnabled(bChecked);
+    ui->lineEditPEFileAlignment->setEnabled(bChecked);
 }
 
-void DialogDumpProcessMemory::on_checkBoxSetSectionAlignment_clicked(bool bChecked)
+void DialogDumpProcessMemory::on_checkBoxPESetSectionAlignment_clicked(bool bChecked)
 {
-    ui->lineEditSectionAlignment->setEnabled(bChecked);
+    ui->lineEditPESectionAlignment->setEnabled(bChecked);
 }
 
-void DialogDumpProcessMemory::on_checkBoxSetEntryPoint_clicked(bool bChecked)
+void DialogDumpProcessMemory::on_checkBoxPESetEntryPoint_clicked(bool bChecked)
 {
-    ui->lineEditEntryPoint->setEnabled(bChecked);
+    ui->lineEditPEEntryPoint->setEnabled(bChecked);
+    ui->pushButtonPEEntryPointDisasm->setEnabled(bChecked);
 }
 
-void DialogDumpProcessMemory::on_checkBoxSetImageBase_clicked(bool bChecked)
+void DialogDumpProcessMemory::on_checkBoxPESetImageBase_clicked(bool bChecked)
 {
-    ui->lineEditImageBase->setEnabled(bChecked);
+    ui->lineEditPEImageBase->setEnabled(bChecked);
 }
 
-void DialogDumpProcessMemory::on_checkBoxAddImportSection_clicked(bool bChecked)
+void DialogDumpProcessMemory::on_checkBoxPEAddImportSection_clicked(bool bChecked)
 {
-    ui->lineEditImportSectionName->setEnabled(bChecked);
+    ui->lineEditPEImportSectionName->setEnabled(bChecked);
 }
 
-void DialogDumpProcessMemory::on_pushButtonScanForIAT_clicked()
+void DialogDumpProcessMemory::on_pushButtonPEScanForIAT_clicked()
 {
     // TODO
 }
@@ -234,7 +243,7 @@ void DialogDumpProcessMemory::on_comboBoxModule_currentIndexChanged(int nIndex)
     reload();
 }
 
-void DialogDumpProcessMemory::on_pushButtonGetImports_clicked()
+void DialogDumpProcessMemory::on_pushButtonPEGetImports_clicked()
 {
     // TODO
 }
@@ -264,21 +273,20 @@ void DialogDumpProcessMemory::reload()
     ui->lineEditProcessImageSize->setValue32_64(g_nImageSize);
 
     if (g_nImageSize) {
-        USEHEADERS useHeaders = (USEHEADERS)(ui->comboBoxUseHeaders->currentData().toULongLong());
+#ifdef Q_OS_WIN
+        USEHEADERS useHeaders = (USEHEADERS)(ui->comboBoxPEUseHeaders->currentData().toULongLong());
 
         if (useHeaders == USEHEADER_FILE) {
             QFile file;
             file.setFileName(g_sFileName);
 
             if (file.open(QIODevice::ReadOnly)) {
-#ifdef Q_OS_WIN
                 XPE pe(&file);
 
                 if (pe.isValid()) {
-                    g_fixDumpOptions = pe.getFixDumpOptions();
+                    g_PEfixDumpOptions = pe.getFixDumpOptions();
                     g_baHeaders = pe.getHeaders();
                 }
-#endif
                 file.close();
             }
 
@@ -286,74 +294,163 @@ void DialogDumpProcessMemory::reload()
             XProcess xprocess(g_nProcessID, g_nImageBase, g_nImageSize);
 
             if (xprocess.open(QIODevice::ReadOnly)) {
-#ifdef Q_OS_WIN
                 XPE pe(&xprocess, true, g_nImageBase);
 
                 if (pe.isValid()) {
-                    g_fixDumpOptions = pe.getFixDumpOptions();
+                    g_PEfixDumpOptions = pe.getFixDumpOptions();
                     g_baHeaders = pe.getHeaders();
                 }
-#endif
                 xprocess.close();
             }
         }
-    }
 
-#ifdef Q_OS_WIN
-    ui->checkBoxOptimizeSize->setChecked(g_fixDumpOptions.bOptimizeSize);
-    ui->checkBoxCleanHeader->setChecked(g_fixDumpOptions.bCleanHeader);
-    ui->checkBoxFixSizeOfHeaders->setChecked(g_fixDumpOptions.bFixSizeOfSections);
-    ui->checkBoxSetFileAlignment->setChecked(g_fixDumpOptions.bSetFileAlignment);
-    ui->lineEditFileAlignment->setEnabled(g_fixDumpOptions.bSetFileAlignment);
-    ui->lineEditFileAlignment->setValue_uint32(g_fixDumpOptions.nFileAlignment);
-    ui->checkBoxSetSectionAlignment->setChecked(g_fixDumpOptions.bSetSectionAlignment);
-    ui->lineEditSectionAlignment->setEnabled(g_fixDumpOptions.bSetSectionAlignment);
-    ui->lineEditSectionAlignment->setValue_uint32(g_fixDumpOptions.nSectionAlignment);
-    ui->checkBoxSetEntryPoint->setChecked(g_fixDumpOptions.bSetEntryPoint);
-    ui->lineEditEntryPoint->setEnabled(g_fixDumpOptions.bSetEntryPoint);
-    ui->lineEditEntryPoint->setValue_uint32(g_fixDumpOptions.nEntryPoint);
-    ui->checkBoxSetImageBase->setChecked(g_fixDumpOptions.bSetImageBase);
-    ui->lineEditImageBase->setEnabled(g_fixDumpOptions.bSetImageBase);
-#ifndef Q_OS_WIN64
-    ui->lineEditImageBase->setValue_uint32(g_fixDumpOptions.nImageBase);
-    ui->lineEditIATAddress->setValue_uint32(g_fixDumpOptions.ddIAT.VirtualAddress + ui->lineEditProcessImageBase->getValue_uint32());
-#else
-    ui->lineEditImageBase->setValue_uint64(g_fixDumpOptions.nImageBase);
-    ui->lineEditIATAddress->setValue_uint64(g_fixDumpOptions.ddIAT.VirtualAddress + ui->lineEditProcessImageBase->getValue_uint64());
+        ui->checkBoxPEOptimizeSize->setChecked(g_PEfixDumpOptions.bOptimizeSize);
+        ui->checkBoxPECleanHeader->setChecked(g_PEfixDumpOptions.bCleanHeader);
+        ui->checkBoxPEFixSections->setChecked(g_PEfixDumpOptions.bFixSections);
+        ui->checkBoxPESetFileAlignment->setChecked(g_PEfixDumpOptions.bSetFileAlignment);
+        ui->lineEditPEFileAlignment->setEnabled(g_PEfixDumpOptions.bSetFileAlignment);
+        ui->lineEditPEFileAlignment->setValue_uint32(g_PEfixDumpOptions.nFileAlignment);
+        ui->checkBoxPESetSectionAlignment->setChecked(g_PEfixDumpOptions.bSetSectionAlignment);
+        ui->lineEditPESectionAlignment->setEnabled(g_PEfixDumpOptions.bSetSectionAlignment);
+        ui->lineEditPESectionAlignment->setValue_uint32(g_PEfixDumpOptions.nSectionAlignment);
+        ui->checkBoxPESetEntryPoint->setChecked(g_PEfixDumpOptions.bSetEntryPoint);
+        ui->lineEditPEEntryPoint->setEnabled(g_PEfixDumpOptions.bSetEntryPoint);
+        ui->pushButtonPEEntryPointDisasm->setEnabled(g_PEfixDumpOptions.bSetEntryPoint);
+        ui->lineEditPEEntryPoint->setValue_uint32(g_PEfixDumpOptions.nEntryPoint);
+        ui->checkBoxPESetImageBase->setChecked(g_PEfixDumpOptions.bSetImageBase);
+        ui->lineEditPEImageBase->setEnabled(g_PEfixDumpOptions.bSetImageBase);
+    #ifndef Q_OS_WIN64
+        ui->lineEditPEImageBase->setValue_uint32(g_fixDumpOptions.nImageBase);
+        ui->lineEditPEIATAddress->setValue_uint32(g_fixDumpOptions.ddIAT.VirtualAddress + ui->lineEditProcessImageBase->getValue_uint32());
+    #else
+        ui->lineEditPEImageBase->setValue_uint64(g_PEfixDumpOptions.nImageBase);
+        ui->lineEditPEIATAddress->setValue_uint64(g_PEfixDumpOptions.ddIAT.VirtualAddress + ui->lineEditProcessImageBase->getValue_uint64());
+    #endif
+        ui->lineEditPEIATSize->setValue_uint32(g_PEfixDumpOptions.ddIAT.Size);
 #endif
-    ui->lineEditIATSize->setValue_uint32(g_fixDumpOptions.ddIAT.Size);
+#ifdef Q_OS_LINUX
+        USEHEADERS useHeaders = (USEHEADERS)(ui->comboBoxPEUseHeaders->currentData().toULongLong());
+
+        if (useHeaders == USEHEADER_FILE) {
+            QFile file;
+            file.setFileName(g_sFileName);
+
+            if (file.open(QIODevice::ReadOnly)) {
+                XELF elf(&file);
+
+                if (elf.isValid()) {
+                    g_ELFfixDumpOptions = elf.getFixDumpOptions();
+                    // g_baHeaders = elf.getHeaders();
+                }
+                file.close();
+            }
+
+        } else if (useHeaders == USEHEADER_MEMORY) {
+            XProcess xprocess(g_nProcessID, g_nImageBase, g_nImageSize);
+
+            if (xprocess.open(QIODevice::ReadOnly)) {
+                XELF elf(&xprocess, true, g_nImageBase);
+
+                if (elf.isValid()) {
+                    g_ELFfixDumpOptions = elf.getFixDumpOptions();
+                    // g_baHeaders = elf.getHeaders();
+                }
+                xprocess.close();
+            }
+        }
+
+        ui->checkBoxELFOptimizeSize->setChecked(g_ELFfixDumpOptions.bOptimizeSize);
+        ui->checkBoxELFFixSegments->setChecked(g_ELFfixDumpOptions.bFixSegments);
+        ui->checkBoxELFSetEntryPoint->setChecked(g_ELFfixDumpOptions.bSetEntryPoint);
+        ui->lineEditELFEntryPoint->setEnabled(g_ELFfixDumpOptions.bSetEntryPoint);
+        ui->pushButtonELFEntryPointDisasm->setEnabled(g_ELFfixDumpOptions.bSetEntryPoint);
+        ui->lineEditELFEntryPoint->setValue_uint64(g_ELFfixDumpOptions.nEntryPoint); // TODO 32/64
 #endif
+    }
 }
 
-void DialogDumpProcessMemory::on_comboBoxUseHeaders_currentIndexChanged(int nIndex)
+void DialogDumpProcessMemory::on_comboBoxPEUseHeaders_currentIndexChanged(int nIndex)
 {
     Q_UNUSED(nIndex)
 
     reload();
 }
 
-void DialogDumpProcessMemory::on_lineEditEntryPoint_textChanged(const QString &sArg)
+void DialogDumpProcessMemory::on_lineEditPEEntryPoint_textChanged(const QString &sArg)
 {
     Q_UNUSED(sArg)
 
-    quint32 nEntryPoint = ui->lineEditEntryPoint->getValue_uint32();
+    quint32 nEntryPoint = ui->lineEditPEEntryPoint->getValue_uint32();
 
     if (nEntryPoint < g_nImageSize) {
 #ifndef Q_OS_WIN64
-        ui->lineEditImportAddressOfCode->setValue_uint32(nEntryPoint + g_nImageBase);
+        ui->lineEditPEImportAddressOfCode->setValue_uint32(nEntryPoint + g_nImageBase);
 #else
-        ui->lineEditImportAddressOfCode->setValue_uint64(nEntryPoint + g_nImageBase);
+        ui->lineEditPEImportAddressOfCode->setValue_uint64(nEntryPoint + g_nImageBase);
 #endif
     }
 }
 
-void DialogDumpProcessMemory::on_pushButtonImportLoad_clicked()
+void DialogDumpProcessMemory::on_pushButtonPEImportLoad_clicked()
 {
 
 }
 
-void DialogDumpProcessMemory::on_pushButtonImportSave_clicked()
+void DialogDumpProcessMemory::on_pushButtonPEImportSave_clicked()
 {
 
+}
+
+void DialogDumpProcessMemory::on_pushButtonPEEntryPointDisasm_clicked()
+{
+    XADDR nAddress = ui->lineEditPEEntryPoint->getValue_uint64() + ui->lineEditProcessImageBase->getValue_uint64();
+
+    viewDisasm(nAddress);
+}
+
+void DialogDumpProcessMemory::viewDisasm(XADDR nAddress)
+{
+    XProcess::MEMORY_REGION memoryRegion = XProcess::getMemoryRegionByAddress(g_nProcessID, nAddress);
+
+    if (memoryRegion.nSize) {
+        XProcess xprocess(g_nProcessID, memoryRegion.nAddress, memoryRegion.nSize);
+
+        if (xprocess.open(QIODevice::ReadOnly)) {
+            XMultiDisasmWidget::OPTIONS options = {};
+            options.bMenu_Hex = false;
+            options.nStartAddress = memoryRegion.nAddress;
+            options.nInitAddress = nAddress;
+            options.bModeFixed = true;
+            options.bHideReadOnly = true;
+    #ifdef Q_PROCESSOR_X86_32
+            options.sArch = "X86";
+    #endif
+    #ifdef Q_PROCESSOR_X86_64
+            options.sArch = "X64";
+    #endif
+            options.fileType = XBinary::FT_REGION;
+
+            DialogMultiDisasm dialogMultiDisasm(this);
+            dialogMultiDisasm.setGlobal(getShortcuts(), getGlobalOptions());
+            // TODO global options
+            dialogMultiDisasm.setData(&xprocess, options);
+            dialogMultiDisasm.exec();
+
+            xprocess.close();
+        }
+    }
+}
+
+void DialogDumpProcessMemory::on_checkBoxELFSetEntryPoint_clicked(bool bChecked)
+{
+    ui->lineEditELFEntryPoint->setEnabled(bChecked);
+    ui->pushButtonELFEntryPointDisasm->setEnabled(bChecked);
+}
+
+void DialogDumpProcessMemory::on_pushButtonELFEntryPointDisasm_clicked()
+{
+    XADDR nAddress = ui->lineEditELFEntryPoint->getValue_uint64();
+
+    viewDisasm(nAddress);
 }
 
