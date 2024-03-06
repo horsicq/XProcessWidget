@@ -164,9 +164,6 @@ void DialogDumpProcessMemory::on_pushButtonDump_clicked()
         }
 #endif
 #ifdef Q_OS_LINUX
-        if (mode == MODE_USER_PROCPIDMEM) {
-
-        }
         if (method == METHOD_RAWDUMP) {
             DialogDumpProcess dialogDumpProcess(this);
             if (mode == MODE_USER_PROCPIDMEM) {
@@ -289,7 +286,6 @@ void DialogDumpProcessMemory::reload()
                 }
                 file.close();
             }
-
         } else if (useHeaders == USEHEADER_MEMORY) {
             XProcess xprocess(g_nProcessID, g_nImageBase, g_nImageSize);
 
@@ -320,8 +316,8 @@ void DialogDumpProcessMemory::reload()
         ui->checkBoxPESetImageBase->setChecked(g_PEfixDumpOptions.bSetImageBase);
         ui->lineEditPEImageBase->setEnabled(g_PEfixDumpOptions.bSetImageBase);
     #ifndef Q_OS_WIN64
-        ui->lineEditPEImageBase->setValue_uint32(g_fixDumpOptions.nImageBase);
-        ui->lineEditPEIATAddress->setValue_uint32(g_fixDumpOptions.ddIAT.VirtualAddress + ui->lineEditProcessImageBase->getValue_uint32());
+        ui->lineEditPEImageBase->setValue_uint32(g_PEfixDumpOptions.nImageBase);
+        ui->lineEditPEIATAddress->setValue_uint32(g_PEfixDumpOptions.ddIAT.VirtualAddress + ui->lineEditProcessImageBase->getValue_uint32());
     #else
         ui->lineEditPEImageBase->setValue_uint64(g_PEfixDumpOptions.nImageBase);
         ui->lineEditPEIATAddress->setValue_uint64(g_PEfixDumpOptions.ddIAT.VirtualAddress + ui->lineEditProcessImageBase->getValue_uint64());
@@ -340,11 +336,10 @@ void DialogDumpProcessMemory::reload()
 
                 if (elf.isValid()) {
                     g_ELFfixDumpOptions = elf.getFixDumpOptions();
-                    // g_baHeaders = elf.getHeaders();
+                    g_baHeaders = elf.getHeaders();
                 }
                 file.close();
             }
-
         } else if (useHeaders == USEHEADER_MEMORY) {
             XProcess xprocess(g_nProcessID, g_nImageBase, g_nImageSize);
 
@@ -353,7 +348,7 @@ void DialogDumpProcessMemory::reload()
 
                 if (elf.isValid()) {
                     g_ELFfixDumpOptions = elf.getFixDumpOptions();
-                    // g_baHeaders = elf.getHeaders();
+                    g_baHeaders = elf.getHeaders();
                 }
                 xprocess.close();
             }
