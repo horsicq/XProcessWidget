@@ -242,7 +242,19 @@ void DialogDumpProcessMemory::on_comboBoxModule_currentIndexChanged(int nIndex)
 
 void DialogDumpProcessMemory::on_pushButtonPEGetImports_clicked()
 {
-    // TODO
+    QList<XPE::IMPORT_RECORD> listImportRecords;
+
+    XInfoDBTransfer::OPTIONS options = {};
+    options.nProcessID = g_nProcessID;
+    options.nAddress = ui->lineEditPEIATAddress->getValue_uint64();
+    options.nSize = ui->lineEditPEIATSize->getValue_uint64();
+#ifdef Q_OS_WIN
+    DialogXInfoDBTransferProcess dialogDataTransfer(this);
+
+    dialogDataTransfer.setData(XInfoDBTransfer::COMMAND_GETIAT, options, &listImportRecords);
+
+    dialogDataTransfer.showDialogDelay();
+#endif
 }
 
 void DialogDumpProcessMemory::reload()
