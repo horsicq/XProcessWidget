@@ -175,11 +175,11 @@ void DialogDumpProcessMemory::on_pushButtonDump_clicked()
         } else if (method == METHOD_REBUILDIMAGE) {
             DialogDumpProcess dialogDumpProcess(this);
             if (mode == MODE_USER_PROCPIDMEM) {
-                dialogDumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_PROCPIDMEM_REBUILD, sFileName,
-                                          g_ELFfixDumpOptions, g_baHeaders);
+                dialogDumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_PROCPIDMEM_REBUILD, sFileName, g_ELFfixDumpOptions,
+                                          g_baHeaders);
             } else if (mode == MODE_USER_PTRACE) {
-                dialogDumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_PTRACE_REBUILD, sFileName,
-                                          g_ELFfixDumpOptions, g_baHeaders);
+                dialogDumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_PTRACE_REBUILD, sFileName, g_ELFfixDumpOptions,
+                                          g_baHeaders);
             }
 
             dialogDumpProcess.exec();
@@ -327,13 +327,13 @@ void DialogDumpProcessMemory::reload()
         ui->lineEditPEEntryPoint->setValue_uint32(g_PEfixDumpOptions.nEntryPoint);
         ui->checkBoxPESetImageBase->setChecked(g_PEfixDumpOptions.bSetImageBase);
         ui->lineEditPEImageBase->setEnabled(g_PEfixDumpOptions.bSetImageBase);
-    #ifndef Q_OS_WIN64
+#ifndef Q_OS_WIN64
         ui->lineEditPEImageBase->setValue_uint32(g_PEfixDumpOptions.nImageBase);
         ui->lineEditPEIATAddress->setValue_uint32(g_PEfixDumpOptions.ddIAT.VirtualAddress + ui->lineEditProcessImageBase->getValue_uint32());
-    #else
+#else
         ui->lineEditPEImageBase->setValue_uint64(g_PEfixDumpOptions.nImageBase);
         ui->lineEditPEIATAddress->setValue_uint64(g_PEfixDumpOptions.ddIAT.VirtualAddress + ui->lineEditProcessImageBase->getValue_uint64());
-    #endif
+#endif
         ui->lineEditPEIATSize->setValue_uint32(g_PEfixDumpOptions.ddIAT.Size);
 #endif
 #ifdef Q_OS_LINUX
@@ -371,7 +371,7 @@ void DialogDumpProcessMemory::reload()
         ui->checkBoxELFSetEntryPoint->setChecked(g_ELFfixDumpOptions.bSetEntryPoint);
         ui->lineEditELFEntryPoint->setEnabled(g_ELFfixDumpOptions.bSetEntryPoint);
         ui->pushButtonELFEntryPointDisasm->setEnabled(g_ELFfixDumpOptions.bSetEntryPoint);
-        ui->lineEditELFEntryPoint->setValue_uint64(g_ELFfixDumpOptions.nEntryPoint); // TODO 32/64
+        ui->lineEditELFEntryPoint->setValue_uint64(g_ELFfixDumpOptions.nEntryPoint);  // TODO 32/64
 #endif
     }
 }
@@ -400,12 +400,10 @@ void DialogDumpProcessMemory::on_lineEditPEEntryPoint_textChanged(const QString 
 
 void DialogDumpProcessMemory::on_pushButtonPEImportLoad_clicked()
 {
-
 }
 
 void DialogDumpProcessMemory::on_pushButtonPEImportSave_clicked()
 {
-
 }
 
 void DialogDumpProcessMemory::on_pushButtonPEEntryPointDisasm_clicked()
@@ -429,12 +427,12 @@ void DialogDumpProcessMemory::viewDisasm(XADDR nAddress)
             options.nInitAddress = nAddress;
             options.bModeFixed = true;
             options.bHideReadOnly = true;
-    #ifdef Q_PROCESSOR_X86_32
+#ifdef Q_PROCESSOR_X86_32
             options.sArch = "X86";
-    #endif
-    #ifdef Q_PROCESSOR_X86_64
+#endif
+#ifdef Q_PROCESSOR_X86_64
             options.sArch = "X64";
-    #endif
+#endif
             options.fileType = XBinary::FT_REGION;
 
             DialogMultiDisasm dialogMultiDisasm(this);
@@ -460,4 +458,3 @@ void DialogDumpProcessMemory::on_pushButtonELFEntryPointDisasm_clicked()
 
     viewDisasm(nAddress);
 }
-
