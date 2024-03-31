@@ -48,8 +48,7 @@ QString XhandleInfo::scanFile(const QString &sFileName)
             scanOptions.bIsVerbose = true;
 
             DiE_Script::SCAN_RESULT scanResult = g_pDieScript->scanFile(sFileName, &scanOptions, g_pPdStruct);
-            QList<XBinary::SCANSTRUCT> listScanResults = DiE_Script::convert(&(scanResult.listRecords));
-            sResult = XFormats::getProtection(&listScanResults);
+            sResult = XFormats::getProtection(&(scanResult.listRecords));
         } else if (g_hiOptions.sScanEngine == "nfd") {
             SpecAbstract::SCAN_OPTIONS scanOptions = {};
             scanOptions.bIsDeepScan = true;
