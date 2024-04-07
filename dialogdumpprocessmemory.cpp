@@ -22,7 +22,7 @@
 #include "ui_dialogdumpprocessmemory.h"
 
 // TODO Save / Load settings
-DialogDumpProcessMemory::DialogDumpProcessMemory(QWidget *parent) : XShortcutsDialog(parent), ui(new Ui::DialogDumpProcessMemory)
+DialogDumpProcessMemory::DialogDumpProcessMemory(QWidget *pParent) : XShortcutsDialog(pParent), ui(new Ui::DialogDumpProcessMemory)
 {
     ui->setupUi(this);
 

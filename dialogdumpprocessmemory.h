@@ -55,7 +55,7 @@ public:
         METHOD_REBUILDIMAGE
     };
 
-    explicit DialogDumpProcessMemory(QWidget *parent = nullptr);
+    explicit DialogDumpProcessMemory(QWidget *pParent = nullptr);
     ~DialogDumpProcessMemory();
 
     void setData(X_ID nProcessID, QString sFileName, METHOD method);
