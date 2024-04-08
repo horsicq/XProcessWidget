@@ -27,7 +27,7 @@
 class DialogHandleInfoProcess : public XDialogProcess {
     Q_OBJECT
 public:
-    explicit DialogHandleInfoProcess(QWidget *parent = nullptr);
+    explicit DialogHandleInfoProcess(QWidget *pParent = nullptr);
     ~DialogHandleInfoProcess();
 
     void setData(XhandleInfo::HANDLE_INFO_OPTIONS hiOptions, QList<XProcess::PROCESS_INFO> *pListProcesses);

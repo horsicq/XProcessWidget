@@ -20,7 +20,7 @@
  */
 #include "dialoghandleinfoprocess.h"
 
-DialogHandleInfoProcess::DialogHandleInfoProcess(QWidget *parent) : XDialogProcess(parent)
+DialogHandleInfoProcess::DialogHandleInfoProcess(QWidget *pParent) : XDialogProcess(pParent)
 {
     g_pXhandleInfo = new XhandleInfo;
     g_pThread = new QThread;
