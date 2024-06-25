@@ -83,6 +83,10 @@ private slots:
     void on_checkBoxELFSetEntryPoint_clicked(bool bChecked);
 
     void on_pushButtonELFEntryPointDisasm_clicked();
+    virtual void adjustView() {}
+
+protected:
+    virtual void registerShortcuts(bool bState) { Q_UNUSED(bState) }
 
 private:
     Ui::DialogDumpProcessMemory *ui;
