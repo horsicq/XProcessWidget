@@ -41,24 +41,20 @@ QString XhandleInfo::scanFile(const QString &sFileName)
     if (g_mapDetects.contains(sFileName)) {
         sResult = g_mapDetects.value(sFileName);
     } else {
+        DiE_Script::SCAN_OPTIONS scanOptions = {};
+        scanOptions.bIsDeepScan = true;
+        scanOptions.bIsHeuristicScan = true;
+        scanOptions.bIsVerbose = true;
+
+        XScanEngine::SCAN_RESULT scanResult = {};
+
         if (g_hiOptions.sScanEngine == "die") {
-            DiE_Script::OPTIONS scanOptions = {};
-            scanOptions.bIsDeepScan = true;
-            scanOptions.bIsHeuristicScan = true;
-            scanOptions.bIsVerbose = true;
-
-            DiE_Script::SCAN_RESULT scanResult = g_pDieScript->scanFile(sFileName, &scanOptions, g_pPdStruct);
-            sResult = XFormats::getProtection(&(scanResult.listRecords));
+            scanResult = g_pDieScript->scanFile(sFileName, &scanOptions, g_pPdStruct);
         } else if (g_hiOptions.sScanEngine == "nfd") {
-            SpecAbstract::SCAN_OPTIONS scanOptions = {};
-            scanOptions.bIsDeepScan = true;
-            // scanOptions.bIsHeuristicScan = true;
-            // scanOptions.bIsVerbose = true;
-
-            SpecAbstract::SCAN_RESULT scanResult = StaticScan::processFile(sFileName, &scanOptions, g_pPdStruct);
-            QList<XBinary::SCANSTRUCT> listScanResults = SpecAbstract::convert(&(scanResult.listRecords));
-            sResult = XFormats::getProtection(&listScanResults);
+            scanResult = SpecAbstract().scanFile(sFileName, &scanOptions, g_pPdStruct);
         }
+
+        sResult = XScanEngine::getProtection(&scanOptions, &(scanResult.listRecords));
 
         g_mapDetects.insert(sFileName, sResult);
     }
@@ -72,8 +68,9 @@ void XhandleInfo::process()
 
     if (g_hiOptions.sScanEngine == "die") {
         g_pDieScript = new DiE_Script;
-        g_pDieScript->loadDatabase(g_hiOptions.sDieDatabase, true);
-        g_pDieScript->loadDatabase(g_hiOptions.sDieDatabaseCustom, false);
+        g_pDieScript->loadDatabase(g_hiOptions.sDieDatabase, DiE_ScriptEngine::DT_MAIN, g_pPdStruct);
+        // TODO db
+        g_pDieScript->loadDatabase(g_hiOptions.sDieDatabaseCustom, DiE_ScriptEngine::DT_CUSTOM, g_pPdStruct);
     }
 
     if (g_hiOptions.infoClass == INFOCLASS_PROCESSES) {

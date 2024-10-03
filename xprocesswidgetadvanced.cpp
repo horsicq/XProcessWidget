@@ -172,6 +172,11 @@ void XProcessWidgetAdvanced::setGlobal(XShortcuts *pShortcuts, XOptions *pXOptio
     XShortcutsWidget::setGlobal(pShortcuts, pXOptions);
 }
 
+void XProcessWidgetAdvanced::adjustView()
+{
+
+}
+
 void XProcessWidgetAdvanced::registerShortcuts(bool bState)
 {
     Q_UNUSED(bState)

@@ -64,6 +64,8 @@ public:
     void reload();
     void setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions);
 
+    void adjustView();
+
 protected:
     virtual void registerShortcuts(bool bState);
 
