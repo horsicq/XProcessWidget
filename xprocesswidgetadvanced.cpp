@@ -174,7 +174,6 @@ void XProcessWidgetAdvanced::setGlobal(XShortcuts *pShortcuts, XOptions *pXOptio
 
 void XProcessWidgetAdvanced::adjustView()
 {
-
 }
 
 void XProcessWidgetAdvanced::registerShortcuts(bool bState)
