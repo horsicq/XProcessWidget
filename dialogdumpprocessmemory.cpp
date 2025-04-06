@@ -246,8 +246,8 @@ void DialogDumpProcessMemory::on_pushButtonPEGetImports_clicked()
 
     XInfoDBTransfer::OPTIONS options = {};
     options.nProcessID = g_nProcessID;
-    options.nAddress = ui->lineEditPEIATAddress->getValue_uint64();
-    options.nSize = ui->lineEditPEIATSize->getValue_uint64();
+    // options.nAddress = ui->lineEditPEIATAddress->getValue_uint64();
+    // options.nSize = ui->lineEditPEIATSize->getValue_uint64();
 #ifdef Q_OS_WIN
     DialogXInfoDBTransferProcess dialogDataTransfer(this);
 
