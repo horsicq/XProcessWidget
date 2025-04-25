@@ -49,7 +49,7 @@ XProcessWidget::XProcessWidget(QWidget *pParent) : XShortcutsWidget(pParent), ui
     ui->tableWidgetProcesses->horizontalHeader()->setSectionResizeMode(COLUMN_NAME, QHeaderView::Interactive);
     ui->tableWidgetProcesses->horizontalHeader()->setSectionResizeMode(COLUMN_FILENAME, QHeaderView::Stretch);
 
-    ui->labelBuild->setText(XProcess::getOsInfo().sBuild);
+    // ui->labelBuild->setText(XProcess::getOsInfo().sBuild);
 
     ui->comboBoxMode->addItem(tr("User mode"));
 #ifdef X_WINIODRIVER

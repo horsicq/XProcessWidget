@@ -92,6 +92,10 @@ public:
 
     void setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions);
 
+    virtual void adjustView()
+    {
+    }
+
 private slots:
     void reload();
 
