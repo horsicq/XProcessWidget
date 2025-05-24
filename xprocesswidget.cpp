@@ -237,10 +237,10 @@ void XProcessWidget::_memoryHex()
     QList<QTableWidgetItem *> listSelected = ui->tableWidgetProcesses->selectedItems();
 
     if (listSelected.count()) {
-        qint64 nPID = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_PID).toLongLong();
-        qint64 nImageAddress = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGEADDRESS).toLongLong();
-        qint64 nImageSize = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGESIZE).toLongLong();
-        QString sName = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_NAME).toString();
+        // qint64 nPID = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_PID).toLongLong();
+        // qint64 nImageAddress = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGEADDRESS).toLongLong();
+        // qint64 nImageSize = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGESIZE).toLongLong();
+        // QString sName = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_NAME).toString();
 
         // XDynStructsEngine dynStructsEngine;
         // dynStructsEngine.setOptions(getGlobalOptions());
@@ -272,10 +272,10 @@ void XProcessWidget::_memoryStrings()
     QList<QTableWidgetItem *> listSelected = ui->tableWidgetProcesses->selectedItems();
 
     if (listSelected.count()) {
-        qint64 nPID = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_PID).toLongLong();
-        qint64 nImageAddress = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGEADDRESS).toLongLong();
-        qint64 nImageSize = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGESIZE).toLongLong();
-        QString sName = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_NAME).toString();
+        // qint64 nPID = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_PID).toLongLong();
+        // qint64 nImageAddress = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGEADDRESS).toLongLong();
+        // qint64 nImageSize = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGESIZE).toLongLong();
+        // QString sName = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_NAME).toString();
 
         // XDynStructsEngine dynStructsEngine;
         // dynStructsEngine.setOptions(getGlobalOptions());
@@ -310,9 +310,9 @@ void XProcessWidget::_memorySignatures()
     QList<QTableWidgetItem *> listSelected = ui->tableWidgetProcesses->selectedItems();
 
     if (listSelected.count()) {
-        qint64 nPID = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_PID).toLongLong();
-        qint64 nImageAddress = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGEADDRESS).toLongLong();
-        qint64 nImageSize = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGESIZE).toLongLong();
+        // qint64 nPID = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_PID).toLongLong();
+        // qint64 nImageAddress = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGEADDRESS).toLongLong();
+        // qint64 nImageSize = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGESIZE).toLongLong();
         //        QString sName=listSelected.at(COLUMN_ID)->data(Qt::UserRole+CBDATA_NAME).toString();
 
         // XDynStructsEngine dynStructsEngine;
@@ -478,8 +478,8 @@ void XProcessWidget::_structs()
     QList<QTableWidgetItem *> listSelected = ui->tableWidgetProcesses->selectedItems();
 
     if (listSelected.count()) {
-        qint64 nProcessId = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_PID).toLongLong();
-        qint64 nImageAddress = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGEADDRESS).toLongLong();
+        // qint64 nProcessId = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_PID).toLongLong();
+        // qint64 nImageAddress = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGEADDRESS).toLongLong();
 
         // g_dynStructsEngine.setProcessId(nProcessId, getCurrentIOMode());
 
@@ -497,10 +497,10 @@ void XProcessWidget::_dumpToFile()
     QList<QTableWidgetItem *> listSelected = ui->tableWidgetProcesses->selectedItems();
 
     if (listSelected.count()) {
-        qint64 nPID = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_PID).toLongLong();
-        qint64 nImageAddress = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGEADDRESS).toLongLong();
-        qint64 nImageSize = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGESIZE).toLongLong();
-        QString sName = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_NAME).toString();
+        // qint64 nPID = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_PID).toLongLong();
+        // qint64 nImageAddress = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGEADDRESS).toLongLong();
+        // qint64 nImageSize = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_IMAGESIZE).toLongLong();
+        // QString sName = listSelected.at(COLUMN_ID)->data(Qt::UserRole + CBDATA_NAME).toString();
 
         // XDynStructsEngine dynStructsEngine;
         // dynStructsEngine.setOptions(getGlobalOptions());
