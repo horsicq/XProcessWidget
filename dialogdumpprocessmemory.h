@@ -21,9 +21,7 @@
 #ifndef DIALOGDUMPPROCESSMEMORY_H
 #define DIALOGDUMPPROCESSMEMORY_H
 
-#include "dialogdumpprocess.h"
 #include "dialogmultidisasm.h"
-#include "dialogxinfodbtransferprocess.h"
 
 namespace Ui {
 class DialogDumpProcessMemory;

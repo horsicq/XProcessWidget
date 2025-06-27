@@ -165,24 +165,24 @@ void DialogDumpProcessMemory::on_pushButtonDump_clicked()
 #endif
 #ifdef Q_OS_LINUX
         if (method == METHOD_RAWDUMP) {
-            DialogDumpProcess dialogDumpProcess(this);
-            if (mode == MODE_USER_PROCPIDMEM) {
-                dialogDumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_PROCPIDMEM_RAWDUMP, sFileName);
-            } else if (mode == MODE_USER_PTRACE) {
-                dialogDumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_PTRACE_RAWDUMP, sFileName);
-            }
-            dialogDumpProcess.exec();
-        } else if (method == METHOD_REBUILDIMAGE) {
-            DialogDumpProcess dialogDumpProcess(this);
-            if (mode == MODE_USER_PROCPIDMEM) {
-                dialogDumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_PROCPIDMEM_REBUILD, sFileName, g_ELFfixDumpOptions,
-                                          g_baHeaders);
-            } else if (mode == MODE_USER_PTRACE) {
-                dialogDumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_PTRACE_REBUILD, sFileName, g_ELFfixDumpOptions,
-                                          g_baHeaders);
-            }
+        //     DialogDumpProcess dialogDumpProcess(this);
+        //     if (mode == MODE_USER_PROCPIDMEM) {
+        //         dialogDumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_PROCPIDMEM_RAWDUMP, sFileName);
+        //     } else if (mode == MODE_USER_PTRACE) {
+        //         dialogDumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_PTRACE_RAWDUMP, sFileName);
+        //     }
+        //     dialogDumpProcess.exec();
+        // } else if (method == METHOD_REBUILDIMAGE) {
+        //     DialogDumpProcess dialogDumpProcess(this);
+        //     if (mode == MODE_USER_PROCPIDMEM) {
+        //         dialogDumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_PROCPIDMEM_REBUILD, sFileName, g_ELFfixDumpOptions,
+        //                                   g_baHeaders);
+        //     } else if (mode == MODE_USER_PTRACE) {
+        //         dialogDumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_PTRACE_REBUILD, sFileName, g_ELFfixDumpOptions,
+        //                                   g_baHeaders);
+        //     }
 
-            dialogDumpProcess.exec();
+        //     dialogDumpProcess.exec();
         }
 #endif
     }
