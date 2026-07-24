@@ -49,8 +49,8 @@ void XProcessWidgetAdvanced::reload()
     piOptions.pio = (XhandleInfo::PIO)(ui->comboBoxProcessesMode->currentData().toInt());
     piOptions.sScanEngine = ui->comboBoxProcessesScan->currentData().toString();
     //    piOptions.bIsScanAll = ui->checkBoxScanProcessesAll->isChecked();
-    piOptions.sDieDatabase = getGlobalOptions()->getDatabasePath();
-    piOptions.sDieDatabaseCustom = getGlobalOptions()->getCustomDatabasePath();
+    piOptions.sDieDatabase = getGlobalOptions()->getValue(XOptions::ID_SCAN_DIE_DATABASE_MAIN_PATH).toString();
+    piOptions.sDieDatabaseCustom = getGlobalOptions()->getValue(XOptions::ID_SCAN_DIE_DATABASE_CUSTOM_PATH).toString();
 
     dip.setData(piOptions, &listProcessInfo);
 

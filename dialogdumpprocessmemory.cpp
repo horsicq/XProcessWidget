@@ -20,6 +20,7 @@
  */
 #include "dialogdumpprocessmemory.h"
 #include "ui_dialogdumpprocessmemory.h"
+#include "xdialogprocess.h"  // generic worker dialog (replaces removed DialogDumpProcess/DialogXInfoDBTransferProcess)
 
 // TODO Save / Load settings
 DialogDumpProcessMemory::DialogDumpProcessMemory(QWidget *pParent) : XShortcutsDialog(pParent), ui(new Ui::DialogDumpProcessMemory)
@@ -150,16 +151,21 @@ void DialogDumpProcessMemory::on_pushButtonDump_clicked()
 #ifdef Q_OS_WIN
         if (mode == MODE_USER_READPROCESSMEMORY) {
             if (method == METHOD_RAWDUMP) {
-                DialogDumpProcess dialogDumpProcess(this);
-                dialogDumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_READPROCESSMEMORY_RAWDUMP, sFileName);
-                dialogDumpProcess.exec();
+                DumpProcess dumpProcess;
+                XDialogProcess dialogDumpProcess(this, &dumpProcess);
+                dumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_READPROCESSMEMORY_RAWDUMP, sFileName, "",
+                                    dialogDumpProcess.getPdStruct());
+                dialogDumpProcess.start();
+                dialogDumpProcess.showDialogDelay();
             } else if (method == METHOD_REBUILDIMAGE) {
-                DialogDumpProcess dialogDumpProcess(this);
+                DumpProcess dumpProcess;
+                XDialogProcess dialogDumpProcess(this, &dumpProcess);
 
-                dialogDumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_READPROCESSMEMORY_REBUILD, sFileName,
-                                          g_PEfixDumpOptions, g_baHeaders);
+                dumpProcess.setData(g_nProcessID, g_nImageBase, g_nImageSize, DumpProcess::DT_DUMP_PROCESS_USER_READPROCESSMEMORY_REBUILD, sFileName, "",
+                                    g_PEfixDumpOptions, g_baHeaders, dialogDumpProcess.getPdStruct());
 
-                dialogDumpProcess.exec();
+                dialogDumpProcess.start();
+                dialogDumpProcess.showDialogDelay();
             }
         }
 #endif
@@ -251,10 +257,12 @@ void DialogDumpProcessMemory::on_pushButtonPEGetImports_clicked()
     // options.nAddress = ui->lineEditPEIATAddress->getValue_uint64();
     // options.nSize = ui->lineEditPEIATSize->getValue_uint64();
 #ifdef Q_OS_WIN
-    DialogXInfoDBTransferProcess dialogDataTransfer(this);
+    XInfoDBTransfer infoDBTransfer;
+    XDialogProcess dialogDataTransfer(this, &infoDBTransfer);
 
-    dialogDataTransfer.setData(XInfoDBTransfer::COMMAND_GETIAT, options, &listImportRecords);
+    infoDBTransfer.setData(XInfoDBTransfer::COMMAND_IMPORT, options, &listImportRecords, dialogDataTransfer.getPdStruct());
 
+    dialogDataTransfer.start();
     dialogDataTransfer.showDialogDelay();
 #endif
 }

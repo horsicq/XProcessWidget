@@ -68,9 +68,13 @@ void XhandleInfo::process()
 
     if (g_hiOptions.sScanEngine == "die") {
         g_pDieScript = new DiE_Script;
-        g_pDieScript->loadDatabase(g_hiOptions.sDieDatabase, DiE_ScriptEngine::DT_MAIN, g_pPdStruct);
-        // TODO db
-        g_pDieScript->loadDatabase(g_hiOptions.sDieDatabaseCustom, DiE_ScriptEngine::DT_CUSTOM, g_pPdStruct);
+
+        // Public API is now loadDatabase(SCAN_OPTIONS*, PDSTRUCT*); the per-path overload is private.
+        XScanEngine::SCAN_OPTIONS scanOptions = {};
+        scanOptions.sMainDatabasePath = g_hiOptions.sDieDatabase;
+        scanOptions.sCustomDatabasePath = g_hiOptions.sDieDatabaseCustom;
+        scanOptions.bUseCustomDatabase = !g_hiOptions.sDieDatabaseCustom.isEmpty();
+        g_pDieScript->loadDatabase(&scanOptions, g_pPdStruct);
     }
 
     if (g_hiOptions.infoClass == INFOCLASS_PROCESSES) {
