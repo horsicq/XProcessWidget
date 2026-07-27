@@ -138,7 +138,8 @@ void XhandleInfo::process()
 #ifdef Q_OS_WIN
                         XPE pe(&file);
                         if (pe.isValid(g_pPdStruct)) {
-                            XPE::CLI_INFO cliInfo = pe.getCliInfo(true);
+                            XCLIAssembly cliAssembly(&file);
+                            XCLIAssembly::CLI_INFO cliInfo = cliAssembly.getCliInfo(true);
 
                             if (cliInfo.bValid) {
                                 record.sInfoExtra = cliInfo.metaData.header.sVersion;
